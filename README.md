@@ -1,4 +1,4 @@
 yaph
 ====
 
-Yet Another Professor Helper
+Yet Another Password Helper
