@@ -1,2 +1,4 @@
-YAPH
+yaph
 ====
+
+Yet Another Password Helper
