@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.gbourquet.yaph.serveur.service.exception.ServiceException;
 
 /**
@@ -19,6 +20,6 @@ public interface PasswordService extends Service {
      * @return password
      * @throws ServiceException 
      */
-    PasswordCard save(final PasswordCard password) throws ServiceException;
     List<PasswordCard> getPasswords(final Account account) throws ServiceException;
+	PasswordCard save(PasswordCard password, List<PasswordField> fields) throws ServiceException;
 }

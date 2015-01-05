@@ -1,9 +1,12 @@
 package com.gbourquet.yaph.client.mvp.view;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
+import com.gbourquet.yaph.client.widget.PasswordFieldWidget;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -32,6 +35,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
@@ -75,16 +79,10 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	Label newBoxError;
 
 	@UiField
-	TextBox newBoxTitre;
-
-	@UiField
-	TextBox newBoxUser;
+	TextBox newBoxTitle;
 
 	@UiField
 	TextBox newBoxPassword;
-
-	@UiField
-	TextBox newBoxUrl;
 
 	@UiField
 	Button newBoxGenerateButton;
@@ -95,25 +93,15 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	@UiField
 	Button newBoxCancelButton;
 
+	@UiField 
+	Panel fieldsPanel;
+	
+	//Liste des champs
+	Map<String, PasswordFieldWidget> fields=new HashMap<String, PasswordFieldWidget>();
 	/**
 	 * Column displays title.
 	 */
 	private Column<PasswordCard, String> titleColumn;
-
-	/**
-	 * Column displays user.
-	 */
-	private Column<PasswordCard, String> userColumn;
-
-	/**
-	 * Column displays password.
-	 */
-	private Column<PasswordCard, String> passwordColumn;
-
-	/**
-	 * Column displays address.
-	 */
-	private Column<PasswordCard, String> addressColumn;
 
 	public interface TableRes extends DataGrid.Resources {
 		@Source({DataGrid.Style.DEFAULT_CSS, "CwCustomDataGrid.css"})
@@ -206,14 +194,27 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 		initWidget(uiBinder.createAndBindUi(this));
 
-		newBoxTitre.getElement().setPropertyString("placeholder", "Titre");
-		newBoxUser.getElement().setPropertyString("placeholder", "User");
+		newBoxTitle.getElement().setPropertyString("placeholder", "Password Title");
 		newBoxPassword.getElement()
 				.setPropertyString("placeholder", "Password");
-		newBoxUrl.getElement().setPropertyString("placeholder", "URL");
-
+		
 		newPasswordBox.center();
 		newPasswordBox.hide();
+		
+		PasswordFieldWidget field1=new PasswordFieldWidget();
+		field1.setTitlePlaceHolder("Field Title");
+		field1.setValuePlaceHolder("Value");
+		PasswordFieldWidget field2=new PasswordFieldWidget();
+		field2.setTitlePlaceHolder("Field Title");
+		field2.setValuePlaceHolder("Value");
+		PasswordFieldWidget field3=new PasswordFieldWidget();
+		field3.setTitlePlaceHolder("Field Title");
+		field3.setValuePlaceHolder("Value");
+		
+		fieldsPanel.add(field1);
+		fieldsPanel.add(field2);
+		fieldsPanel.add(field3);
+		
 	}
 
 	/**
@@ -234,10 +235,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 			AbstractHeaderOrFooterBuilder<PasswordCard> {
 
 		private Header<String> titleHeader = new TextHeader("Titre");
-		private Header<String> userHeader = new TextHeader("User");
-		private Header<String> passwordHeader = new TextHeader("Password");
-		private Header<String> addressHeader = new TextHeader("Adresse");
-
+		
 		public CustomHeaderBuilder() {
 			super(dataGrid, false);
 			setSortIconStartOfLine(false);
@@ -272,12 +270,6 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 			tr = startRow();
 			buildHeader(tr, titleHeader, titleColumn, sortedColumn,
 					isSortAscending, false, false);
-			buildHeader(tr, userHeader, userColumn, sortedColumn,
-					isSortAscending, false, false);
-			buildHeader(tr, passwordHeader, passwordColumn, sortedColumn,
-					isSortAscending, false, false);
-			buildHeader(tr, addressHeader, addressColumn, sortedColumn,
-					isSortAscending, false, true);
 			tr.endTR();
 
 			return true;
@@ -427,27 +419,6 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 			renderCell(td, createContext(1), titleColumn, rowValue);
 			td.endTD();
 
-			// User column.
-			td = row.startTD();
-			td.className(cellStyles);
-			td.style().outlineStyle(OutlineStyle.NONE).endStyle();
-			renderCell(td, createContext(2), userColumn, rowValue);
-			td.endTD();
-
-			// Password column.
-			td = row.startTD();
-			td.className(cellStyles);
-			td.style().outlineStyle(OutlineStyle.NONE).endStyle();
-			renderCell(td, createContext(3), passwordColumn, rowValue);
-			td.endTD();
-
-			// Address column.
-			td = row.startTD();
-			td.className(cellStyles);
-			td.style().outlineStyle(OutlineStyle.NONE).endStyle();
-			renderCell(td, createContext(4), addressColumn, rowValue);
-			td.endTD();
-
 			row.endTR();
 		}
 	}
@@ -484,68 +455,8 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		});
 		dataGrid.setColumnWidth(0, 25, Unit.PCT);
 
-		// user.
-		userColumn = new Column<PasswordCard, String>(new TextCell()) {
-			@Override
-			public String getValue(PasswordCard object) {
-				return object.getUser();
-			}
-		};
-		userColumn.setSortable(true);
-		userColumn.setHorizontalAlignment(HasAlignment.ALIGN_LEFT);
-		sortHandler.setComparator(userColumn, new Comparator<PasswordCard>() {
-			@Override
-			public int compare(PasswordCard o1, PasswordCard o2) {
-				return o1.getUser().compareTo(o2.getUser());
-			}
-		});
-		userColumn.setFieldUpdater(new FieldUpdater<PasswordCard, String>() {
-			@Override
-			public void update(int index, PasswordCard object, String value) {
-				// Called when the user changes the value.
-				object.setUser(value);
-				dataProvider.refresh();
-			}
-		});
-		dataGrid.setColumnWidth(1, 20, Unit.PCT);
-
-		// Password.
-		passwordColumn = new Column<PasswordCard, String>(new TextCell()) {
-			@Override
-			public String getValue(PasswordCard object) {
-				return object.getPassword();
-			}
-		};
-		passwordColumn.setSortable(true);
-		passwordColumn.setHorizontalAlignment(HasAlignment.ALIGN_LEFT);
-		sortHandler.setComparator(passwordColumn,
-				new Comparator<PasswordCard>() {
-					@Override
-					public int compare(PasswordCard o1, PasswordCard o2) {
-						return o1.getPassword().compareTo(o2.getPassword());
-					}
-				});
-		dataGrid.setColumnWidth(2, 20, Unit.PCT);
-
-		// Address.
-		addressColumn = new Column<PasswordCard, String>(new TextCell()) {
-			@Override
-			public String getValue(PasswordCard object) {
-				return object.getAdresse();
-			}
-		};
-		addressColumn.setSortable(true);
-		addressColumn.setHorizontalAlignment(HasAlignment.ALIGN_LEFT);
-		sortHandler.setComparator(addressColumn,
-				new Comparator<PasswordCard>() {
-					@Override
-					public int compare(PasswordCard o1, PasswordCard o2) {
-						return o1.getAdresse().compareTo(o2.getAdresse());
-					}
-				});
-		dataGrid.setColumnWidth(3, 40, Unit.PCT);
 	}
-
+	
 	@Override
 	public HasClickHandlers getNewPasswordButton() {
 		return newPasswordButton;
@@ -577,10 +488,8 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 	@Override
 	public void clearNewPasswordBox() {
-		newBoxTitre.setText("");
-		newBoxUser.setText("");
+		newBoxTitle.setText("");
 		newBoxPassword.setText("");
-		newBoxUrl.setText("");
 	}
 
 	@Override
@@ -590,22 +499,12 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 	@Override
 	public String getTitleText() {
-		return newBoxTitre.getText();
-	}
-
-	@Override
-	public String getUserText() {
-		return newBoxUser.getText();
+		return newBoxTitle.getText();
 	}
 
 	@Override
 	public String getPasswordText() {
 		return newBoxPassword.getText();
-	}
-
-	@Override
-	public String getAdressText() {
-		return newBoxUrl.getText();
 	}
 
 	@Override

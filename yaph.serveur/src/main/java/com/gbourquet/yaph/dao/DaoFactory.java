@@ -4,6 +4,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import com.gbourquet.yaph.dao.generated.AccountMapper;
 import com.gbourquet.yaph.dao.generated.PasswordCardMapper;
+import com.gbourquet.yaph.dao.generated.PasswordFieldMapper;
 
 public class DaoFactory {
 	/**
@@ -42,6 +43,15 @@ public class DaoFactory {
 	public final PasswordCardMapper getPasswordDAO() {
 		try {
 			PasswordCardMapper mapper = sqlSession.getMapper(PasswordCardMapper.class);
+			return mapper;
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	public final PasswordFieldMapper getPasswordFieldDAO() {
+		try {
+			PasswordFieldMapper mapper = sqlSession.getMapper(PasswordFieldMapper.class);
 			return mapper;
 		} finally {
 			sqlSession.close();

@@ -537,19 +537,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	}
 
 	@Override
-	public String getUserText() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String getPasswordText() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getAdressText() {
 		// TODO Auto-generated method stub
 		return null;
 	}

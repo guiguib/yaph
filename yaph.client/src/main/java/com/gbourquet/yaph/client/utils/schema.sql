@@ -16,5 +16,16 @@ CREATE TABLE passwordCard (
 	account INTEGER,
 	titre TEXT,
 	CONSTRAINT passwordcard_pk PRIMARY KEY (id),
-	CONSTRAINT PASSWORDCARD_FK_ACCOUNT FOREIGN KEY (id) REFERENCES account(id)
+	CONSTRAINT PASSWORDCARD_FK_ACCOUNT FOREIGN KEY (account) REFERENCES account(id)
 );
+
+CREATE TABLE passwordField (
+	id INTEGER,
+	idCard INTEGER,
+	type TEXT(80),
+	libelle TEXT,
+	value TEXT,
+	CONSTRAINT passwordfield_pk PRIMARY KEY (id),
+	CONSTRAINT PASSWORDFIELD_FK_PASSWORDCARD FOREIGN KEY (idCard) REFERENCES passwordCard(id)
+);
+

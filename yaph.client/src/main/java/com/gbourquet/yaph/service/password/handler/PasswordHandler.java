@@ -1,9 +1,12 @@
 package com.gbourquet.yaph.service.password.handler;
 
+import java.util.List;
+
 import net.customware.gwt.dispatch.server.ExecutionContext;
 import net.customware.gwt.dispatch.shared.ActionException;
 
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.gbourquet.yaph.serveur.service.PasswordService;
 import com.gbourquet.yaph.serveur.service.exception.ServiceException;
 import com.gbourquet.yaph.serveur.util.BeanFactory;
@@ -17,11 +20,12 @@ public class PasswordHandler extends AbstractHandler<PasswordAction, PasswordRes
 			throws ActionException {
 
 		final PasswordCard password = in.getPasswordCard();
+		final List<PasswordField> fields = in.getFields();
 
 		PasswordCard out; 
 		PasswordService service = (PasswordService) BeanFactory.getInstance().getService("passwordService");
 		try {
-			out = service.save(password);
+			out = service.save(password, fields);
 		} catch (ServiceException e) {
 			throw new ActionException(e.getMessage());
 		}

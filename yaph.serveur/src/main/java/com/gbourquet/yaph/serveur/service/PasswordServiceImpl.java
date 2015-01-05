@@ -7,6 +7,7 @@ import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCardExample;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCardExample.Criteria;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.gbourquet.yaph.serveur.service.exception.ServiceException;
 
 /**
@@ -23,7 +24,7 @@ public class PasswordServiceImpl implements PasswordService {
 	}
 
 	@Override
-	public PasswordCard save(PasswordCard password) throws ServiceException {
+	public PasswordCard save(PasswordCard password,List<PasswordField> fields) throws ServiceException {
 		if (password.getId()==null || password.getId()==0)
 		{
 			//c'est un nouveau mot de passe à créer
@@ -33,6 +34,18 @@ public class PasswordServiceImpl implements PasswordService {
 		} else { 
 			daoFactory.getPasswordDAO().updateByPrimaryKey(password);
 		}
+		
+		for (PasswordField field : fields) {
+			field.setIdCard(password.getId());
+			if (field.getId()==null || field.getId()==0)
+			{
+				//c'est un nouveau mot de passe à créer
+				daoFactory.getPasswordFieldDAO().insert(field);
+			} else { 
+				daoFactory.getPasswordFieldDAO().updateByPrimaryKey(field);
+			}
+		}
+		
 		return password;
 	}
 

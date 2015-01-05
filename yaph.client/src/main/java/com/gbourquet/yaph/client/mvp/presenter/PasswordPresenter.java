@@ -45,11 +45,7 @@ public class PasswordPresenter extends AbstractPresenter {
 
 		String getTitleText();
 
-		String getUserText();
-
 		String getPasswordText();
-
-		String getAdressText();
 
 		void setPasswordText(String password);
 
@@ -126,11 +122,9 @@ public class PasswordPresenter extends AbstractPresenter {
 						if (account != null)
 							password.setAccount(account.getId());
 						password.setTitre(getView().getTitleText());
-						password.setUser(getView().getUserText());
 						password.setPassword(getView().getPasswordText());
-						password.setAdresse(getView().getAdressText());
-
-						dispatcher.execute(new PasswordAction(password),
+						
+						dispatcher.execute(new PasswordAction(password,null),
 								new MyAsyncCallback<PasswordResult>(
 										getEventBus()) {
 									public void success(PasswordResult result) {

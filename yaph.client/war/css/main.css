@@ -390,10 +390,10 @@ input[type="button"],input[type="submit"],input[type="reset"],.button {
 	font-weight: 600;
 }
 
-.bloc input[type="text"],input[type="password"] {
+.bloc input[type="text"],input[type="password"],.gwt-ListBox {
 	font-weight: 100;
 	padding: 10px;
-	margin: 10px 0 0 0;
+	margin: 5px 10px 5px 0;
 	display: block;
 	width: 93%;
 	background: #ffffff;
@@ -409,8 +409,7 @@ input[type="button"],input[type="submit"],input[type="reset"],.button {
 }
 
 .bloc button {
-	margin-top: 10px;
-	margin-left: 10px;
+	margin: 5px 10px 5px 0;
 	-webkit-appearance: none;
 	cursor: pointer;
 	border: none;
