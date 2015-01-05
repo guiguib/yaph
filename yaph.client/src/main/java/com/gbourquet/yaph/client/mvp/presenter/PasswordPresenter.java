@@ -11,7 +11,6 @@ import com.gbourquet.yaph.client.event.MenuEvent;
 import com.gbourquet.yaph.client.mvp.ClientFactory;
 import com.gbourquet.yaph.client.mvp.place.AppPlace;
 import com.gbourquet.yaph.client.utils.DataAccess;
-import com.gbourquet.yaph.client.utils.PasswordGenerator;
 import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.service.callback.MyAsyncCallback;
@@ -41,13 +40,7 @@ public class PasswordPresenter extends AbstractPresenter {
 
 		HasClickHandlers getValidNewPasswordButton();
 
-		HasClickHandlers getGeneratePasswordButton();
-
 		String getTitleText();
-
-		String getPasswordText();
-
-		void setPasswordText(String password);
 
 		Label getErrorNewPasswordLabel();
 
@@ -122,7 +115,6 @@ public class PasswordPresenter extends AbstractPresenter {
 						if (account != null)
 							password.setAccount(account.getId());
 						password.setTitre(getView().getTitleText());
-						password.setPassword(getView().getPasswordText());
 						
 						dispatcher.execute(new PasswordAction(password,null),
 								new MyAsyncCallback<PasswordResult>(
@@ -156,17 +148,7 @@ public class PasswordPresenter extends AbstractPresenter {
 						getView().closeNewPasswordBox();
 					}
 				});
-		// Generate nouveau mot de passe
-		getView().getGeneratePasswordButton().addClickHandler(
-				new ClickHandler() {
-
-					@Override
-					public void onClick(ClickEvent event) {
-						PasswordGenerator generator = new PasswordGenerator(10,
-								true);
-						getView().setPasswordText(generator.exec());
-					}
-				});
+		
 	}
 
 	@Override

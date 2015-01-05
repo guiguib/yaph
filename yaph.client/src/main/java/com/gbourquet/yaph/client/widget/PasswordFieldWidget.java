@@ -1,8 +1,11 @@
 package com.gbourquet.yaph.client.widget;
 
+import com.gbourquet.yaph.client.utils.PasswordGenerator;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
@@ -47,32 +50,39 @@ public class PasswordFieldWidget extends Composite {
 
 			@Override
 			public void onChange(ChangeEvent event) {
-				if ("PASSWD".equals(type.getValue(type.getSelectedIndex()))) 
+				if ("PASSWD".equals(type.getValue(type.getSelectedIndex())))
 					setGenerateVisible(true);
 				else
 					setGenerateVisible(false);
 
 			}
 		});
+
+		// Generate nouveau mot de passe
+		generate.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				PasswordGenerator generator = new PasswordGenerator(20, true);
+				value.setText(generator.exec());
+			}
+		});
 	}
 
-	private void setGenerateVisible(boolean visible)
-	{
+	private void setGenerateVisible(boolean visible) {
 		if (visible)
-			value.setWidth("351px");
+			value.setWidth("383px");
 		else
 			value.setWidth("500px");
 		generate.setVisible(visible);
 	}
-	
-	public void setTitlePlaceHolder(String placeHolder)
-	{
+
+	public void setTitlePlaceHolder(String placeHolder) {
 		title.getElement().setPropertyString("placeholder", placeHolder);
 	}
-	
-	public void setValuePlaceHolder(String placeHolder)
-	{
+
+	public void setValuePlaceHolder(String placeHolder) {
 		value.getElement().setPropertyString("placeholder", placeHolder);
 	}
-	
+
 }

@@ -537,12 +537,6 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	}
 
 	@Override
-	public String getPasswordText() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void clearNewPasswordBox() {
 		// TODO Auto-generated method stub
 		
@@ -560,15 +554,4 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		
 	}
 
-	@Override
-	public HasClickHandlers getGeneratePasswordButton() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setPasswordText(String password) {
-		// TODO Auto-generated method stub
-		
-	}
 }

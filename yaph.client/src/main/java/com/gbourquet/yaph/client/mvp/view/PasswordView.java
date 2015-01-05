@@ -82,12 +82,6 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	TextBox newBoxTitle;
 
 	@UiField
-	TextBox newBoxPassword;
-
-	@UiField
-	Button newBoxGenerateButton;
-
-	@UiField
 	Button newBoxValidButton;
 
 	@UiField
@@ -195,8 +189,6 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		newBoxTitle.getElement().setPropertyString("placeholder", "Password Title");
-		newBoxPassword.getElement()
-				.setPropertyString("placeholder", "Password");
 		
 		newPasswordBox.center();
 		newPasswordBox.hide();
@@ -489,7 +481,6 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	@Override
 	public void clearNewPasswordBox() {
 		newBoxTitle.setText("");
-		newBoxPassword.setText("");
 	}
 
 	@Override
@@ -500,11 +491,6 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	@Override
 	public String getTitleText() {
 		return newBoxTitle.getText();
-	}
-
-	@Override
-	public String getPasswordText() {
-		return newBoxPassword.getText();
 	}
 
 	@Override
@@ -519,13 +505,4 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		data.addAll(passwords);
 	}
 
-	@Override
-	public HasClickHandlers getGeneratePasswordButton() {
-		return newBoxGenerateButton;
-	}
-
-	@Override
-	public void setPasswordText(String password) {
-		newBoxPassword.setText(password);
-	}
 }
