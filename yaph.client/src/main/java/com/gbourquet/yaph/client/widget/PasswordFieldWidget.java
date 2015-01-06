@@ -31,6 +31,8 @@ public class PasswordFieldWidget extends Composite {
 	@UiField
 	ListBox type;
 
+	private int width=500;
+	
 	private static PasswordFieldWidgetUiBinder uiBinder = GWT
 			.create(PasswordFieldWidgetUiBinder.class);
 
@@ -38,6 +40,11 @@ public class PasswordFieldWidget extends Composite {
 			UiBinder<Widget, PasswordFieldWidget> {
 	}
 
+	public void addDelClickHandler(ClickHandler handler)
+	{
+		del.addClickHandler(handler);
+	}
+	
 	public PasswordFieldWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
 		type.addItem("Texte", "TEXT");
@@ -67,14 +74,43 @@ public class PasswordFieldWidget extends Composite {
 				value.setText(generator.exec());
 			}
 		});
+		
 	}
 
 	private void setGenerateVisible(boolean visible) {
-		if (visible)
-			value.setWidth("383px");
-		else
-			value.setWidth("500px");
 		generate.setVisible(visible);
+		
+		if (visible)
+			width = width - generate.getOffsetWidth() - 10;
+		else
+			width = 500;
+		
+		value.setWidth(width + "px");
+		
+	}
+
+	public TextBox getTitleBox() {
+		return title;
+	}
+
+	public void setTitle(TextBox title) {
+		this.title = title;
+	}
+
+	public TextBox getValue() {
+		return value;
+	}
+
+	public void setValue(TextBox value) {
+		this.value = value;
+	}
+
+	public ListBox getType() {
+		return type;
+	}
+
+	public void setType(ListBox type) {
+		this.type = type;
 	}
 
 	public void setTitlePlaceHolder(String placeHolder) {

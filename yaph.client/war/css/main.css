@@ -351,7 +351,7 @@ input[type="button"],input[type="submit"],input[type="reset"],.button {
 	border-radius: 0.35em;
 	color: #fff !important;
 	text-decoration: none;
-	margin: 10px;
+	margin: 5px 10px 5px 0;
 	padding: 0.50em 1.5em 0.50em 1.5em;
 	background-color: #8ebebc;
 	border: 0;
@@ -392,7 +392,7 @@ input[type="button"],input[type="submit"],input[type="reset"],.button {
 
 .bloc input[type="text"],input[type="password"],.gwt-ListBox {
 	font-weight: 80;
-	padding: 10px;
+	padding: 0.50em 1.5em 0.50em 1.5em;
 	margin: 5px 10px 5px 0;
 	display: block;
 	width: 93%;
@@ -409,13 +409,14 @@ input[type="button"],input[type="submit"],input[type="reset"],.button {
 }
 
 .bloc button {
-	margin: 5px 10px 5px 0;
+	font-weight: 80;
+	margin: 7px 10px 5px 0;
 	-webkit-appearance: none;
 	cursor: pointer;
 	border: none;
 	outline: none;
 	display: inline-block;
-	padding: 10px;
+	padding: 5px;
 	font-size: 50;
 	color: #ffffff;
 	background: #A8BD44;

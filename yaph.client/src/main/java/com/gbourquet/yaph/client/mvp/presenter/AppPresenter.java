@@ -11,7 +11,6 @@ import com.gbourquet.yaph.client.event.LoginEventHandler;
 import com.gbourquet.yaph.client.event.MenuEvent;
 import com.gbourquet.yaph.client.mvp.ClientFactory;
 import com.gbourquet.yaph.client.mvp.place.LoginPlace;
-import com.gbourquet.yaph.client.utils.DataAccess;
 import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.gbourquet.yaph.service.callback.MyAsyncCallback;
 import com.gbourquet.yaph.service.login.in.LoginFromSessionAction;
@@ -65,10 +64,6 @@ public class AppPresenter extends AbstractPresenter {
 					public void success(final LoginResult result) {
 
 						Account account = result.getAccount();
-						if (account == null) {
-							// On a un compte en local ?
-							account = DataAccess.getInstance().getAccount();
-						}
 						if (account != null) {
 							LocalSession.getInstance().setAttribute("token",result.getToken());
 							LocalSession.getInstance().setAttribute("account",account);

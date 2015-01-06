@@ -1,13 +1,10 @@
 package com.gbourquet.yaph.client.mvp.view;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
-import com.gbourquet.yaph.client.widget.PasswordFieldWidget;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
+import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
 import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
@@ -32,11 +29,8 @@ import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.NoSelectionModel;
@@ -72,26 +66,6 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	@UiField(provided = true)
 	SimplePager pager;
 
-	@UiField
-	DialogBox newPasswordBox;
-
-	@UiField
-	Label newBoxError;
-
-	@UiField
-	TextBox newBoxTitle;
-
-	@UiField
-	Button newBoxValidButton;
-
-	@UiField
-	Button newBoxCancelButton;
-
-	@UiField 
-	Panel fieldsPanel;
-	
-	//Liste des champs
-	Map<String, PasswordFieldWidget> fields=new HashMap<String, PasswordFieldWidget>();
 	/**
 	 * Column displays title.
 	 */
@@ -186,27 +160,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		// Add the CellList to the adapter in the database.
 		dataProvider.addDataDisplay(dataGrid);
 
-		initWidget(uiBinder.createAndBindUi(this));
-
-		newBoxTitle.getElement().setPropertyString("placeholder", "Password Title");
-		
-		newPasswordBox.center();
-		newPasswordBox.hide();
-		
-		PasswordFieldWidget field1=new PasswordFieldWidget();
-		field1.setTitlePlaceHolder("Field Title");
-		field1.setValuePlaceHolder("Value");
-		PasswordFieldWidget field2=new PasswordFieldWidget();
-		field2.setTitlePlaceHolder("Field Title");
-		field2.setValuePlaceHolder("Value");
-		PasswordFieldWidget field3=new PasswordFieldWidget();
-		field3.setTitlePlaceHolder("Field Title");
-		field3.setValuePlaceHolder("Value");
-		
-		fieldsPanel.add(field1);
-		fieldsPanel.add(field2);
-		fieldsPanel.add(field3);
-		
+		initWidget(uiBinder.createAndBindUi(this));		
 	}
 
 	/**
@@ -237,19 +191,6 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		protected boolean buildHeaderOrFooterImpl() {
 
 			TableRowBuilder tr = startRow();
-			/*TableCellBuilder th = tr.startTH();
-			enableColumnHandlers(th, titleColumn);
-			th.style().trustedProperty("border-right", "10px solid white")
-					.cursor(Cursor.POINTER).endStyle();
-			th.startH2().text("Titre").endH2();
-			th.endTH();
-
-			// Information group header.
-			th = tr.startTH().colSpan(3);
-			th.startH2().text("Informations").endH2();
-			th.endTH();
-*/
-			// Get information about the sorted column.
 			ColumnSortList sortList = dataGrid.getColumnSortList();
 			ColumnSortInfo sortedInfo = (sortList.size() == 0) ? null
 					: sortList.get(0);
@@ -461,48 +402,10 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	}
 
 	@Override
-	public void showNewPasswordBox() {
-		newPasswordBox.center();
-		newPasswordBox.setVisible(true);
-		newPasswordBox.show();
-	}
-
-	@Override
-	public HasClickHandlers getCancelNewPasswordButton() {
-
-		return newBoxCancelButton;
-	}
-
-	@Override
-	public void closeNewPasswordBox() {
-		newPasswordBox.hide();
-	}
-
-	@Override
-	public void clearNewPasswordBox() {
-		newBoxTitle.setText("");
-	}
-
-	@Override
-	public HasClickHandlers getValidNewPasswordButton() {
-		return newBoxValidButton;
-	}
-
-	@Override
-	public String getTitleText() {
-		return newBoxTitle.getText();
-	}
-
-	@Override
-	public Label getErrorNewPasswordLabel() {
-		return newBoxError;
-	}
-
-	@Override
 	public void updatePasswordList(List<PasswordCard> passwords) {
 		List<PasswordCard> data = dataProvider.getList();
 		data.clear();
 		data.addAll(passwords);
 	}
-
+	
 }
