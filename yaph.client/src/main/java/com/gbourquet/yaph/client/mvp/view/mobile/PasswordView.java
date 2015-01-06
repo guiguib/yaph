@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
 import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -36,6 +37,7 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 import com.google.gwt.view.client.SelectionModel;
 
 public class PasswordView extends Composite implements PasswordPresenter.View {
@@ -405,6 +407,36 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		List<PasswordCard> data = dataProvider.getList();
 		data.clear();
 		data.addAll(passwords);
+	}
+
+	@Override
+	public void addField(PasswordField field) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clearFields() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addSelectionChangeHandler(Handler handler) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public PasswordCard getSelectedPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setFieldsVisible(Boolean isVisible) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

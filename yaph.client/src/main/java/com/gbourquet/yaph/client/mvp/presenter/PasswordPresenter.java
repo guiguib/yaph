@@ -16,14 +16,19 @@ import com.gbourquet.yaph.client.mvp.place.NewPasswordPlace;
 import com.gbourquet.yaph.client.utils.DataAccess;
 import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.gbourquet.yaph.service.callback.MyAsyncCallback;
+import com.gbourquet.yaph.service.password.in.AllFieldAction;
 import com.gbourquet.yaph.service.password.in.AllPasswordAction;
+import com.gbourquet.yaph.service.password.out.AllFieldResult;
 import com.gbourquet.yaph.service.password.out.AllPasswordResult;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 
 public class PasswordPresenter extends AbstractPresenter {
 
@@ -37,9 +42,16 @@ public class PasswordPresenter extends AbstractPresenter {
 		HasClickHandlers getNewPasswordButton();
 		
 		void addPassword(PasswordCard password);
+		void addField(PasswordField field);
+		void clearFields();
 		
 		void updatePasswordList(List<PasswordCard> passwords);
 
+		void addSelectionChangeHandler(SelectionChangeEvent.Handler handler);
+		
+		PasswordCard getSelectedPassword();
+		void setFieldsVisible(Boolean isVisible);
+		
 	}
 
 	public View view;
@@ -94,6 +106,35 @@ public class PasswordPresenter extends AbstractPresenter {
 			public void onClick(ClickEvent event) {
 				// On redirige vers la vue de connexion
 				getFactory().getPlaceController().goTo(new NewPasswordPlace(""));
+			}
+		});
+		
+		getView().addSelectionChangeHandler(new Handler() {
+			
+			@Override
+			public void onSelectionChange(SelectionChangeEvent event) {
+				PasswordCard password = getView().getSelectedPassword();
+				dispatcher.execute(new AllFieldAction(password), 
+						new MyAsyncCallback<AllFieldResult>(getEventBus()) {
+
+							@Override
+							public void success(AllFieldResult result) {
+								List<PasswordField> fields = result.getFieldList();
+								getView().clearFields();
+								for (PasswordField field : fields)
+								{
+									getView().addField(field);
+								}
+							}
+							
+							@Override
+							public void failure(Throwable caught) {
+								// TODO Auto-generated method stub
+								
+							}
+					
+				});
+				getView().setFieldsVisible(true);
 			}
 		});
 	}

@@ -1,10 +1,13 @@
 package com.gbourquet.yaph.client.mvp.view;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
-import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
+import com.gbourquet.yaph.client.widget.PasswordWidget;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
@@ -29,13 +32,15 @@ import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
-import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 import com.google.gwt.view.client.SelectionModel;
 
 public class PasswordView extends Composite implements PasswordPresenter.View {
@@ -66,22 +71,29 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	@UiField(provided = true)
 	SimplePager pager;
 
+	@UiField
+	DisclosurePanel detailPassword;
+
+	@UiField
+	VerticalPanel fields;
+
 	/**
 	 * Column displays title.
 	 */
 	private Column<PasswordCard, String> titleColumn;
+	private NoSelectionModel<PasswordCard> selectionModel;
 
 	public interface TableRes extends DataGrid.Resources {
-		@Source({DataGrid.Style.DEFAULT_CSS, "CwCustomDataGrid.css"})
+		@Source({ DataGrid.Style.DEFAULT_CSS, "CwCustomDataGrid.css" })
 		DataGridStyle dataGridStyle();
-		 
-		interface DataGridStyle extends DataGrid.Style {}
+
+		interface DataGridStyle extends DataGrid.Style {
 		}
-	
-	//CellTable custom UI resource
+	}
+
+	// CellTable custom UI resource
 	private DataGrid.Resources tableRes = GWT.create(TableRes.class);
-			
-			
+
 	public PasswordView() {
 
 		// Create a DataGrid.
@@ -98,7 +110,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 			}
 		};
 
-		dataGrid = new DataGrid<PasswordCard>(20,tableRes,KEY_PROVIDER);
+		dataGrid = new DataGrid<PasswordCard>(20, tableRes, KEY_PROVIDER);
 		dataGrid.setWidth("100%");
 
 		/*
@@ -126,16 +138,8 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		pager.setDisplay(dataGrid);
 
 		// Add a selection model so we can select cells.
-		final NoSelectionModel<PasswordCard> selectionModel = new NoSelectionModel<PasswordCard>();
-		selectionModel
-				.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-					@Override
-					public void onSelectionChange(SelectionChangeEvent event) {
-						// final PasswordCard passwordCard =
-						// selectionModel.getLastSelectedObject();
-
-					}
-				});
+		selectionModel = new NoSelectionModel<PasswordCard>();
+		selectionModel.getLastSelectedObject();
 
 		dataGrid.setSelectionModel(selectionModel);
 
@@ -160,7 +164,9 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		// Add the CellList to the adapter in the database.
 		dataProvider.addDataDisplay(dataGrid);
 
-		initWidget(uiBinder.createAndBindUi(this));		
+		initWidget(uiBinder.createAndBindUi(this));
+		detailPassword.setAnimationEnabled(true);
+
 	}
 
 	/**
@@ -181,7 +187,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 			AbstractHeaderOrFooterBuilder<PasswordCard> {
 
 		private Header<String> titleHeader = new TextHeader("Titre");
-		
+
 		public CustomHeaderBuilder() {
 			super(dataGrid, false);
 			setSortIconStartOfLine(false);
@@ -389,7 +395,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		dataGrid.setColumnWidth(0, 25, Unit.PCT);
 
 	}
-	
+
 	@Override
 	public HasClickHandlers getNewPasswordButton() {
 		return newPasswordButton;
@@ -407,5 +413,36 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		data.clear();
 		data.addAll(passwords);
 	}
-	
+
+	@Override
+	public void addSelectionChangeHandler(Handler handler) {
+		selectionModel.addSelectionChangeHandler(handler);
+	}
+
+	@Override
+	public void addField(PasswordField field) {
+		PasswordWidget fieldWidget = new PasswordWidget();
+		fieldWidget.setTitleText(field.getLibelle());
+		fieldWidget.setValueText(field.getValue());
+		fields.add(fieldWidget);
+	}
+
+	@Override
+	public PasswordCard getSelectedPassword() {
+		return selectionModel.getLastSelectedObject();
+	}
+
+	@Override
+	public void setFieldsVisible(Boolean isVisible) {
+		detailPassword.setVisible(true);
+	}
+
+	@Override
+	public void clearFields() {
+		Iterator<Widget> iterator = fields.iterator();
+		while (iterator.hasNext()) {
+			fields.remove(iterator.next());
+		}
+	}
+
 }

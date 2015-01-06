@@ -6,8 +6,8 @@ import com.gbourquet.yaph.dao.DaoFactory;
 import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCardExample;
-import com.gbourquet.yaph.serveur.metier.generated.PasswordCardExample.Criteria;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordFieldExample;
 import com.gbourquet.yaph.serveur.service.exception.ServiceException;
 
 /**
@@ -53,11 +53,20 @@ public class PasswordServiceImpl implements PasswordService {
 	public List<PasswordCard> getPasswords(Account account)	throws ServiceException {
 		
 		PasswordCardExample passwordExample = new PasswordCardExample();
-		Criteria critere = passwordExample.createCriteria();
+		com.gbourquet.yaph.serveur.metier.generated.PasswordCardExample.Criteria critere = passwordExample.createCriteria();
 		critere.andAccountEqualTo(account.getId());
 		
 		return daoFactory.getPasswordDAO().selectByExample(passwordExample);
 
+	}
+
+	@Override
+	public List<PasswordField> getFields(PasswordCard password)	throws ServiceException {
+		PasswordFieldExample passwordField = new PasswordFieldExample();
+		com.gbourquet.yaph.serveur.metier.generated.PasswordFieldExample.Criteria critere = passwordField.createCriteria();
+		critere.andIdCardEqualTo(password.getId());
+		
+		return daoFactory.getPasswordFieldDAO().selectByExample(passwordField);
 	}
 
 }
