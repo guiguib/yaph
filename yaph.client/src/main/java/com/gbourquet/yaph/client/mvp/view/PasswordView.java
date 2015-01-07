@@ -420,4 +420,9 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		detailPassword.add(fields);
 	}
 
+	@Override
+	public void unselectPassword() {
+		selectionModel.clear();
+	}
+
 }

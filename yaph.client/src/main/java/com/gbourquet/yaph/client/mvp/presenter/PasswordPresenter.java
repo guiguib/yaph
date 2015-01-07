@@ -11,7 +11,6 @@ import com.gbourquet.yaph.client.event.MenuEvent;
 import com.gbourquet.yaph.client.event.NewPasswordEvent;
 import com.gbourquet.yaph.client.event.NewPasswordEventHandler;
 import com.gbourquet.yaph.client.mvp.ClientFactory;
-import com.gbourquet.yaph.client.mvp.place.AppPlace;
 import com.gbourquet.yaph.client.mvp.place.NewPasswordPlace;
 import com.gbourquet.yaph.client.utils.DataAccess;
 import com.gbourquet.yaph.serveur.metier.generated.Account;
@@ -41,18 +40,23 @@ public class PasswordPresenter extends AbstractPresenter {
 	public interface View extends IsWidget {
 
 		HasClickHandlers getNewPasswordButton();
-		
+
 		void addPassword(PasswordCard password);
+
 		void addField(PasswordField field);
+
 		void clearFields();
-		
+
+		void unselectPassword();
+
 		void updatePasswordList(List<PasswordCard> passwords);
 
 		void addSelectionChangeHandler(Handler handler);
-		
+
 		PasswordCard getSelectedPassword();
+
 		void setFieldsVisible(Boolean isVisible);
-		
+
 	}
 
 	public View view;
@@ -70,19 +74,26 @@ public class PasswordPresenter extends AbstractPresenter {
 			@Override
 			public void onLogin(final LoginEvent event) {
 				final Account account = event.getAccount();
-				Boolean disconnected = ((Boolean)LocalSession.getInstance().getAttribute("disconnected")==null) ? false : (Boolean)LocalSession.getInstance().getAttribute("disconnected");
+				Boolean disconnected = ((Boolean) LocalSession.getInstance()
+						.getAttribute("disconnected") == null) ? false
+						: (Boolean) LocalSession.getInstance().getAttribute(
+								"disconnected");
 				if (disconnected) {
-					getView().updatePasswordList(DataAccess.getInstance().getPasswords(account));
+					getView().updatePasswordList(
+							DataAccess.getInstance().getPasswords(account));
 				} else {
 					dispatcher.execute(new AllPasswordAction(account),
 
 					new MyAsyncCallback<AllPasswordResult>(getEventBus()) {
 						public void success(AllPasswordResult result) {
 							// On met à jour la base locale
-							DataAccess.getInstance().setPasswords(result.getPasswordCardList(), account);
+							DataAccess.getInstance().setPasswords(
+									result.getPasswordCardList(), account);
 
 							// getView().updatePasswordList(result.getPasswordCardList());
-							getView().updatePasswordList(DataAccess.getInstance().getPasswords(account));
+							getView().updatePasswordList(
+									DataAccess.getInstance().getPasswords(
+											account));
 
 						}
 
@@ -92,66 +103,66 @@ public class PasswordPresenter extends AbstractPresenter {
 				}
 			}
 		});
-		
-		getEventBus().addHandler(NewPasswordEvent.TYPE, new NewPasswordEventHandler() {
-			
-			@Override
-			public void onNewPassword(NewPasswordEvent event) {
-				getView().addPassword(event.getPasswordCard());
-			}
-		});
-		
+
+		getEventBus().addHandler(NewPasswordEvent.TYPE,
+				new NewPasswordEventHandler() {
+
+					@Override
+					public void onNewPassword(NewPasswordEvent event) {
+						getView().addPassword(event.getPasswordCard());
+					}
+				});
+
 		getView().getNewPasswordButton().addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				// On redirige vers la vue de connexion
-				getFactory().getPlaceController().goTo(new NewPasswordPlace(""));
+				getFactory().getPlaceController()
+						.goTo(new NewPasswordPlace(""));
 			}
 		});
-		
+
 		getView().addSelectionChangeHandler(new Handler() {
-			
+
 			@Override
 			public void onSelectionChange(SelectionChangeEvent event) {
-				PasswordCard password = getView().getSelectedPassword();
-				dispatcher.execute(new AllFieldAction(password), 
-						new MyAsyncCallback<AllFieldResult>(getEventBus()) {
+				if (getView().getSelectedPassword() != null) {
+					PasswordCard password = getView().getSelectedPassword();
+					dispatcher.execute(new AllFieldAction(password),
+							new MyAsyncCallback<AllFieldResult>(getEventBus()) {
 
-							@Override
-							public void success(AllFieldResult result) {
-								List<PasswordField> fields = result.getFieldList();
-								getView().clearFields();
-								for (PasswordField field : fields)
-								{
-									getView().addField(field);
+								@Override
+								public void success(AllFieldResult result) {
+									List<PasswordField> fields = result
+											.getFieldList();
+									getView().clearFields();
+									for (PasswordField field : fields) {
+										getView().addField(field);
+									}
+
 								}
-							
-							}
-							
-							@Override
-							public void failure(Throwable caught) {
-								GWT.log(caught.getMessage());
-							}
-					
-				});
-				getView().setFieldsVisible(true);
+
+								@Override
+								public void failure(Throwable caught) {
+									GWT.log(caught.getMessage());
+								}
+
+							});
+					getView().setFieldsVisible(true);
+				}
 			}
 		});
 	}
 
 	@Override
 	public void start() {
-		if (LocalSession.getInstance().getAttribute("account") != null) {
-			RootPanel.get("container").clear();
-			RootPanel.get("container").add(getView().asWidget());
-			getEventBus().fireEvent(new MenuEvent("password", true));
-		} else {
-			// On redirige vers la page d'acceuil
-			getEventBus().fireEvent(new MenuEvent("app", true));
-			getFactory().getPlaceController().goTo(new AppPlace(""));
-		}
-
+		RootPanel.get("container").clear();
+		RootPanel.get("container").add(getView().asWidget());
+		getEventBus().fireEvent(new MenuEvent("password", true));
+		// On nettoie
+		getView().setFieldsVisible(false);
+		getView().unselectPassword();
 	}
 
 	@Override

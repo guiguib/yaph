@@ -438,5 +438,11 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void unselectPassword() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
