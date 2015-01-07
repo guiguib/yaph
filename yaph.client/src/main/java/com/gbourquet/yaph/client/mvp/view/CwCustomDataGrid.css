@@ -103,7 +103,7 @@
 
 .dataGridSelectedRow {
   background: #ffc;
-  color: white;
+  color: black;
   height: auto;
   overflow: auto;
 }

@@ -1,11 +1,12 @@
 package com.gbourquet.yaph.client.mvp.view;
 
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
+import com.gbourquet.yaph.client.widget.NormalPager;
 import com.gbourquet.yaph.client.widget.PasswordWidget;
+import com.gbourquet.yaph.client.widget.PasswordWidget.TypePassword;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.google.gwt.cell.client.Cell.Context;
@@ -32,16 +33,16 @@ import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 import com.google.gwt.view.client.SelectionModel;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 public class PasswordView extends Composite implements PasswordPresenter.View {
 
@@ -69,19 +70,21 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	 * The pager used to change the range of data.
 	 */
 	@UiField(provided = true)
-	SimplePager pager;
+	NormalPager pager;
 
 	@UiField
-	DisclosurePanel detailPassword;
+	SimplePanel detailPassword;
 
 	@UiField
+	Button updateFields;
+	
 	VerticalPanel fields;
 
 	/**
 	 * Column displays title.
 	 */
 	private Column<PasswordCard, String> titleColumn;
-	private NoSelectionModel<PasswordCard> selectionModel;
+	private SingleSelectionModel<PasswordCard> selectionModel;
 
 	public interface TableRes extends DataGrid.Resources {
 		@Source({ DataGrid.Style.DEFAULT_CSS, "CwCustomDataGrid.css" })
@@ -133,39 +136,29 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		// Create a Pager to control the table.
 		SimplePager.Resources pagerResources = GWT
 				.create(SimplePager.Resources.class);
-		pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0,
-				true);
+		pager = new NormalPager(TextLocation.CENTER, pagerResources, false, 0,true);
 		pager.setDisplay(dataGrid);
 
 		// Add a selection model so we can select cells.
-		selectionModel = new NoSelectionModel<PasswordCard>();
-		selectionModel.getLastSelectedObject();
+		selectionModel = new SingleSelectionModel<PasswordCard>();
+		selectionModel.getSelectedObject();
 
 		dataGrid.setSelectionModel(selectionModel);
-
-		/*
-		 * final SelectionModel<PasswordCard> selectionModel = new
-		 * MultiSelectionModel<PasswordCard>( KEY_PROVIDER);
-		 */
-		/*
-		 * dataGrid.setSelectionModel(selectionModel,
-		 * DefaultSelectionEventManager .<PasswordCard>
-		 * createCheckboxManager());
-		 */
-
+		
 		// Initialize the columns.
 		initializeColumns(sortHandler);
 
 		// Specify a custom table.
 		dataGrid.setTableBuilder(new CustomTableBuilder());
 		dataGrid.setHeaderBuilder(new CustomHeaderBuilder());
-		dataGrid.setFooterBuilder(new CustomFooterBuilder());
-
+		
 		// Add the CellList to the adapter in the database.
 		dataProvider.addDataDisplay(dataGrid);
 
 		initWidget(uiBinder.createAndBindUi(this));
-		detailPassword.setAnimationEnabled(true);
+		fields=new VerticalPanel();
+		detailPassword.add(fields);
+		setFieldsVisible(false);
 
 	}
 
@@ -269,25 +262,6 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 			// End the table cell.
 			th.endTH();
-		}
-	}
-
-	/**
-	 * Renders custom table footers that appear beneath the columns in the
-	 * table. This footer consists of a single cell containing the average age
-	 * of all contacts on the current page. This is an example of a dynamic
-	 * footer that changes with the row data in the table.
-	 */
-	private class CustomFooterBuilder extends
-			AbstractHeaderOrFooterBuilder<PasswordCard> {
-
-		public CustomFooterBuilder() {
-			super(dataGrid, true);
-		}
-
-		@Override
-		protected boolean buildHeaderOrFooterImpl() {
-			return true;
 		}
 	}
 
@@ -421,7 +395,8 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 	@Override
 	public void addField(PasswordField field) {
-		PasswordWidget fieldWidget = new PasswordWidget();
+		TypePassword type = "PASSWD".equals(field.getType()) ? TypePassword.PASSWD : TypePassword.TEXT; //TODO gérer tous les types
+		PasswordWidget fieldWidget = new PasswordWidget(type);
 		fieldWidget.setTitleText(field.getLibelle());
 		fieldWidget.setValueText(field.getValue());
 		fields.add(fieldWidget);
@@ -429,20 +404,20 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 	@Override
 	public PasswordCard getSelectedPassword() {
-		return selectionModel.getLastSelectedObject();
+		return selectionModel.getSelectedObject();
 	}
 
 	@Override
 	public void setFieldsVisible(Boolean isVisible) {
-		detailPassword.setVisible(true);
+		detailPassword.setVisible(isVisible);
+		updateFields.setVisible(isVisible);
 	}
 
 	@Override
 	public void clearFields() {
-		Iterator<Widget> iterator = fields.iterator();
-		while (iterator.hasNext()) {
-			fields.remove(iterator.next());
-		}
+		detailPassword.remove(fields);
+		fields = new VerticalPanel();
+		detailPassword.add(fields);
 	}
 
 }

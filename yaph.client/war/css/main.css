@@ -478,3 +478,24 @@ div.active a {
 	color: #E27689;
 	border-bottom-color: rgba(255, 255, 255, 10);
 }
+
+.petit
+{
+	font-size: 12px;
+	color: #ccc
+}
+
+.petit:hover
+{
+	color: #E27689;
+	border-bottom-color: rgba(255, 255, 255, 0);
+	cursor: pointer;
+}
+
+.detailPassword
+{
+	border-radius: 0.35em;
+	border : 1px solid #ccc;
+	margin-top: 10px;
+	padding : 10px;
+}

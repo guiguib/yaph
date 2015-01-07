@@ -37,18 +37,21 @@
 		<table schema="yaph" tableName="ACCOUNT" modelType=""
 			domainObjectName="Account">
 			<property name="useActualColumnNames" value="true" />
+			<generatedKey column="id" sqlStatement="SELECT last_insert_rowid()"/>
 			<columnOverride column="id"></columnOverride>
 		</table>
 		
 		<table schema="yaph" tableName="PASSWORDCARD" modelType=""
 			domainObjectName="PasswordCard">
 			<property name="useActualColumnNames" value="true" />
+			<generatedKey column="id" sqlStatement="SELECT last_insert_rowid()"/>
 			<columnOverride column="id"></columnOverride>
 		</table>
 		
 		<table schema="yaph" tableName="PASSWORDFIELD" modelType=""
 			domainObjectName="PasswordField">
 			<property name="useActualColumnNames" value="true" />
+			<generatedKey column="id" sqlStatement="SELECT last_insert_rowid()"/>
 			<columnOverride column="id"></columnOverride>
 		</table>
 		

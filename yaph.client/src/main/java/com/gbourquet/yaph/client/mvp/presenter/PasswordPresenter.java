@@ -22,6 +22,7 @@ import com.gbourquet.yaph.service.password.in.AllFieldAction;
 import com.gbourquet.yaph.service.password.in.AllPasswordAction;
 import com.gbourquet.yaph.service.password.out.AllFieldResult;
 import com.gbourquet.yaph.service.password.out.AllPasswordResult;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -47,7 +48,7 @@ public class PasswordPresenter extends AbstractPresenter {
 		
 		void updatePasswordList(List<PasswordCard> passwords);
 
-		void addSelectionChangeHandler(SelectionChangeEvent.Handler handler);
+		void addSelectionChangeHandler(Handler handler);
 		
 		PasswordCard getSelectedPassword();
 		void setFieldsVisible(Boolean isVisible);
@@ -125,12 +126,12 @@ public class PasswordPresenter extends AbstractPresenter {
 								{
 									getView().addField(field);
 								}
+							
 							}
 							
 							@Override
 							public void failure(Throwable caught) {
-								// TODO Auto-generated method stub
-								
+								GWT.log(caught.getMessage());
 							}
 					
 				});

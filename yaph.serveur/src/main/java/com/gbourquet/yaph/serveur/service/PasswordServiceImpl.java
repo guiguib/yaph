@@ -28,9 +28,7 @@ public class PasswordServiceImpl implements PasswordService {
 		if (password.getId()==null || password.getId()==0)
 		{
 			//c'est un nouveau mot de passe à créer
-			int passwordId = daoFactory.getPasswordDAO().insert(password);
-			password.setId(passwordId);
-			
+			daoFactory.getPasswordDAO().insert(password);
 		} else { 
 			daoFactory.getPasswordDAO().updateByPrimaryKey(password);
 		}
