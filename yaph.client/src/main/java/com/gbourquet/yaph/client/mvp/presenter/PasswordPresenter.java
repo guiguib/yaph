@@ -174,27 +174,37 @@ public class PasswordPresenter extends AbstractPresenter {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				// On supprime en local
-				DataAccess.getInstance().deletePassword(getView().getSelectedPassword());
+				if (Window.confirm("Confirmez vous la suppression ?")) {
+					// On supprime en local
+					DataAccess.getInstance().deletePassword(getView().getSelectedPassword());
 
-				// On supprime en distant
-				dispatcher.execute(new DeletePasswordAction(getView().getSelectedPassword()), new MyAsyncCallback<DeletePasswordResult>(getEventBus()) {
+					Boolean disconnected = ((Boolean) LocalSession.getInstance().getAttribute("disconnected") == null) ? false : (Boolean) LocalSession.getInstance().getAttribute(
+							"disconnected");
+					if (disconnected) {
+						getView().clearFields();
+						getView().setFieldsVisible(false);
+						getView().removePassword(getView().getSelectedPassword());
+						getView().unselectPassword();
+					} else {
+						// On supprime en distant
+						dispatcher.execute(new DeletePasswordAction(getView().getSelectedPassword()), new MyAsyncCallback<DeletePasswordResult>(getEventBus()) {
 
-					@Override
-					public void success(DeletePasswordResult result) {
-						if (Window.confirm("Confirmez vous la suppression ?")) {
-							getView().clearFields();
-							getView().setFieldsVisible(false);
-							getView().removePassword(getView().getSelectedPassword());
-							getView().unselectPassword();
-						}
+							@Override
+							public void success(DeletePasswordResult result) {
+
+								getView().clearFields();
+								getView().setFieldsVisible(false);
+								getView().removePassword(getView().getSelectedPassword());
+								getView().unselectPassword();
+							}
+
+							@Override
+							public void failure(Throwable caught) {
+							}
+
+						});
 					}
-
-					@Override
-					public void failure(Throwable caught) {
-					}
-
-				});
+				}
 			}
 		});
 
