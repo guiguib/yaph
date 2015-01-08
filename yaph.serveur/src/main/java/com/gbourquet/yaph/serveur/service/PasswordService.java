@@ -23,4 +23,6 @@ public interface PasswordService extends Service {
     List<PasswordCard> getPasswords(final Account account) throws ServiceException;
 	PasswordCard save(PasswordCard password, List<PasswordField> fields) throws ServiceException;
 	List<PasswordField> getFields(final PasswordCard password) throws ServiceException;
+	void delete(PasswordCard password) throws ServiceException;
+	
 }

@@ -444,5 +444,29 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public HasClickHandlers getUpdatePasswordButton() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HasClickHandlers getDeletePasswordButton() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void removePassword(PasswordCard password) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void selectPassword(PasswordCard password) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

@@ -33,15 +33,14 @@ public class PasswordServiceImpl implements PasswordService {
 			daoFactory.getPasswordDAO().updateByPrimaryKey(password);
 		}
 		
+		PasswordFieldExample example = new PasswordFieldExample();
+		example.createCriteria().andIdCardEqualTo(password.getId());
+		daoFactory.getPasswordFieldDAO().deleteByExample(example);
+		
 		for (PasswordField field : fields) {
 			field.setIdCard(password.getId());
-			if (field.getId()==null || field.getId()==0)
-			{
-				//c'est un nouveau mot de passe à créer
-				daoFactory.getPasswordFieldDAO().insert(field);
-			} else { 
-				daoFactory.getPasswordFieldDAO().updateByPrimaryKey(field);
-			}
+			field.setId(null);
+			daoFactory.getPasswordFieldDAO().insert(field);
 		}
 		
 		return password;
@@ -65,6 +64,19 @@ public class PasswordServiceImpl implements PasswordService {
 		critere.andIdCardEqualTo(password.getId());
 		
 		return daoFactory.getPasswordFieldDAO().selectByExample(passwordField);
+	}
+
+	@Override
+	public void delete(PasswordCard password) throws ServiceException {
+		
+		//Suppression des champs
+		PasswordFieldExample example = new PasswordFieldExample();
+		example.createCriteria().andIdCardEqualTo(password.getId());
+		daoFactory.getPasswordFieldDAO().deleteByExample(example);
+		
+		//Suppression du mot de passe
+		daoFactory.getPasswordDAO().deleteByPrimaryKey(password.getId());
+		
 	}
 
 }

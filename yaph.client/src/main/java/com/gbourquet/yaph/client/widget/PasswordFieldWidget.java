@@ -2,10 +2,12 @@ package com.gbourquet.yaph.client.widget;
 
 import com.gbourquet.yaph.client.utils.PasswordGenerator;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
@@ -79,9 +81,8 @@ public class PasswordFieldWidget extends Composite {
 
 	private void setGenerateVisible(boolean visible) {
 		generate.setVisible(visible);
-		
 		if (visible)
-			width = width - generate.getOffsetWidth() - 10;
+			width = width - 108;
 		else
 			width = 500;
 		
@@ -93,24 +94,31 @@ public class PasswordFieldWidget extends Composite {
 		return title;
 	}
 
-	public void setTitle(TextBox title) {
-		this.title = title;
+	public void setTitle(String title) {
+		this.title.setText(title);
 	}
 
-	public TextBox getValue() {
+	public TextBox getValueBox() {
 		return value;
 	}
 
-	public void setValue(TextBox value) {
-		this.value = value;
+	public void setValue(String value) {
+		this.value.setText(value);
 	}
 
-	public ListBox getType() {
+	public ListBox getTypeBox() {
 		return type;
 	}
 
-	public void setType(ListBox type) {
-		this.type = type;
+	public void setType(String type) {
+		int index=0;
+		for (int i=0;i<this.type.getItemCount();i++)
+		{
+			if (type.equals(this.type.getValue(i)))
+				index=i;
+		}
+		this.type.setItemSelected(index, true);
+		DomEvent.fireNativeEvent(Document.get().createChangeEvent(), this.type);
 	}
 
 	public void setTitlePlaceHolder(String placeHolder) {

@@ -61,9 +61,9 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 		dialog.center();
 		dialog.hide();
 		
-		addField();
-		addField();
-		addField();
+		addBlankField();
+		addBlankField();
+		addBlankField();
 		
 	}
 
@@ -99,9 +99,9 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 			fieldsPanel.remove(fieldWidget);
 		}
 		fields = new ArrayList<PasswordFieldWidget>();
-		addField();
-		addField();
-		addField();
+		addBlankField();
+		addBlankField();
+		addBlankField();
 	}
 
 	@Override
@@ -115,6 +115,11 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 	}
 
 	@Override
+	public void setTitleText(String title) {
+		this.title.setText(title);
+	}
+
+	@Override
 	public Label getErrorLabel() {
 		return error;
 	}
@@ -125,7 +130,7 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 	}
 
 	@Override
-	public void addField() {
+	public void addBlankField() {
 		final PasswordFieldWidget field=new PasswordFieldWidget();
 		field.setTitlePlaceHolder("Field Title");
 		field.setValuePlaceHolder("Value");
@@ -141,6 +146,27 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 		fields.add(field);
 		fieldsPanel.add(field);
 	}
+	
+	@Override
+	public void addField(PasswordField field) {
+		final PasswordFieldWidget fieldWidget=new PasswordFieldWidget();
+		fieldWidget.setTitlePlaceHolder("Field Title");
+		fieldWidget.setValuePlaceHolder("Value");
+		fieldWidget.setTitle(field.getLibelle());
+		fieldWidget.setValue(field.getValue());
+		fieldWidget.setType(field.getType());
+		fieldWidget.addDelClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				fieldsPanel.remove(fieldWidget);
+				fields.remove(fieldWidget);
+			}
+		});
+		
+		fields.add(fieldWidget);
+		fieldsPanel.add(fieldWidget);
+	}
 
 	@Override
 	public List<PasswordField> getPasswordFields() {
@@ -149,12 +175,24 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 		{
 			PasswordField field = new PasswordField();
 			field.setLibelle(fieldWidget.getTitleBox().getText());
-			field.setType(fieldWidget.getType().getValue(fieldWidget.getType().getSelectedIndex()));
-			field.setValue(fieldWidget.getValue().getText());
+			field.setType(fieldWidget.getTypeBox().getValue(fieldWidget.getTypeBox().getSelectedIndex()));
+			field.setValue(fieldWidget.getValueBox().getText());
 			
 			result.add(field);
 		}
 		return result;
+	}
+
+	@Override
+	public void delFields() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setHeaderText(String header) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

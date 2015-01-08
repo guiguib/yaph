@@ -76,7 +76,10 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	SimplePanel detailPassword;
 
 	@UiField
-	Button updateFields;
+	Button updatePasswordButton;
+	
+	@UiField
+	Button deletePasswordButton;
 	
 	VerticalPanel fields;
 
@@ -382,6 +385,12 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	}
 
 	@Override
+	public void removePassword(PasswordCard password) {
+		List<PasswordCard> passwords = dataProvider.getList();
+		passwords.remove(password);
+	}
+
+	@Override
 	public void updatePasswordList(List<PasswordCard> passwords) {
 		List<PasswordCard> data = dataProvider.getList();
 		data.clear();
@@ -410,7 +419,8 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	@Override
 	public void setFieldsVisible(Boolean isVisible) {
 		detailPassword.setVisible(isVisible);
-		updateFields.setVisible(isVisible);
+		updatePasswordButton.setVisible(isVisible);
+		deletePasswordButton.setVisible(isVisible);
 	}
 
 	@Override
@@ -423,6 +433,25 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	@Override
 	public void unselectPassword() {
 		selectionModel.clear();
+		detailPassword.setVisible(false);
+		updatePasswordButton.setVisible(false);
+		deletePasswordButton.setVisible(false);
+	}
+
+	@Override
+	public void selectPassword(PasswordCard password) {
+		selectionModel.setSelected(password, true);
+		pager.lastPage();
+	}
+
+	@Override
+	public HasClickHandlers getUpdatePasswordButton() {
+		return updatePasswordButton;
+	}
+	
+	@Override
+	public HasClickHandlers getDeletePasswordButton() {
+		return deletePasswordButton;
 	}
 
 }

@@ -10,10 +10,15 @@ public class NormalPager extends SimplePager {
 	}
 
 	protected String createText() {
-        if(getDisplay().getRowCount()==0){
-              return "0 of 0";
-          }else{
-              return super.createText();
-          }
-        }   
+		if (getDisplay().getRowCount() == 0) {
+			return "0 of 0";
+		} else {
+			return super.createText();
+		}
+	}
+
+	@Override
+	public void lastPage() {
+		super.lastPage();
+	}
 }

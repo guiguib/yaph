@@ -5,7 +5,12 @@ import java.util.List;
 import net.customware.gwt.dispatch.client.DispatchAsync;
 
 import com.gbourquet.yaph.client.LocalSession;
+import com.gbourquet.yaph.client.event.CreatedPasswordEvent;
 import com.gbourquet.yaph.client.event.NewPasswordEvent;
+import com.gbourquet.yaph.client.event.NewPasswordEventHandler;
+import com.gbourquet.yaph.client.event.UpdatePasswordEvent;
+import com.gbourquet.yaph.client.event.UpdatePasswordEventHandler;
+import com.gbourquet.yaph.client.event.UpdatedPasswordEvent;
 import com.gbourquet.yaph.client.mvp.ClientFactory;
 import com.gbourquet.yaph.client.mvp.place.PasswordPlace;
 import com.gbourquet.yaph.client.utils.DataAccess;
@@ -36,19 +41,27 @@ public class NewPasswordPresenter extends AbstractPresenter {
 		HasClickHandlers getAddFieldButton();
 		
 		String getTitleText();
+		void setTitleText(String title);
+		void setHeaderText(String header);
 		
 		Label getErrorLabel();
 
-		void addField();
+		void addBlankField();
+		void addField(PasswordField field);
+		void delFields();
+		
 		List<PasswordField> getPasswordFields();
 		
 		void clear();
 		void show();
 		void close();
+		
 	}
 
 	public View view;
 
+	private PasswordCard passwordData= new PasswordCard();
+	
 	public NewPasswordPresenter(ClientFactory factory) {
 		super(factory);
 		view = factory.getNewPasswordView();
@@ -66,28 +79,31 @@ public class NewPasswordPresenter extends AbstractPresenter {
 
 					@Override
 					public void onClick(ClickEvent event) {
-						final PasswordCard password = new PasswordCard();
 						final Account account = (Account) LocalSession.getInstance().getAttribute("account");
 						if (account != null)
-							password.setAccount(account.getId());
-						password.setTitre(getView().getTitleText());
-						
-						dispatcher.execute(new PasswordAction(password,getView().getPasswordFields()),
+							passwordData.setAccount(account.getId());
+						passwordData.setTitre(getView().getTitleText());
+						dispatcher.execute(new PasswordAction(passwordData,getView().getPasswordFields()),
 								new MyAsyncCallback<PasswordResult>(
 										getEventBus()) {
 									public void success(PasswordResult result) {
 										//On envoit un message dans le bus pour actualiser les autres vues
 										//getView().addPassword(result.getPasswordCard());
-										getEventBus().fireEvent(new NewPasswordEvent(result.getPasswordCard()));
+										if (result.getPasswordCard().getId().equals(passwordData.getId()))
+											getEventBus().fireEvent(new UpdatedPasswordEvent(result.getPasswordCard()));
+										else
+											getEventBus().fireEvent(new CreatedPasswordEvent(result.getPasswordCard()));
+										
+										passwordData = new PasswordCard();
 										getView().clear();
 										getView().close();
 									}
 
 									public void failure(Throwable caught) {
 										//On insère en base locale
-										int idPassword = DataAccess.getInstance().insertPassword(account, password);
-										password.setId(idPassword);
-										DataAccess.getInstance().insertPasswordFields(password, getView().getPasswordFields());
+										int idPassword = DataAccess.getInstance().insertPassword(account, passwordData);
+										passwordData.setId(idPassword);
+										DataAccess.getInstance().insertPasswordFields(passwordData, getView().getPasswordFields());
 										//On envoit un message dans le bus pour actualiser les autres vues
 										//getView().addPassword(password);
 										getView().clear();
@@ -104,6 +120,7 @@ public class NewPasswordPresenter extends AbstractPresenter {
 
 					@Override
 					public void onClick(ClickEvent event) {
+						passwordData = new PasswordCard();
 						getView().clear();
 						getView().close();
 						getFactory().getPlaceController().goTo(new PasswordPlace(""));
@@ -115,15 +132,43 @@ public class NewPasswordPresenter extends AbstractPresenter {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				getView().addField();
+				getView().addBlankField();
 				
 			}
 		});
+		
+		//Messages du bus
+		getEventBus().addHandler(NewPasswordEvent.TYPE, 
+				new NewPasswordEventHandler() {
+					
+					@Override
+					public void onNewPassword(NewPasswordEvent event) {
+						getView().clear();
+						getView().show();
+					}
+				});
+		getEventBus().addHandler(UpdatePasswordEvent.TYPE,
+				new UpdatePasswordEventHandler() {
+
+					@Override
+					public void onUpdatePassword(UpdatePasswordEvent event) {
+						passwordData = event.getPasswordCard();
+						List<PasswordField> fields = event.getPasswordFields();
+						getView().clear();
+						getView().setHeaderText("Update Password");
+						getView().delFields();
+						getView().setTitleText(passwordData.getTitre());
+						for (PasswordField field : fields)
+						{
+							getView().addField(field);
+						}
+						getView().show();
+					}
+				});
 	}
 
 	@Override
 	public void start() {
-		getView().show();
 	}
 
 	@Override
