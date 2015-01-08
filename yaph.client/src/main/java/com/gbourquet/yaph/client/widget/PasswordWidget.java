@@ -20,30 +20,25 @@ public class PasswordWidget extends Composite {
 	@UiField
 	Label enclair;
 
-	String valuePasswd="";
-	Boolean valueVisible=false;
-	
-	public enum TypePassword {
-		  TEXT,
-		  ADRESS,
-		  PASSWD,
-		  DATE;	
-		}
-	
-	TypePassword type;
-	
-	private static PasswordFieldWidgetUiBinder uiBinder = GWT
-			.create(PasswordFieldWidgetUiBinder.class);
+	String valuePasswd = "";
+	Boolean valueVisible = false;
 
-	interface PasswordFieldWidgetUiBinder extends
-			UiBinder<Widget, PasswordWidget> {
+	public enum TypePassword {
+		TEXT, ADRESS, PASSWD, DATE;
+	}
+
+	TypePassword type;
+
+	private static PasswordFieldWidgetUiBinder uiBinder = GWT.create(PasswordFieldWidgetUiBinder.class);
+
+	interface PasswordFieldWidgetUiBinder extends UiBinder<Widget, PasswordWidget> {
 	}
 
 	public PasswordWidget(TypePassword type) {
 		initWidget(uiBinder.createAndBindUi(this));
-		this.type = type;	
+		this.type = type;
 		enclair.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				setValueVisible(!valueVisible);
@@ -56,7 +51,7 @@ public class PasswordWidget extends Composite {
 	}
 
 	public void setTitleText(String title) {
-		this.title.setText(title+" : ");
+		this.title.setText(title + " : ");
 	}
 
 	public String getValueText() {
@@ -65,33 +60,26 @@ public class PasswordWidget extends Composite {
 
 	public void setValueText(String value) {
 		this.valuePasswd = value;
-		if (this.type==TypePassword.PASSWD && !valueVisible)
-		{
+		if (this.type == TypePassword.PASSWD && !valueVisible) {
 			this.value.setText("******");
 			this.enclair.setText("en clair");
-		}
-		else
-		{
+		} else {
 			this.value.setText(value);
-			this.enclair.setText(this.type==TypePassword.PASSWD ? "dissimuler" : "");
+			this.enclair.setText(this.type == TypePassword.PASSWD ? "dissimuler" : "");
 		}
 	}
 
-	public void setValueVisible(Boolean visible)
-	{
-		if (this.type==TypePassword.PASSWD && !visible)
-		{
+	public void setValueVisible(Boolean visible) {
+		if (this.type == TypePassword.PASSWD && !visible) {
 			this.value.setText("******");
 			this.enclair.setText("en clair");
-		}
-		else
-		{
+		} else {
 			this.value.setText(valuePasswd);
-			this.enclair.setText(this.type==TypePassword.PASSWD ? "dissimuler" : "");
+			this.enclair.setText(this.type == TypePassword.PASSWD ? "dissimuler" : "");
 		}
-		this.valueVisible=visible;
+		this.valueVisible = visible;
 	}
-	
+
 	public TypePassword getType() {
 		return type;
 	}

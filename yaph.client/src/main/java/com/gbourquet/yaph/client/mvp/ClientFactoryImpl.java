@@ -27,7 +27,7 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 public class ClientFactoryImpl implements ClientFactory {
 	private final EventBus eventBus = new SimpleEventBus();
 	private final PlaceController placeController = new PlaceController(eventBus);
-	
+
 	private final AppPresenter.View appView = new AppView();
 	private final ProgressionPresenter.View progressionView = new ProgressionView();
 	private final PasswordPresenter.View passwordView = new PasswordView();
@@ -35,9 +35,9 @@ public class ClientFactoryImpl implements ClientFactory {
 	private final LoginPresenter.View loginView = new LoginView();
 	private final LogoutPresenter.View logoutView = new LogoutView();
 	private final MenuPresenter.View menuView = new MenuView();
-	
+
 	private final DispatchAsync dispatcher = new StandardDispatchAsync(new DefaultExceptionHandler());
-	
+
 	@Override
 	public EventBus getEventBus() {
 		return eventBus;
@@ -80,13 +80,13 @@ public class ClientFactoryImpl implements ClientFactory {
 
 	@Override
 	public LoginPresenter.View getLoginView() {
-		
+
 		return loginView;
 	}
-	
+
 	@Override
 	public MenuPresenter.View getMenuView() {
-		
+
 		return menuView;
 	}
 

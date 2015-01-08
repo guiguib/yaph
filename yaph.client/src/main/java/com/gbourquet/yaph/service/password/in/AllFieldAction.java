@@ -5,20 +5,20 @@ import com.gbourquet.yaph.service.in.AbstractAction;
 import com.gbourquet.yaph.service.password.out.AllFieldResult;
 
 public class AllFieldAction extends AbstractAction<AllFieldResult> {
-    
-	private PasswordCard password;
-	
-    /** For serialization only. */
-    AllFieldAction() {
-    }
- 
-    public AllFieldAction(PasswordCard password) {
-        super();
-        this.password = password;
-    }
 
-    public PasswordCard getPassword() {
-        return this.password;
-    }
-    
+	private PasswordCard password;
+
+	/** For serialization only. */
+	AllFieldAction() {
+	}
+
+	public AllFieldAction(PasswordCard password) {
+		super();
+		this.password = password;
+	}
+
+	public PasswordCard getPassword() {
+		return this.password;
+	}
+
 }

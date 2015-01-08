@@ -13,11 +13,10 @@ import com.gbourquet.yaph.service.password.out.DeletePasswordResult;
 
 public class DeletePasswordHandler extends AbstractHandler<DeletePasswordAction, DeletePasswordResult> {
 
-	public DeletePasswordResult exec(DeletePasswordAction in, ExecutionContext context)
-			throws ActionException {
+	public DeletePasswordResult exec(DeletePasswordAction in, ExecutionContext context) throws ActionException {
 
 		final PasswordCard password = in.getPasswordCard();
-		
+
 		PasswordService service = (PasswordService) BeanFactory.getInstance().getService("passwordService");
 		try {
 			service.delete(password);
@@ -30,8 +29,7 @@ public class DeletePasswordHandler extends AbstractHandler<DeletePasswordAction,
 	}
 
 	@Override
-	public void rollback(final DeletePasswordAction action, final DeletePasswordResult result,
-			final ExecutionContext context) throws ActionException {
+	public void rollback(final DeletePasswordAction action, final DeletePasswordResult result, final ExecutionContext context) throws ActionException {
 		// Nothing to do here
 	}
 

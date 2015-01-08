@@ -5,26 +5,26 @@ import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.place.shared.Prefix;
 
 public class ProgressionPlace extends Place {
-    private String token;
+	private String token;
 
-    public ProgressionPlace(String token) {
-        this.token = token;
-    }
+	public ProgressionPlace(String token) {
+		this.token = token;
+	}
 
-    public String getToken() {
-        return token;
-    }
+	public String getToken() {
+		return token;
+	}
 
-    @Prefix(value="progression")
-    public static class Tokenizer implements PlaceTokenizer<ProgressionPlace> {
-        @Override
-        public String getToken(ProgressionPlace place) {
-            return place.getToken();
-        }
+	@Prefix(value = "progression")
+	public static class Tokenizer implements PlaceTokenizer<ProgressionPlace> {
+		@Override
+		public String getToken(ProgressionPlace place) {
+			return place.getToken();
+		}
 
-        @Override
-        public ProgressionPlace getPlace(String token) {
-            return new ProgressionPlace(token);
-        }
-    }
+		@Override
+		public ProgressionPlace getPlace(String token) {
+			return new ProgressionPlace(token);
+		}
+	}
 }

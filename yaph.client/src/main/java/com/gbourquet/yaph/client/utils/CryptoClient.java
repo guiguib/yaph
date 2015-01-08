@@ -9,40 +9,40 @@ import com.googlecode.gwt.crypto.client.TripleDesCipher;
  */
 public class CryptoClient {
 
-    public String encrypt(final String dataToEncrypt, final String secretKey) {
-    	
-    	String encryptedData=null;
-    	
-    	TripleDesCipher cipher = new TripleDesCipher();
-    	cipher.setKey(secretKey.getBytes());
-    	try {
-    		encryptedData = cipher.encrypt(String.valueOf(dataToEncrypt));
-    	} catch (DataLengthException e1) {
-    	  e1.printStackTrace();
-    	} catch (IllegalStateException e1) {
-    	  e1.printStackTrace();
-    	} catch (InvalidCipherTextException e1) {
-    	  e1.printStackTrace();
-    	}
-        
-    	return encryptedData;
-    }
+	public String encrypt(final String dataToEncrypt, final String secretKey) {
 
-    public String decrypt(final String encryptedData, final String secretKey) {
-        
-    	String decryptedData = null;
-        
-    	TripleDesCipher cipher = new TripleDesCipher();
-        cipher.setKey(secretKey.getBytes());
-        try {
-        	decryptedData = cipher.decrypt(encryptedData);
-        } catch (DataLengthException e) {
-          e.printStackTrace();
-        } catch (IllegalStateException e) {
-          e.printStackTrace();
-        } catch (InvalidCipherTextException e) {
-          e.printStackTrace();
-        }
-        return decryptedData;
-    }
+		String encryptedData = null;
+
+		TripleDesCipher cipher = new TripleDesCipher();
+		cipher.setKey(secretKey.getBytes());
+		try {
+			encryptedData = cipher.encrypt(String.valueOf(dataToEncrypt));
+		} catch (DataLengthException e1) {
+			e1.printStackTrace();
+		} catch (IllegalStateException e1) {
+			e1.printStackTrace();
+		} catch (InvalidCipherTextException e1) {
+			e1.printStackTrace();
+		}
+
+		return encryptedData;
+	}
+
+	public String decrypt(final String encryptedData, final String secretKey) {
+
+		String decryptedData = null;
+
+		TripleDesCipher cipher = new TripleDesCipher();
+		cipher.setKey(secretKey.getBytes());
+		try {
+			decryptedData = cipher.decrypt(encryptedData);
+		} catch (DataLengthException e) {
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (InvalidCipherTextException e) {
+			e.printStackTrace();
+		}
+		return decryptedData;
+	}
 }

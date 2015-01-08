@@ -30,7 +30,7 @@ public class MenuPresenter extends AbstractPresenter {
 		public void setEnablePassword(boolean enabled);
 
 		public void setVisiblePassword(boolean visible);
-		
+
 		public void setDisconnection(boolean visible);
 	}
 
@@ -44,27 +44,25 @@ public class MenuPresenter extends AbstractPresenter {
 
 	public void bind() {
 		// On s'inscrit aux evenements du Bus
-		getEventBus().addHandler(LoadApplicationEvent.TYPE,
-				new LoadApplicationEventHandler() {
+		getEventBus().addHandler(LoadApplicationEvent.TYPE, new LoadApplicationEventHandler() {
 
-					@Override
-					public void onLoad(final LoadApplicationEvent event) {
-						RootPanel.get("menu").clear();
-						RootPanel.get("menu").add(getView().asWidget());
-						getView().setVisiblePassword(false);
-					}
-				});
+			@Override
+			public void onLoad(final LoadApplicationEvent event) {
+				RootPanel.get("menu").clear();
+				RootPanel.get("menu").add(getView().asWidget());
+				getView().setVisiblePassword(false);
+			}
+		});
 
 		getEventBus().addHandler(LoginEvent.TYPE, new LoginEventHandler() {
 
 			@Override
 			public void onLogin(final LoginEvent event) {
 				Account account = event.getAccount();
-				getView().updateUserLabel(
-						account.getPrenom() + " " + account.getNom());
+				getView().updateUserLabel(account.getPrenom() + " " + account.getNom());
 				getView().updateActionLabel("Sign out", "logout:");
 				getView().setVisiblePassword(true);
-				
+
 			}
 		});
 		getEventBus().addHandler(LogoutEvent.TYPE, new LogoutEventHandler() {
@@ -87,9 +85,9 @@ public class MenuPresenter extends AbstractPresenter {
 					getView().setEnablePassword(event.isEnabled());
 			}
 		});
-		
+
 		getEventBus().addHandler(DisconnectionEvent.TYPE, new DisconnectionEventHandler() {
-			
+
 			@Override
 			public void onDisconnect(DisconnectionEvent event) {
 				getView().setDisconnection(true);

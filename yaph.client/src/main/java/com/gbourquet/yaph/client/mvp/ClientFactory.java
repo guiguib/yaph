@@ -21,12 +21,18 @@ public interface ClientFactory {
 	DispatchAsync getDistpatcher();
 
 	AppPresenter.View getAppView();
+
 	ProgressionPresenter.View getProgressionView();
+
 	PasswordPresenter.View getPasswordView();
+
 	NewPasswordPresenter.View getNewPasswordView();
+
 	LoginPresenter.View getLoginView();
+
 	MenuPresenter.View getMenuView();
+
 	LogoutPresenter.View getLogoutView();
-	
+
 	LocalSession getLocalSession();
 }

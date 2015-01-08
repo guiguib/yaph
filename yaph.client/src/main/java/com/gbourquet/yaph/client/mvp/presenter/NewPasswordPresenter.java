@@ -37,31 +37,39 @@ public class NewPasswordPresenter extends AbstractPresenter {
 	public interface View extends IsWidget {
 
 		HasClickHandlers getCancelButton();
+
 		HasClickHandlers getValidButton();
+
 		HasClickHandlers getAddFieldButton();
-		
+
 		String getTitleText();
+
 		void setTitleText(String title);
+
 		void setHeaderText(String header);
-		
+
 		Label getErrorLabel();
 
 		void addBlankField();
+
 		void addField(PasswordField field);
+
 		void delFields();
-		
+
 		List<PasswordField> getPasswordFields();
-		
+
 		void clear();
+
 		void show();
+
 		void close();
-		
+
 	}
 
 	public View view;
 
-	private PasswordCard passwordData= new PasswordCard();
-	
+	private PasswordCard passwordData = new PasswordCard();
+
 	public NewPasswordPresenter(ClientFactory factory) {
 		super(factory);
 		view = factory.getNewPasswordView();
@@ -70,101 +78,108 @@ public class NewPasswordPresenter extends AbstractPresenter {
 	}
 
 	public void bind() {
-		
+
 		RootPanel.get("dialog").add(getView().asWidget());
-		
+
 		// Valid nouveau mot de passe
-		getView().getValidButton().addClickHandler(
-				new ClickHandler() {
+		getView().getValidButton().addClickHandler(new ClickHandler() {
 
-					@Override
-					public void onClick(ClickEvent event) {
-						final Account account = (Account) LocalSession.getInstance().getAttribute("account");
-						if (account != null)
-							passwordData.setAccount(account.getId());
-						passwordData.setTitre(getView().getTitleText());
-						dispatcher.execute(new PasswordAction(passwordData,getView().getPasswordFields()),
-								new MyAsyncCallback<PasswordResult>(
-										getEventBus()) {
-									public void success(PasswordResult result) {
-										//On envoit un message dans le bus pour actualiser les autres vues
-										//getView().addPassword(result.getPasswordCard());
-										if (result.getPasswordCard().getId().equals(passwordData.getId()))
-											getEventBus().fireEvent(new UpdatedPasswordEvent(result.getPasswordCard()));
-										else
-											getEventBus().fireEvent(new CreatedPasswordEvent(result.getPasswordCard()));
-										
-										passwordData = new PasswordCard();
-										getView().clear();
-										getView().close();
-									}
+			@Override
+			public void onClick(ClickEvent event) {
+				final Account account = (Account) LocalSession.getInstance().getAttribute("account");
+				if (account != null)
+					passwordData.setAccount(account.getId());
+				passwordData.setTitre(getView().getTitleText());
+				Boolean disconnected = ((Boolean) LocalSession.getInstance().getAttribute("disconnected") == null) ? false : (Boolean) LocalSession.getInstance().getAttribute(
+						"disconnected");
+				if (disconnected) {
+					// On insère en base locale
+					int idPassword = DataAccess.getInstance().insertPassword(account, passwordData);
+					passwordData.setId(idPassword);
+					DataAccess.getInstance().insertPasswordFields(passwordData, getView().getPasswordFields());
+				} else {
+					dispatcher.execute(new PasswordAction(passwordData, getView().getPasswordFields()),
 
-									public void failure(Throwable caught) {
-										//On insère en base locale
-										int idPassword = DataAccess.getInstance().insertPassword(account, passwordData);
-										passwordData.setId(idPassword);
-										DataAccess.getInstance().insertPasswordFields(passwordData, getView().getPasswordFields());
-										//On envoit un message dans le bus pour actualiser les autres vues
-										//getView().addPassword(password);
-										getView().clear();
-										getView().close();
-									}
-								});
-						getFactory().getPlaceController().goTo(new PasswordPlace(""));
-					}
-				});
+					new MyAsyncCallback<PasswordResult>(getEventBus()) {
+						public void success(PasswordResult result) {
+							// On envoit un message dans le bus pour actualiser
+							// les autres vues
+							// getView().addPassword(result.getPasswordCard());
+							if (result.getPasswordCard().getId().equals(passwordData.getId()))
+								getEventBus().fireEvent(new UpdatedPasswordEvent(result.getPasswordCard()));
+							else
+								getEventBus().fireEvent(new CreatedPasswordEvent(result.getPasswordCard()));
+
+							// On insère en base locale
+							DataAccess.getInstance().insertPassword(account, result.getPasswordCard());
+							DataAccess.getInstance().insertPasswordFields(result.getPasswordCard(), result.getPasswordFields());
+
+							passwordData = new PasswordCard();
+
+						}
+
+						public void failure(Throwable caught) {
+							// On insère en base locale
+							int idPassword = DataAccess.getInstance().insertPassword(account, passwordData);
+							passwordData.setId(idPassword);
+							DataAccess.getInstance().insertPasswordFields(passwordData, getView().getPasswordFields());
+
+						}
+					});
+				}
+				getView().clear();
+				getView().close();
+				getFactory().getPlaceController().goTo(new PasswordPlace(""));
+			}
+		});
 
 		// Cancel nouveau mot de passe
-		getView().getCancelButton().addClickHandler(
-				new ClickHandler() {
+		getView().getCancelButton().addClickHandler(new ClickHandler() {
 
-					@Override
-					public void onClick(ClickEvent event) {
-						passwordData = new PasswordCard();
-						getView().clear();
-						getView().close();
-						getFactory().getPlaceController().goTo(new PasswordPlace(""));
-					}
-				});
-		
-		//Ajout d'un champ
+			@Override
+			public void onClick(ClickEvent event) {
+				passwordData = new PasswordCard();
+				getView().clear();
+				getView().close();
+				getFactory().getPlaceController().goTo(new PasswordPlace(""));
+			}
+		});
+
+		// Ajout d'un champ
 		getView().getAddFieldButton().addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				getView().addBlankField();
-				
+
 			}
 		});
-		
-		//Messages du bus
-		getEventBus().addHandler(NewPasswordEvent.TYPE, 
-				new NewPasswordEventHandler() {
-					
-					@Override
-					public void onNewPassword(NewPasswordEvent event) {
-						getView().clear();
-						getView().show();
-					}
-				});
-		getEventBus().addHandler(UpdatePasswordEvent.TYPE,
-				new UpdatePasswordEventHandler() {
 
-					@Override
-					public void onUpdatePassword(UpdatePasswordEvent event) {
-						passwordData = event.getPasswordCard();
-						List<PasswordField> fields = event.getPasswordFields();
-						getView().clear();
-						getView().setHeaderText("Update Password");
-						getView().delFields();
-						getView().setTitleText(passwordData.getTitre());
-						for (PasswordField field : fields)
-						{
-							getView().addField(field);
-						}
-						getView().show();
-					}
-				});
+		// Messages du bus
+		getEventBus().addHandler(NewPasswordEvent.TYPE, new NewPasswordEventHandler() {
+
+			@Override
+			public void onNewPassword(NewPasswordEvent event) {
+				getView().clear();
+				getView().show();
+			}
+		});
+		getEventBus().addHandler(UpdatePasswordEvent.TYPE, new UpdatePasswordEventHandler() {
+
+			@Override
+			public void onUpdatePassword(UpdatePasswordEvent event) {
+				passwordData = event.getPasswordCard();
+				List<PasswordField> fields = event.getPasswordFields();
+				getView().clear();
+				getView().setHeaderText("Update Password");
+				getView().delFields();
+				getView().setTitleText(passwordData.getTitre());
+				for (PasswordField field : fields) {
+					getView().addField(field);
+				}
+				getView().show();
+			}
+		});
 	}
 
 	@Override

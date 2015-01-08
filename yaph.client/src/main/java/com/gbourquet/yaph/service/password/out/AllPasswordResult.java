@@ -5,20 +5,27 @@ import java.util.List;
 import net.customware.gwt.dispatch.shared.Result;
 
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 
 public class AllPasswordResult implements Result {
-    
+
 	private List<PasswordCard> passwordList;
-    
-    /** For serialization only. */
-    AllPasswordResult() {
-    }
+	private List<PasswordField> fieldList;
 
-    public AllPasswordResult(List<PasswordCard> passwordList) {
-    	this.passwordList = passwordList;
-    }
+	/** For serialization only. */
+	AllPasswordResult() {
+	}
 
-    public List<PasswordCard> getPasswordCardList() {
-        return passwordList;
-    }
+	public AllPasswordResult(List<PasswordCard> passwordList, List<PasswordField> fieldList) {
+		this.passwordList = passwordList;
+		this.fieldList = fieldList;
+	}
+
+	public List<PasswordCard> getPasswordCardList() {
+		return passwordList;
+	}
+
+	public List<PasswordField> getPasswordFieldList() {
+		return fieldList;
+	}
 }

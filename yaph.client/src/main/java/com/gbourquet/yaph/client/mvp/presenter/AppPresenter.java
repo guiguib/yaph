@@ -48,39 +48,36 @@ public class AppPresenter extends AbstractPresenter {
 			}
 		});
 
-		getEventBus().addHandler(DisconnectionEvent.TYPE,
-				new DisconnectionEventHandler() {
+		getEventBus().addHandler(DisconnectionEvent.TYPE, new DisconnectionEventHandler() {
 
-					@Override
-					public void onDisconnect(DisconnectionEvent event) {
-						LocalSession.getInstance().setAttribute("disconnected",
-								true);
-					}
-				});
+			@Override
+			public void onDisconnect(DisconnectionEvent event) {
+				LocalSession.getInstance().setAttribute("disconnected", true);
+			}
+		});
 
 		// On est loggué en distant ?
-		dispatcher.execute(new LoginFromSessionAction(),
-				new MyAsyncCallback<LoginResult>(getEventBus()) {
-					public void success(final LoginResult result) {
+		dispatcher.execute(new LoginFromSessionAction(), new MyAsyncCallback<LoginResult>(getEventBus()) {
+			public void success(final LoginResult result) {
 
-						Account account = result.getAccount();
-						if (account != null) {
-							LocalSession.getInstance().setAttribute("token",result.getToken());
-							LocalSession.getInstance().setAttribute("account",account);
-							// On envoie un message dans le bus
-							getEventBus().fireEvent(new LoginEvent(account));
-						} else {
-							// On redirige vers la vue de connexion
-							getFactory().getPlaceController().goTo(new LoginPlace(""));
-						}
-					}
+				Account account = result.getAccount();
+				if (account != null) {
+					LocalSession.getInstance().setAttribute("token", result.getToken());
+					LocalSession.getInstance().setAttribute("account", account);
+					// On envoie un message dans le bus
+					getEventBus().fireEvent(new LoginEvent(account));
+				} else {
+					// On redirige vers la vue de connexion
+					getFactory().getPlaceController().goTo(new LoginPlace(""));
+				}
+			}
 
-					public void failure(final Throwable e) {
-						// On redirige vers la vue de connexion
-						getFactory().getPlaceController().goTo(new LoginPlace(""));
+			public void failure(final Throwable e) {
+				// On redirige vers la vue de connexion
+				getFactory().getPlaceController().goTo(new LoginPlace(""));
 
-					}
-				});
+			}
+		});
 
 		// L'application est lancé
 		getEventBus().fireEvent(new LoadApplicationEvent());

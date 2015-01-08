@@ -7,32 +7,28 @@ import junit.framework.TestSuite;
 /**
  * Unit test for simple App.
  */
-public class HudsonTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public HudsonTest( String testName )
-    {
-        super( testName );
-    }
+public class HudsonTest extends TestCase {
+	/**
+	 * Create the test case
+	 * 
+	 * @param testName
+	 *            name of the test case
+	 */
+	public HudsonTest(String testName) {
+		super(testName);
+	}
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( HudsonTest.class );
-    }
+	/**
+	 * @return the suite of tests being tested
+	 */
+	public static Test suite() {
+		return new TestSuite(HudsonTest.class);
+	}
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testForHudson()
-    {
-        assertTrue( true );
-    }
+	/**
+	 * Rigourous Test :-)
+	 */
+	public void testForHudson() {
+		assertTrue(true);
+	}
 }

@@ -16,12 +16,11 @@ import com.gbourquet.yaph.service.password.out.AllFieldResult;
 
 public class AllFieldFromPasswordHandler extends AbstractHandler<AllFieldAction, AllFieldResult> {
 
-	public AllFieldResult exec(AllFieldAction in, ExecutionContext context)
-			throws ActionException {
+	public AllFieldResult exec(AllFieldAction in, ExecutionContext context) throws ActionException {
 
 		final PasswordCard password = in.getPassword();
 
-		List<PasswordField> out; 
+		List<PasswordField> out;
 		PasswordService service = (PasswordService) BeanFactory.getInstance().getService("passwordService");
 		try {
 			out = service.getFields(password);
@@ -34,8 +33,7 @@ public class AllFieldFromPasswordHandler extends AbstractHandler<AllFieldAction,
 	}
 
 	@Override
-	public void rollback(final AllFieldAction action, final AllFieldResult result,
-			final ExecutionContext context) throws ActionException {
+	public void rollback(final AllFieldAction action, final AllFieldResult result, final ExecutionContext context) throws ActionException {
 		// Nothing to do here
 	}
 

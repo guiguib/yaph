@@ -22,8 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class NewPasswordView extends Composite implements NewPasswordPresenter.View {
 
-	private static NewPasswordViewUiBinder uiBinder = GWT
-			.create(NewPasswordViewUiBinder.class);
+	private static NewPasswordViewUiBinder uiBinder = GWT.create(NewPasswordViewUiBinder.class);
 
 	interface NewPasswordViewUiBinder extends UiBinder<Widget, NewPasswordView> {
 	}
@@ -45,26 +44,26 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 
 	@UiField
 	Button addFieldButton;
-	
-	@UiField 
+
+	@UiField
 	Panel fieldsPanel;
-	
-	//Liste des champs
-	List<PasswordFieldWidget> fields=new ArrayList<PasswordFieldWidget>();
-		
+
+	// Liste des champs
+	List<PasswordFieldWidget> fields = new ArrayList<PasswordFieldWidget>();
+
 	public NewPasswordView() {
 
 		initWidget(uiBinder.createAndBindUi(this));
 
 		title.getElement().setPropertyString("placeholder", "Password Title");
-		
+
 		dialog.center();
 		dialog.hide();
-		
+
 		addBlankField();
 		addBlankField();
 		addBlankField();
-		
+
 	}
 
 	/**
@@ -72,7 +71,7 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 	 */
 	interface Binder extends UiBinder<Widget, NewPasswordView> {
 	}
-	
+
 	@Override
 	public void show() {
 		dialog.center();
@@ -94,8 +93,7 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 	@Override
 	public void clear() {
 		title.setText("");
-		for (PasswordFieldWidget fieldWidget : fields)
-		{
+		for (PasswordFieldWidget fieldWidget : fields) {
 			fieldsPanel.remove(fieldWidget);
 		}
 		fields = new ArrayList<PasswordFieldWidget>();
@@ -131,39 +129,39 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 
 	@Override
 	public void addBlankField() {
-		final PasswordFieldWidget field=new PasswordFieldWidget();
+		final PasswordFieldWidget field = new PasswordFieldWidget();
 		field.setTitlePlaceHolder("Field Title");
 		field.setValuePlaceHolder("Value");
 		field.addDelClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				fieldsPanel.remove(field);
 				fields.remove(field);
 			}
 		});
-		
+
 		fields.add(field);
 		fieldsPanel.add(field);
 	}
-	
+
 	@Override
 	public void addField(PasswordField field) {
-		final PasswordFieldWidget fieldWidget=new PasswordFieldWidget();
+		final PasswordFieldWidget fieldWidget = new PasswordFieldWidget();
 		fieldWidget.setTitlePlaceHolder("Field Title");
 		fieldWidget.setValuePlaceHolder("Value");
 		fieldWidget.setTitle(field.getLibelle());
 		fieldWidget.setValue(field.getValue());
 		fieldWidget.setType(field.getType());
 		fieldWidget.addDelClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				fieldsPanel.remove(fieldWidget);
 				fields.remove(fieldWidget);
 			}
 		});
-		
+
 		fields.add(fieldWidget);
 		fieldsPanel.add(fieldWidget);
 	}
@@ -171,13 +169,12 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 	@Override
 	public List<PasswordField> getPasswordFields() {
 		List<PasswordField> result = new ArrayList<PasswordField>();
-		for (PasswordFieldWidget fieldWidget : fields)
-		{
+		for (PasswordFieldWidget fieldWidget : fields) {
 			PasswordField field = new PasswordField();
 			field.setLibelle(fieldWidget.getTitleBox().getText());
 			field.setType(fieldWidget.getTypeBox().getValue(fieldWidget.getTypeBox().getSelectedIndex()));
 			field.setValue(fieldWidget.getValueBox().getText());
-			
+
 			result.add(field);
 		}
 		return result;
@@ -186,13 +183,13 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 	@Override
 	public void delFields() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setHeaderText(String header) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

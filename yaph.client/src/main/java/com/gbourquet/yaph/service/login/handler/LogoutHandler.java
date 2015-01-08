@@ -10,21 +10,19 @@ import com.gbourquet.yaph.service.login.out.LoginResult;
 
 public class LogoutHandler extends AbstractHandler<LogoutAction, LoginResult> {
 
-	public LoginResult exec(LogoutAction in, ExecutionContext context)
-			throws ActionException {
+	public LoginResult exec(LogoutAction in, ExecutionContext context) throws ActionException {
 
 		Account account = null;
 		String token = "";
 		session().removeAttribute("account");
 		session().removeAttribute("token");
-		
-		return new LoginResult(account,token);
+
+		return new LoginResult(account, token);
 
 	}
 
 	@Override
-	public void rollback(final LogoutAction action, final LoginResult result,
-			final ExecutionContext context) throws ActionException {
+	public void rollback(final LogoutAction action, final LoginResult result, final ExecutionContext context) throws ActionException {
 		// Nothing to do here
 	}
 

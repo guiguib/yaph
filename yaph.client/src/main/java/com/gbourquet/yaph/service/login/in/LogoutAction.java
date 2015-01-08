@@ -4,9 +4,9 @@ import com.gbourquet.yaph.service.in.AbstractAction;
 import com.gbourquet.yaph.service.login.out.LoginResult;
 
 public class LogoutAction extends AbstractAction<LoginResult> {
-    
+
 	/** For serialization only. */
-    public LogoutAction() {
-    }
- 
+	public LogoutAction() {
+	}
+
 }

@@ -8,8 +8,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class AppView extends Composite implements AppPresenter.View {
 
-	private static AppViewUiBinder uiBinder = GWT
-			.create(AppViewUiBinder.class);
+	private static AppViewUiBinder uiBinder = GWT.create(AppViewUiBinder.class);
 
 	interface AppViewUiBinder extends UiBinder<Widget, AppView> {
 	}
@@ -21,7 +20,7 @@ public class AppView extends Composite implements AppPresenter.View {
 	@Override
 	public void hello(String nom) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

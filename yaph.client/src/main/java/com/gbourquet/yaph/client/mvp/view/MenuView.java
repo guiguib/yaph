@@ -11,8 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class MenuView extends Composite implements MenuPresenter.View {
 
-	private static MenuViewUiBinder uiBinder = GWT
-			.create(MenuViewUiBinder.class);
+	private static MenuViewUiBinder uiBinder = GWT.create(MenuViewUiBinder.class);
 
 	interface MenuViewUiBinder extends UiBinder<Widget, MenuView> {
 	}
@@ -46,7 +45,7 @@ public class MenuView extends Composite implements MenuPresenter.View {
 	}
 
 	@Override
-	public void updateActionLabel(String newLabel,String newAction) {
+	public void updateActionLabel(String newLabel, String newAction) {
 		actionLabel.setText(newLabel);
 		actionLabel.setTargetHistoryToken(newAction);
 	}

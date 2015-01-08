@@ -37,9 +37,8 @@ public abstract class AbstractPresenter implements Activity {
 	}
 
 	@Override
-	public final void start(AcceptsOneWidget panel,
-			com.google.gwt.event.shared.EventBus eventBus) {
-		
+	public final void start(AcceptsOneWidget panel, com.google.gwt.event.shared.EventBus eventBus) {
+
 		start();
 
 	}

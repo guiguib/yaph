@@ -13,15 +13,13 @@ import com.gbourquet.yaph.service.login.out.LoginResult;
 
 public class LoginHandler extends AbstractHandler<LoginAction, LoginResult> {
 
-	public LoginResult exec(LoginAction in, ExecutionContext context)
-			throws ActionException {
+	public LoginResult exec(LoginAction in, ExecutionContext context) throws ActionException {
 
 		final String login = in.getLogin();
 		final String passwd = in.getPasswd();
 
 		com.gbourquet.yaph.serveur.metier.generated.Account account = null;
-		LoginService service = (LoginService) BeanFactory.getInstance()
-				.getService("loginService");
+		LoginService service = (LoginService) BeanFactory.getInstance().getService("loginService");
 		try {
 			account = service.login(login, passwd);
 		} catch (ServiceException e) {
@@ -31,13 +29,12 @@ public class LoginHandler extends AbstractHandler<LoginAction, LoginResult> {
 		session().setAttribute("account", account);
 		String token = generateToken();
 		session().setAttribute("token", token);
-		return new LoginResult(account,token);
+		return new LoginResult(account, token);
 
 	}
 
 	@Override
-	public void rollback(final LoginAction action, final LoginResult result,
-			final ExecutionContext context) throws ActionException {
+	public void rollback(final LoginAction action, final LoginResult result, final ExecutionContext context) throws ActionException {
 		// Nothing to do here
 	}
 
@@ -47,7 +44,7 @@ public class LoginHandler extends AbstractHandler<LoginAction, LoginResult> {
 	}
 
 	private final static String generateToken() {
-		String result=new CryptoServeur().encrypt(Math.random() + "","è-JHGè-tJHVè_-tJ");
+		String result = new CryptoServeur().encrypt(Math.random() + "", "è-JHGè-tJHVè_-tJ");
 		return result;
 	}
 

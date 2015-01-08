@@ -33,20 +33,17 @@ public class PasswordFieldWidget extends Composite {
 	@UiField
 	ListBox type;
 
-	private int width=500;
-	
-	private static PasswordFieldWidgetUiBinder uiBinder = GWT
-			.create(PasswordFieldWidgetUiBinder.class);
+	private int width = 500;
 
-	interface PasswordFieldWidgetUiBinder extends
-			UiBinder<Widget, PasswordFieldWidget> {
+	private static PasswordFieldWidgetUiBinder uiBinder = GWT.create(PasswordFieldWidgetUiBinder.class);
+
+	interface PasswordFieldWidgetUiBinder extends UiBinder<Widget, PasswordFieldWidget> {
 	}
 
-	public void addDelClickHandler(ClickHandler handler)
-	{
+	public void addDelClickHandler(ClickHandler handler) {
 		del.addClickHandler(handler);
 	}
-	
+
 	public PasswordFieldWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
 		type.addItem("Texte", "TEXT");
@@ -76,7 +73,7 @@ public class PasswordFieldWidget extends Composite {
 				value.setText(generator.exec());
 			}
 		});
-		
+
 	}
 
 	private void setGenerateVisible(boolean visible) {
@@ -85,9 +82,9 @@ public class PasswordFieldWidget extends Composite {
 			width = width - 108;
 		else
 			width = 500;
-		
+
 		value.setWidth(width + "px");
-		
+
 	}
 
 	public TextBox getTitleBox() {
@@ -111,11 +108,10 @@ public class PasswordFieldWidget extends Composite {
 	}
 
 	public void setType(String type) {
-		int index=0;
-		for (int i=0;i<this.type.getItemCount();i++)
-		{
+		int index = 0;
+		for (int i = 0; i < this.type.getItemCount(); i++) {
 			if (type.equals(this.type.getValue(i)))
-				index=i;
+				index = i;
 		}
 		this.type.setItemSelected(index, true);
 		DomEvent.fireNativeEvent(Document.get().createChangeEvent(), this.type);

@@ -8,8 +8,7 @@ import com.gbourquet.yaph.client.mvp.presenter.ProgressionPresenter;
 
 public class ProgressionView extends Composite implements ProgressionPresenter.View {
 
-	private static ProgressionViewUiBinder uiBinder = GWT
-			.create(ProgressionViewUiBinder.class);
+	private static ProgressionViewUiBinder uiBinder = GWT.create(ProgressionViewUiBinder.class);
 
 	interface ProgressionViewUiBinder extends UiBinder<Widget, ProgressionView> {
 	}

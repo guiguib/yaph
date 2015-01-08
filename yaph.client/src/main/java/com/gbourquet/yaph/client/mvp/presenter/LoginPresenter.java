@@ -101,39 +101,35 @@ public class LoginPresenter extends AbstractPresenter {
 	}
 
 	private void login() {
-		Boolean disconnected = ((Boolean)LocalSession.getInstance().getAttribute("disconnected")==null) ? false : (Boolean)LocalSession.getInstance().getAttribute("disconnected");
+		Boolean disconnected = ((Boolean) LocalSession.getInstance().getAttribute("disconnected") == null) ? false : (Boolean) LocalSession.getInstance().getAttribute(
+				"disconnected");
 		if (disconnected) {
-			Account account = DataAccess.getInstance().getAccount(view.getLoginText(),view.getPasswdText());
+			Account account = DataAccess.getInstance().getAccount(view.getLoginText(), view.getPasswdText());
 			if (account == null)
 				getView().errorLogin("Connexion impossible");
 			else
 				loginOK(account, "");
 		} else {
-			dispatcher.execute(
-					new LoginAction(view.getLoginText(), view.getPasswdText()),
-					new MyAsyncCallback<LoginResult>(getEventBus()) {
-						public void success(final LoginResult result) {
+			dispatcher.execute(new LoginAction(view.getLoginText(), view.getPasswdText()), new MyAsyncCallback<LoginResult>(getEventBus()) {
+				public void success(final LoginResult result) {
 
-							Account account = result.getAccount();
-							String token = result.getToken();
-							loginOK(account, token);
-						}
+					Account account = result.getAccount();
+					String token = result.getToken();
+					loginOK(account, token);
+				}
 
-						public void failure(final Throwable e) {
-							Account account = null;
-							if ("Connexion au serveur impossible".equals(e
-									.getMessage())) {
-								account = DataAccess.getInstance().getAccount(
-										view.getLoginText(),
-										view.getPasswdText());
-							}
-							if (account == null)
-								getView().errorLogin(e.getMessage());
-							else
-								loginOK(account, "");
+				public void failure(final Throwable e) {
+					Account account = null;
+					if ("Connexion au serveur impossible".equals(e.getMessage())) {
+						account = DataAccess.getInstance().getAccount(view.getLoginText(), view.getPasswdText());
+					}
+					if (account == null)
+						getView().errorLogin(e.getMessage());
+					else
+						loginOK(account, "");
 
-						}
-					});
+				}
+			});
 		}
 	}
 

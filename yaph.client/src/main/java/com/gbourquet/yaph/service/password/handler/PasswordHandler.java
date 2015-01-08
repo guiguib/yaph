@@ -16,27 +16,32 @@ import com.gbourquet.yaph.service.password.out.PasswordResult;
 
 public class PasswordHandler extends AbstractHandler<PasswordAction, PasswordResult> {
 
-	public PasswordResult exec(PasswordAction in, ExecutionContext context)
-			throws ActionException {
+	public PasswordResult exec(PasswordAction in, ExecutionContext context) throws ActionException {
 
 		final PasswordCard password = in.getPasswordCard();
 		final List<PasswordField> fields = in.getFields();
 
-		PasswordCard out; 
+		PasswordCard outPassword;
+		List<PasswordField> outFields;
 		PasswordService service = (PasswordService) BeanFactory.getInstance().getService("passwordService");
 		try {
-			out = service.save(password, fields);
+			outPassword = service.save(password, fields);
 		} catch (ServiceException e) {
 			throw new ActionException(e.getMessage());
 		}
 
-		return new PasswordResult(out);
+		try {
+			outFields = service.getFields(outPassword);
+		} catch (ServiceException e) {
+			throw new ActionException(e.getMessage());
+		}
+
+		return new PasswordResult(outPassword, outFields);
 
 	}
 
 	@Override
-	public void rollback(final PasswordAction action, final PasswordResult result,
-			final ExecutionContext context) throws ActionException {
+	public void rollback(final PasswordAction action, final PasswordResult result, final ExecutionContext context) throws ActionException {
 		// Nothing to do here
 	}
 

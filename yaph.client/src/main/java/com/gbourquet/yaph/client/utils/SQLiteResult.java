@@ -18,113 +18,98 @@ import com.google.gwt.json.client.JSONValue;
  * Provides an easy access to rows and columns resulting from a SQL query ran against SQLite
  * Since the SQLite JSON result format may change, this will provide an independant access to results.
  */
-public class SQLiteResult implements Iterable<SQLiteResult.Row>
-{
-	HashMap<String,Integer> columnsIdx = new HashMap<String, Integer>();
+public class SQLiteResult implements Iterable<SQLiteResult.Row> {
+	HashMap<String, Integer> columnsIdx = new HashMap<String, Integer>();
 	JsArray<JsArrayMixed> rows;
 
-	public SQLiteResult( JavaScriptObject jso )
-	{
-		JSONValue r = new JSONArray( jso ).get( 0 );
-		if( r == null )
+	public SQLiteResult(JavaScriptObject jso) {
+		JSONValue r = new JSONArray(jso).get(0);
+		if (r == null)
 			return;
 
 		JSONObject root = r.isObject();
 
-		JsArrayString columns = root.get( "columns" ).isArray().getJavaScriptObject().cast();
-		for( int i=0; i<columns.length(); i++ )
-			columnsIdx.put( columns.get( i ), i );
+		JsArrayString columns = root.get("columns").isArray().getJavaScriptObject().cast();
+		for (int i = 0; i < columns.length(); i++)
+			columnsIdx.put(columns.get(i), i);
 
-		rows = root.get( "values" ).isArray().getJavaScriptObject().cast();
+		rows = root.get("values").isArray().getJavaScriptObject().cast();
 	}
 
-	public int size()
-	{
+	public int size() {
 		return rows == null ? 0 : rows.length();
 	}
 
-	public Row getRow( int rowIdx )
-	{
-		return new Row( rowIdx );
+	public Row getRow(int rowIdx) {
+		return new Row(rowIdx);
 	}
 
-	public static class Cell
-	{
+	public static class Cell {
 		public String column;
 		public String value;
 	}
 
-	public class Row implements Iterable<Cell>
-	{
+	public class Row implements Iterable<Cell> {
 		int rowIdx;
 
-		Row( int rowIdx )
-		{
+		Row(int rowIdx) {
 			this.rowIdx = rowIdx;
 		}
 
-		public String getString( String columnName )
-		{
-			Integer colIdx = columnsIdx.get( columnName );
-			if( colIdx == null )
-				throw new IllegalArgumentException( columnName + " column does not exist." );
+		public String getString(String columnName) {
+			Integer colIdx = columnsIdx.get(columnName);
+			if (colIdx == null)
+				throw new IllegalArgumentException(columnName + " column does not exist.");
 
-			//return rows.get( rowIdx ).getString( colIdx );
-			return getString0( rows.get( rowIdx ), colIdx );
+			// return rows.get( rowIdx ).getString( colIdx );
+			return getString0(rows.get(rowIdx), colIdx);
 		}
 
-		private native String getString0( JsArrayMixed jso, int index )
+		private native String getString0(JsArrayMixed jso, int index)
 		/*-{
 			var value = jso[index];
 			return (value==null||value==undefined) ? null : value;
 		}-*/;
 
-		public Integer getInt( String columnName )
-		{
-			String stringValue = getString( columnName );
-			if( stringValue==null || stringValue.isEmpty() || stringValue.equals( "null" ) )
+		public Integer getInt(String columnName) {
+			String stringValue = getString(columnName);
+			if (stringValue == null || stringValue.isEmpty() || stringValue.equals("null"))
 				return null;
 
-			return Integer.parseInt( stringValue );
+			return Integer.parseInt(stringValue);
 		}
 
 		@Override
-		public String toString()
-		{
-			return rows.get( rowIdx ).toString();
+		public String toString() {
+			return rows.get(rowIdx).toString();
 		}
 
 		@Override
-		public Iterator<Cell> iterator()
-		{
-			return new Iterator<SQLiteResult.Cell>()
-			{
+		public Iterator<Cell> iterator() {
+			return new Iterator<SQLiteResult.Cell>() {
 				int current = 0;
 
-				List<Entry<String,Integer>> entries = new ArrayList<Entry<String, Integer>>( columnsIdx.entrySet() );
+				List<Entry<String, Integer>> entries = new ArrayList<Entry<String, Integer>>(columnsIdx.entrySet());
 
 				@Override
-				public void remove()
-				{
+				public void remove() {
 					assert false;
 				}
 
 				@Override
-				public Cell next()
-				{
-					Entry<String,Integer> entry = entries.get( current );
+				public Cell next() {
+					Entry<String, Integer> entry = entries.get(current);
 					current++;
 
 					Cell cell = new Cell();
 					cell.column = entry.getKey();
-					cell.value = rows.get( rowIdx ).getString( entry.getValue() );
+					cell.value = rows.get(rowIdx).getString(entry.getValue());
 
 					return cell;
 				}
 
 				@Override
-				public boolean hasNext()
-				{
+				public boolean hasNext() {
 					return current < entries.size();
 				}
 			};
@@ -132,55 +117,48 @@ public class SQLiteResult implements Iterable<SQLiteResult.Row>
 	}
 
 	@Override
-	public Iterator<Row> iterator()
-	{
-		return new Iterator<SQLiteResult.Row>()
-		{
+	public Iterator<Row> iterator() {
+		return new Iterator<SQLiteResult.Row>() {
 			int current = 0;
 
 			@Override
-			public void remove()
-			{
+			public void remove() {
 				assert false;
 			}
 
 			@Override
-			public Row next()
-			{
-				Row row = new Row( current );
+			public Row next() {
+				Row row = new Row(current);
 				current++;
 
 				return row;
 			}
 
 			@Override
-			public boolean hasNext()
-			{
+			public boolean hasNext() {
 				return rows == null ? false : (current < rows.length());
 			}
 		};
 	}
 
-	public List<Record> getAsMap()
-	{
+	public List<Record> getAsMap() {
 		ArrayList<Record> res = new ArrayList<com.gbourquet.yaph.client.utils.Record>();
 
 		String[] columns = new String[columnsIdx.size()];
-		for( Entry<String,Integer> e: columnsIdx.entrySet())
+		for (Entry<String, Integer> e : columnsIdx.entrySet())
 			columns[e.getValue()] = e.getKey();
 
-		for( int r=0; r<size(); r++ )
-		{
+		for (int r = 0; r < size(); r++) {
 			HashMap<String, String> rowObject = new HashMap<String, String>();
 
-			JsArrayMixed row = rows.get( r );
-			for( int c=0; c<row.length(); c++ )
-				rowObject.put( columns[c], row.getString( c ) );
+			JsArrayMixed row = rows.get(r);
+			for (int c = 0; c < row.length(); c++)
+				rowObject.put(columns[c], row.getString(c));
 
 			Record record = new Record();
-			record.setProperties( rowObject );
+			record.setProperties(rowObject);
 
-			res.add( record );
+			res.add(record);
 		}
 
 		return res;

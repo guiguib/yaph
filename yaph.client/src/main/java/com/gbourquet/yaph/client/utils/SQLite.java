@@ -22,8 +22,7 @@ public class SQLite extends JavaScriptObject {
 
 	private final static String LOCAL_CURRENT_ID_INCREMENT = "LOCAL_CURRENT_ID_INCREMENT";
 
-	public static final DateTimeFormat dateTimeFormat = DateTimeFormat
-			.getFormat("yyyy-MM-dd HH:mm:ss");
+	public static final DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm:ss");
 
 	protected SQLite() {
 	}
@@ -90,8 +89,7 @@ public class SQLite extends JavaScriptObject {
 		try {
 			return execute0(statement);
 		} catch (Exception e) {
-			throw new RuntimeException("SQLite execute exception: " + statement
-					+ " => " + e.toString());
+			throw new RuntimeException("SQLite execute exception: " + statement + " => " + e.toString());
 		}
 	}
 

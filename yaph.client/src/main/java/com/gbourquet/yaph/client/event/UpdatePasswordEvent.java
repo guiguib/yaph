@@ -12,7 +12,7 @@ public class UpdatePasswordEvent extends GwtEvent<UpdatePasswordEventHandler> {
 	private final PasswordCard password;
 	private final List<PasswordField> fields;
 
-	public UpdatePasswordEvent(final PasswordCard password,final List<PasswordField> fields) {
+	public UpdatePasswordEvent(final PasswordCard password, final List<PasswordField> fields) {
 		this.password = password;
 		this.fields = fields;
 	}

@@ -20,7 +20,7 @@ public class AppMapper implements ActivityMapper {
 	private LoginPresenter loginPresenter;
 	private LogoutPresenter logoutPresenter;
 	private MenuPresenter menuPresenter;
-	
+
 	public AppMapper(ClientFactory clientFactory) {
 		super();
 		this.progressionPresenter = new ProgressionPresenter(clientFactory);
@@ -51,7 +51,7 @@ public class AppMapper implements ActivityMapper {
 		return null;
 	}
 
-	//Presenter qui n'ont pas de "Place"
+	// Presenter qui n'ont pas de "Place"
 	public MenuPresenter getMenuPresenter() {
 		return menuPresenter;
 	}

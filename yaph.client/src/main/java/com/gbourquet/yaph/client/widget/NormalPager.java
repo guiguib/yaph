@@ -4,8 +4,7 @@ import com.google.gwt.user.cellview.client.SimplePager;
 
 public class NormalPager extends SimplePager {
 
-	public NormalPager(TextLocation center, Resources pagerResources,
-			boolean b, int i, boolean c) {
+	public NormalPager(TextLocation center, Resources pagerResources, boolean b, int i, boolean c) {
 		super(center, pagerResources, b, i, c);
 	}
 

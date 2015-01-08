@@ -13,10 +13,9 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class LoginView extends Composite implements LoginPresenter.View  {
+public class LoginView extends Composite implements LoginPresenter.View {
 
-	private static LoginViewUiBinder uiBinder = GWT
-			.create(LoginViewUiBinder.class);
+	private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
 
 	interface LoginViewUiBinder extends UiBinder<Widget, LoginView> {
 	}
@@ -32,7 +31,7 @@ public class LoginView extends Composite implements LoginPresenter.View  {
 
 	@UiField
 	Label error;
-	
+
 	public LoginView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		buttonLogin.setText("Login");
@@ -70,7 +69,7 @@ public class LoginView extends Composite implements LoginPresenter.View  {
 	@Override
 	public void setLoginText(String loginText) {
 		login.setText(loginText);
-		
+
 	}
 
 	@Override

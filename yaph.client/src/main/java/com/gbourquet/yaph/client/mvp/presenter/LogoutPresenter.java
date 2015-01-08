@@ -21,7 +21,7 @@ public class LogoutPresenter extends AbstractPresenter {
 
 	public View view;
 	private DispatchAsync dispatcher;
-	
+
 	public LogoutPresenter(ClientFactory factory) {
 		super(factory);
 		view = factory.getLogoutView();
@@ -40,7 +40,7 @@ public class LogoutPresenter extends AbstractPresenter {
 		RootPanel.get("container").add(getView().asWidget());
 		dispatcher.execute(new LogoutAction(), new MyAsyncCallback<LoginResult>(getEventBus()) {
 			public void success(final LoginResult result) {
-				
+
 				LocalSession.getInstance().setAttribute("token", "");
 				LocalSession.getInstance().setAttribute("account", null);
 				// On envoie un message dans le bus
@@ -49,14 +49,14 @@ public class LogoutPresenter extends AbstractPresenter {
 			}
 
 			public void failure(final Throwable e) {
-				// On n'a pas réussi à se delogguer du serveur, mais on se "déconnecte" en local 
+				// On n'a pas réussi à se delogguer du serveur, mais on se
+				// "déconnecte" en local
 				LocalSession.getInstance().setAttribute("token", "");
 				LocalSession.getInstance().setAttribute("account", null);
-				
-				//On envoie un message dans le bus
+
+				// On envoie un message dans le bus
 				getEventBus().fireEvent(new LogoutEvent());
 
-				
 			}
 		});
 	}

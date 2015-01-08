@@ -5,26 +5,26 @@ import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.place.shared.Prefix;
 
 public class PasswordPlace extends Place {
-    private String token;
+	private String token;
 
-    public PasswordPlace(String token) {
-        this.token = token;
-    }
+	public PasswordPlace(String token) {
+		this.token = token;
+	}
 
-    public String getToken() {
-        return token;
-    }
+	public String getToken() {
+		return token;
+	}
 
-    @Prefix(value="password")
-    public static class Tokenizer implements PlaceTokenizer<PasswordPlace> {
-        @Override
-        public String getToken(PasswordPlace place) {
-            return place.getToken();
-        }
+	@Prefix(value = "password")
+	public static class Tokenizer implements PlaceTokenizer<PasswordPlace> {
+		@Override
+		public String getToken(PasswordPlace place) {
+			return place.getToken();
+		}
 
-        @Override
-        public PasswordPlace getPlace(String token) {
-            return new PasswordPlace(token);
-        }
-    }
+		@Override
+		public PasswordPlace getPlace(String token) {
+			return new PasswordPlace(token);
+		}
+	}
 }

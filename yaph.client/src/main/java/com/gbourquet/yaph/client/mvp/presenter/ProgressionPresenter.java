@@ -32,14 +32,12 @@ public class ProgressionPresenter extends AbstractPresenter {
 			RootPanel.get("container").clear();
 			RootPanel.get("container").add(getView().asWidget());
 			getEventBus().fireEvent(new MenuEvent("progression", true));
-		}
-		else
-		{
+		} else {
 			// On redirige vers la page d'acceuil
 			getEventBus().fireEvent(new MenuEvent("app", true));
 			getFactory().getPlaceController().goTo(new AppPlace(""));
 		}
-			
+
 	}
 
 	@Override

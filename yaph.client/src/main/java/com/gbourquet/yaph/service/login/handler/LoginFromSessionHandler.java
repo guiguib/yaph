@@ -10,19 +10,17 @@ import com.gbourquet.yaph.service.login.out.LoginResult;
 
 public class LoginFromSessionHandler extends AbstractHandler<LoginFromSessionAction, LoginResult> {
 
-	public LoginResult exec(LoginFromSessionAction in, ExecutionContext context)
-			throws ActionException {
+	public LoginResult exec(LoginFromSessionAction in, ExecutionContext context) throws ActionException {
 
-		Account account = (Account)session().getAttribute("account");
-		String token = (String)session().getAttribute("token");
-		
-		return new LoginResult(account,token);
+		Account account = (Account) session().getAttribute("account");
+		String token = (String) session().getAttribute("token");
+
+		return new LoginResult(account, token);
 
 	}
 
 	@Override
-	public void rollback(final LoginFromSessionAction action, final LoginResult result,
-			final ExecutionContext context) throws ActionException {
+	public void rollback(final LoginFromSessionAction action, final LoginResult result, final ExecutionContext context) throws ActionException {
 		// Nothing to do here
 	}
 

@@ -6,10 +6,9 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.gbourquet.yaph.client.mvp.presenter.LogoutPresenter;
 
-public class LogoutView extends Composite implements LogoutPresenter.View  {
+public class LogoutView extends Composite implements LogoutPresenter.View {
 
-	private static LogoutViewUiBinder uiBinder = GWT
-			.create(LogoutViewUiBinder.class);
+	private static LogoutViewUiBinder uiBinder = GWT.create(LogoutViewUiBinder.class);
 
 	interface LogoutViewUiBinder extends UiBinder<Widget, LogoutView> {
 	}

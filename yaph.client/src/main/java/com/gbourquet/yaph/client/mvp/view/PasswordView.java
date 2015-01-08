@@ -46,8 +46,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 
 public class PasswordView extends Composite implements PasswordPresenter.View {
 
-	private static PasswordViewUiBinder uiBinder = GWT
-			.create(PasswordViewUiBinder.class);
+	private static PasswordViewUiBinder uiBinder = GWT.create(PasswordViewUiBinder.class);
 
 	interface PasswordViewUiBinder extends UiBinder<Widget, PasswordView> {
 	}
@@ -77,10 +76,10 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 	@UiField
 	Button updatePasswordButton;
-	
+
 	@UiField
 	Button deletePasswordButton;
-	
+
 	VerticalPanel fields;
 
 	/**
@@ -132,14 +131,12 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		// Attach a column sort handler to the ListDataProvider to sort the
 		// list.
 		dataProvider = new ListDataProvider<PasswordCard>();
-		ListHandler<PasswordCard> sortHandler = new ListHandler<PasswordCard>(
-				dataProvider.getList());
+		ListHandler<PasswordCard> sortHandler = new ListHandler<PasswordCard>(dataProvider.getList());
 		dataGrid.addColumnSortHandler(sortHandler);
 
 		// Create a Pager to control the table.
-		SimplePager.Resources pagerResources = GWT
-				.create(SimplePager.Resources.class);
-		pager = new NormalPager(TextLocation.CENTER, pagerResources, false, 0,true);
+		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
+		pager = new NormalPager(TextLocation.CENTER, pagerResources, false, 0, true);
 		pager.setDisplay(dataGrid);
 
 		// Add a selection model so we can select cells.
@@ -147,19 +144,19 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		selectionModel.getSelectedObject();
 
 		dataGrid.setSelectionModel(selectionModel);
-		
+
 		// Initialize the columns.
 		initializeColumns(sortHandler);
 
 		// Specify a custom table.
 		dataGrid.setTableBuilder(new CustomTableBuilder());
 		dataGrid.setHeaderBuilder(new CustomHeaderBuilder());
-		
+
 		// Add the CellList to the adapter in the database.
 		dataProvider.addDataDisplay(dataGrid);
 
 		initWidget(uiBinder.createAndBindUi(this));
-		fields=new VerticalPanel();
+		fields = new VerticalPanel();
 		detailPassword.add(fields);
 		setFieldsVisible(false);
 
@@ -179,8 +176,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	 * category, and address of the contacts grouped under the "Information"
 	 * category.
 	 */
-	private class CustomHeaderBuilder extends
-			AbstractHeaderOrFooterBuilder<PasswordCard> {
+	private class CustomHeaderBuilder extends AbstractHeaderOrFooterBuilder<PasswordCard> {
 
 		private Header<String> titleHeader = new TextHeader("Titre");
 
@@ -194,17 +190,13 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 			TableRowBuilder tr = startRow();
 			ColumnSortList sortList = dataGrid.getColumnSortList();
-			ColumnSortInfo sortedInfo = (sortList.size() == 0) ? null
-					: sortList.get(0);
-			Column<?, ?> sortedColumn = (sortedInfo == null) ? null
-					: sortedInfo.getColumn();
-			boolean isSortAscending = (sortedInfo == null) ? false : sortedInfo
-					.isAscending();
+			ColumnSortInfo sortedInfo = (sortList.size() == 0) ? null : sortList.get(0);
+			Column<?, ?> sortedColumn = (sortedInfo == null) ? null : sortedInfo.getColumn();
+			boolean isSortAscending = (sortedInfo == null) ? false : sortedInfo.isAscending();
 
 			// Add column headers.
 			tr = startRow();
-			buildHeader(tr, titleHeader, titleColumn, sortedColumn,
-					isSortAscending, false, false);
+			buildHeader(tr, titleHeader, titleColumn, sortedColumn, isSortAscending, false, false);
 			tr.endTR();
 
 			return true;
@@ -228,12 +220,10 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		 * @param isLast
 		 *            true if this the last column
 		 */
-		private void buildHeader(TableRowBuilder out, Header<?> header,
-				Column<PasswordCard, ?> column, Column<?, ?> sortedColumn,
-				boolean isSortAscending, boolean isFirst, boolean isLast) {
+		private void buildHeader(TableRowBuilder out, Header<?> header, Column<PasswordCard, ?> column, Column<?, ?> sortedColumn, boolean isSortAscending, boolean isFirst,
+				boolean isLast) {
 			// Choose the classes to include with the element.
-			com.google.gwt.user.cellview.client.AbstractCellTable.Style style = dataGrid
-					.getResources().style();
+			com.google.gwt.user.cellview.client.AbstractCellTable.Style style = dataGrid.getResources().style();
 			boolean isSorted = (sortedColumn == column);
 			StringBuilder classesBuilder = new StringBuilder(style.header());
 			if (isFirst) {
@@ -246,14 +236,11 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 				classesBuilder.append(" " + style.sortableHeader());
 			}
 			if (isSorted) {
-				classesBuilder.append(" "
-						+ (isSortAscending ? style.sortedHeaderAscending()
-								: style.sortedHeaderDescending()));
+				classesBuilder.append(" " + (isSortAscending ? style.sortedHeaderAscending() : style.sortedHeaderDescending()));
 			}
 
 			// Create the table cell.
-			TableCellBuilder th = out.startTH().className(
-					classesBuilder.toString());
+			TableCellBuilder th = out.startTH().className(classesBuilder.toString());
 
 			// Associate the cell with the column to enable sorting of the
 			// column.
@@ -271,8 +258,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	/**
 	 * Renders the data rows that display each contact in the table.
 	 */
-	private class CustomTableBuilder extends
-			AbstractCellTableBuilder<PasswordCard> {
+	private class CustomTableBuilder extends AbstractCellTableBuilder<PasswordCard> {
 
 		private final String rowStyle;
 		private final String selectedRowStyle;
@@ -283,8 +269,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 			super(dataGrid);
 
 			// Cache styles for faster access.
-			com.google.gwt.user.cellview.client.AbstractCellTable.Style style = dataGrid
-					.getResources().style();
+			com.google.gwt.user.cellview.client.AbstractCellTable.Style style = dataGrid.getResources().style();
 			rowStyle = style.evenRow();
 			selectedRowStyle = " " + style.selectedRow();
 			cellStyle = style.cell() + " " + style.evenRowCell();
@@ -310,10 +295,8 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		 */
 		private void buildPasswordCardRow(PasswordCard rowValue, int absRowIndex) {
 			// Calculate the row styles.
-			SelectionModel<? super PasswordCard> selectionModel = dataGrid
-					.getSelectionModel();
-			boolean isSelected = (selectionModel == null || rowValue == null) ? false
-					: selectionModel.isSelected(rowValue);
+			SelectionModel<? super PasswordCard> selectionModel = dataGrid.getSelectionModel();
+			boolean isSelected = (selectionModel == null || rowValue == null) ? false : selectionModel.isSelected(rowValue);
 			StringBuilder trClasses = new StringBuilder(rowStyle);
 			if (isSelected) {
 				trClasses.append(selectedRowStyle);
@@ -404,7 +387,11 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 	@Override
 	public void addField(PasswordField field) {
-		TypePassword type = "PASSWD".equals(field.getType()) ? TypePassword.PASSWD : TypePassword.TEXT; //TODO gérer tous les types
+		TypePassword type = "PASSWD".equals(field.getType()) ? TypePassword.PASSWD : TypePassword.TEXT; // TODO
+																										// gérer
+																										// tous
+																										// les
+																										// types
 		PasswordWidget fieldWidget = new PasswordWidget(type);
 		fieldWidget.setTitleText(field.getLibelle());
 		fieldWidget.setValueText(field.getValue());
@@ -448,7 +435,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	public HasClickHandlers getUpdatePasswordButton() {
 		return updatePasswordButton;
 	}
-	
+
 	@Override
 	public HasClickHandlers getDeletePasswordButton() {
 		return deletePasswordButton;

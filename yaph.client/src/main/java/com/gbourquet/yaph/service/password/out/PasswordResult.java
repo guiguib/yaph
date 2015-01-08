@@ -1,23 +1,32 @@
 package com.gbourquet.yaph.service.password.out;
 
+import java.util.List;
+
 import net.customware.gwt.dispatch.shared.Result;
 
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 
 public class PasswordResult implements Result {
-    
+
 	private PasswordCard password;
-	
-    /** For serialization only. */
-    PasswordResult() {
-    }
+	private List<PasswordField> fields;
 
-    public PasswordResult(PasswordCard password) {
-        this.password = password;
-    }
+	/** For serialization only. */
+	PasswordResult() {
+	}
 
-    public PasswordCard getPasswordCard() {
-        return password;
-    }
-        
+	public PasswordResult(PasswordCard password, List<PasswordField> fields) {
+		this.password = password;
+		this.fields = fields;
+	}
+
+	public PasswordCard getPasswordCard() {
+		return password;
+	}
+
+	public List<PasswordField> getPasswordFields() {
+		return fields;
+	}
+
 }
