@@ -10,10 +10,12 @@ import com.gbourquet.yaph.client.mvp.presenter.LoginPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.LoginPresenter.View;
 import com.gbourquet.yaph.client.mvp.presenter.LogoutPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.MenuPresenter;
+import com.gbourquet.yaph.client.mvp.presenter.InlinePresenter;
 import com.gbourquet.yaph.client.mvp.presenter.NewPasswordPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.ProgressionPresenter;
-import com.gbourquet.yaph.client.mvp.view.MenuView;
+import com.gbourquet.yaph.client.mvp.view.mobile.MenuView;
+import com.gbourquet.yaph.client.mvp.view.mobile.InlineView;
 import com.gbourquet.yaph.client.mvp.view.mobile.AppView;
 import com.gbourquet.yaph.client.mvp.view.mobile.LoginView;
 import com.gbourquet.yaph.client.mvp.view.mobile.LogoutView;
@@ -35,6 +37,7 @@ public class ClientFactoryMobileImpl implements ClientFactory {
 	private final LoginPresenter.View loginView = new LoginView();
 	private final LogoutPresenter.View logoutView = new LogoutView();
 	private final MenuPresenter.View menuView = new MenuView();
+	private final InlinePresenter.View inlineView = new InlineView();
 
 	private final DispatchAsync dispatcher = new StandardDispatchAsync(new DefaultExceptionHandler());
 
@@ -81,6 +84,11 @@ public class ClientFactoryMobileImpl implements ClientFactory {
 	@Override
 	public MenuPresenter.View getMenuView() {
 		return menuView;
+	}
+
+	@Override
+	public InlinePresenter.View getInlineView() {
+		return inlineView;
 	}
 
 	@Override

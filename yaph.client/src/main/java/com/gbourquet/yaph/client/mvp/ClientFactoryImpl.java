@@ -6,6 +6,7 @@ import net.customware.gwt.dispatch.client.standard.StandardDispatchAsync;
 
 import com.gbourquet.yaph.client.LocalSession;
 import com.gbourquet.yaph.client.mvp.presenter.AppPresenter;
+import com.gbourquet.yaph.client.mvp.presenter.InlinePresenter;
 import com.gbourquet.yaph.client.mvp.presenter.LoginPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.LogoutPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.LogoutPresenter.View;
@@ -14,6 +15,7 @@ import com.gbourquet.yaph.client.mvp.presenter.NewPasswordPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.ProgressionPresenter;
 import com.gbourquet.yaph.client.mvp.view.AppView;
+import com.gbourquet.yaph.client.mvp.view.InlineView;
 import com.gbourquet.yaph.client.mvp.view.LoginView;
 import com.gbourquet.yaph.client.mvp.view.LogoutView;
 import com.gbourquet.yaph.client.mvp.view.MenuView;
@@ -35,6 +37,7 @@ public class ClientFactoryImpl implements ClientFactory {
 	private final LoginPresenter.View loginView = new LoginView();
 	private final LogoutPresenter.View logoutView = new LogoutView();
 	private final MenuPresenter.View menuView = new MenuView();
+	private final InlinePresenter.View inlineView = new InlineView();
 
 	private final DispatchAsync dispatcher = new StandardDispatchAsync(new DefaultExceptionHandler());
 
@@ -88,6 +91,12 @@ public class ClientFactoryImpl implements ClientFactory {
 	public MenuPresenter.View getMenuView() {
 
 		return menuView;
+	}
+
+	@Override
+	public InlinePresenter.View getInlineView() {
+
+		return inlineView;
 	}
 
 	@Override

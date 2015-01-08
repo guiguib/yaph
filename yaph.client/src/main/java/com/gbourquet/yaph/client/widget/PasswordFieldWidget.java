@@ -18,7 +18,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class PasswordFieldWidget extends Composite {
 
-	@UiField
+	int id=0;
+	
+		@UiField
 	Button del;
 
 	@UiField
@@ -123,6 +125,14 @@ public class PasswordFieldWidget extends Composite {
 
 	public void setValuePlaceHolder(String placeHolder) {
 		value.getElement().setPropertyString("placeholder", placeHolder);
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }

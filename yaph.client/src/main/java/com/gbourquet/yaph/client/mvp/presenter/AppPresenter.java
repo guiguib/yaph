@@ -3,8 +3,8 @@ package com.gbourquet.yaph.client.mvp.presenter;
 import net.customware.gwt.dispatch.client.DispatchAsync;
 
 import com.gbourquet.yaph.client.LocalSession;
-import com.gbourquet.yaph.client.event.DisconnectionEvent;
-import com.gbourquet.yaph.client.event.DisconnectionEventHandler;
+import com.gbourquet.yaph.client.event.InlineEvent;
+import com.gbourquet.yaph.client.event.InlineEventHandler;
 import com.gbourquet.yaph.client.event.LoadApplicationEvent;
 import com.gbourquet.yaph.client.event.LoginEvent;
 import com.gbourquet.yaph.client.event.LoginEventHandler;
@@ -48,10 +48,15 @@ public class AppPresenter extends AbstractPresenter {
 			}
 		});
 
-		getEventBus().addHandler(DisconnectionEvent.TYPE, new DisconnectionEventHandler() {
+		getEventBus().addHandler(InlineEvent.TYPE, new InlineEventHandler() {
 
 			@Override
-			public void onDisconnect(DisconnectionEvent event) {
+			public void onInline(InlineEvent event) {
+				LocalSession.getInstance().setAttribute("disconnected", false);
+			}
+
+			@Override
+			public void onOffline(InlineEvent event) {
 				LocalSession.getInstance().setAttribute("disconnected", true);
 			}
 		});

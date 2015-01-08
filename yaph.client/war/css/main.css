@@ -479,23 +479,26 @@ div.active a {
 	border-bottom-color: rgba(255, 255, 255, 10);
 }
 
-.petit
-{
+.petit {
 	font-size: 12px;
 	color: #ccc
 }
 
-.petit:hover
-{
+.petit:hover {
 	color: #E27689;
 	border-bottom-color: rgba(255, 255, 255, 0);
 	cursor: pointer;
 }
 
-.detailPassword
-{
+.detailPassword {
 	border-radius: 0.35em;
-	border : 1px solid #ccc;
+	border: 1px solid #ccc;
 	margin-top: 10px;
-	padding : 10px;
+	padding: 10px;
+}
+
+.inline {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
 }

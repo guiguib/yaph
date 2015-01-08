@@ -1,7 +1,5 @@
 package com.gbourquet.yaph.client.mvp.presenter;
 
-import com.gbourquet.yaph.client.event.DisconnectionEvent;
-import com.gbourquet.yaph.client.event.DisconnectionEventHandler;
 import com.gbourquet.yaph.client.event.LoadApplicationEvent;
 import com.gbourquet.yaph.client.event.LoadApplicationEventHandler;
 import com.gbourquet.yaph.client.event.LoginEvent;
@@ -83,14 +81,6 @@ public class MenuPresenter extends AbstractPresenter {
 					getView().setEnableApp(event.isEnabled());
 				else if ("password".equals(event.getMenu()))
 					getView().setEnablePassword(event.isEnabled());
-			}
-		});
-
-		getEventBus().addHandler(DisconnectionEvent.TYPE, new DisconnectionEventHandler() {
-
-			@Override
-			public void onDisconnect(DisconnectionEvent event) {
-				getView().setDisconnection(true);
 			}
 		});
 	}

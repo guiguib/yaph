@@ -4,6 +4,7 @@ import net.customware.gwt.dispatch.client.DispatchAsync;
 
 import com.gbourquet.yaph.client.LocalSession;
 import com.gbourquet.yaph.client.mvp.presenter.AppPresenter;
+import com.gbourquet.yaph.client.mvp.presenter.InlinePresenter;
 import com.gbourquet.yaph.client.mvp.presenter.LoginPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.LogoutPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.MenuPresenter;
@@ -31,6 +32,8 @@ public interface ClientFactory {
 	LoginPresenter.View getLoginView();
 
 	MenuPresenter.View getMenuView();
+
+	InlinePresenter.View getInlineView();
 
 	LogoutPresenter.View getLogoutView();
 

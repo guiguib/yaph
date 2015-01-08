@@ -2,11 +2,11 @@ package com.gbourquet.yaph.client.mvp.presenter;
 
 import com.gbourquet.yaph.client.mvp.ClientFactory;
 import com.gbourquet.yaph.client.mvp.place.AppPlace;
+import com.gbourquet.yaph.client.mvp.place.LoginPlace;
+import com.gbourquet.yaph.client.mvp.place.LogoutPlace;
 import com.gbourquet.yaph.client.mvp.place.NewPasswordPlace;
 import com.gbourquet.yaph.client.mvp.place.PasswordPlace;
 import com.gbourquet.yaph.client.mvp.place.ProgressionPlace;
-import com.gbourquet.yaph.client.mvp.place.LoginPlace;
-import com.gbourquet.yaph.client.mvp.place.LogoutPlace;
 import com.gbourquet.yaph.client.utils.DataAccess;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
@@ -20,6 +20,7 @@ public class AppMapper implements ActivityMapper {
 	private LoginPresenter loginPresenter;
 	private LogoutPresenter logoutPresenter;
 	private MenuPresenter menuPresenter;
+	private InlinePresenter inlinePresenter;
 
 	public AppMapper(ClientFactory clientFactory) {
 		super();
@@ -29,6 +30,7 @@ public class AppMapper implements ActivityMapper {
 		this.loginPresenter = new LoginPresenter(clientFactory);
 		this.logoutPresenter = new LogoutPresenter(clientFactory);
 		this.setMenuPresenter(new MenuPresenter(clientFactory));
+		this.setInlinePresenter(new InlinePresenter(clientFactory));
 		this.appPresenter = new AppPresenter(clientFactory);
 		DataAccess.getInstance().init();
 	}
@@ -58,5 +60,13 @@ public class AppMapper implements ActivityMapper {
 
 	public void setMenuPresenter(MenuPresenter menuPresenter) {
 		this.menuPresenter = menuPresenter;
+	}
+
+	public InlinePresenter getInlinePresenter() {
+		return inlinePresenter;
+	}
+
+	public void setInlinePresenter(InlinePresenter inlinePresenter) {
+		this.inlinePresenter = inlinePresenter;
 	}
 }

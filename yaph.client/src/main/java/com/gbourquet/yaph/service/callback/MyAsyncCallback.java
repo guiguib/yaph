@@ -1,6 +1,6 @@
 package com.gbourquet.yaph.service.callback;
 
-import com.gbourquet.yaph.client.event.DisconnectionEvent;
+import com.gbourquet.yaph.client.event.InlineEvent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -13,7 +13,7 @@ public abstract class MyAsyncCallback<T> implements AsyncCallback<T> {
 		Throwable newCaught = caught;
 		if ("0  ".equals(caught.getMessage())) {
 			// On est deconnecté
-			eventBus.fireEvent(new DisconnectionEvent());
+			eventBus.fireEvent(new InlineEvent(false));
 			newCaught = new Throwable("Connexion au serveur impossible", caught);
 		}
 

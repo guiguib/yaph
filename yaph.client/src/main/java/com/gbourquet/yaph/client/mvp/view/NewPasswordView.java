@@ -62,11 +62,6 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 
 		dialog.center();
 		dialog.hide();
-
-		addBlankField();
-		addBlankField();
-		addBlankField();
-
 	}
 
 	/**
@@ -98,9 +93,6 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 		header.setText("New Password");
 		title.setText("");
 		delFields();
-		addBlankField();
-		addBlankField();
-		addBlankField();
 	}
 
 	@Override
@@ -129,26 +121,9 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 	}
 
 	@Override
-	public void addBlankField() {
-		final PasswordFieldWidget field = new PasswordFieldWidget();
-		field.setTitlePlaceHolder("Field Title");
-		field.setValuePlaceHolder("Value");
-		field.addDelClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				fieldsPanel.remove(field);
-				fields.remove(field);
-			}
-		});
-
-		fields.add(field);
-		fieldsPanel.add(field);
-	}
-
-	@Override
 	public void addField(PasswordField field) {
 		final PasswordFieldWidget fieldWidget = new PasswordFieldWidget();
+		fieldWidget.setId(field.getId());
 		fieldWidget.setTitlePlaceHolder("Field Title");
 		fieldWidget.setValuePlaceHolder("Value");
 		fieldWidget.setTitle(field.getLibelle());
@@ -172,6 +147,7 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 		List<PasswordField> result = new ArrayList<PasswordField>();
 		for (PasswordFieldWidget fieldWidget : fields) {
 			PasswordField field = new PasswordField();
+			field.setId(fieldWidget.getId());
 			field.setLibelle(fieldWidget.getTitleBox().getText());
 			field.setType(fieldWidget.getTypeBox().getValue(fieldWidget.getTypeBox().getSelectedIndex()));
 			field.setValue(fieldWidget.getValueBox().getText());

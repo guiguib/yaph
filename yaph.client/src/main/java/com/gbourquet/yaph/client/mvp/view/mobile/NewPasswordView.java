@@ -12,6 +12,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -60,9 +61,7 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 		dialog.center();
 		dialog.hide();
 
-		addBlankField();
-		addBlankField();
-		addBlankField();
+		
 
 	}
 
@@ -97,9 +96,7 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 			fieldsPanel.remove(fieldWidget);
 		}
 		fields = new ArrayList<PasswordFieldWidget>();
-		addBlankField();
-		addBlankField();
-		addBlankField();
+		
 	}
 
 	@Override
@@ -127,32 +124,18 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 		return addFieldButton;
 	}
 
-	@Override
-	public void addBlankField() {
-		final PasswordFieldWidget field = new PasswordFieldWidget();
-		field.setTitlePlaceHolder("Field Title");
-		field.setValuePlaceHolder("Value");
-		field.addDelClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				fieldsPanel.remove(field);
-				fields.remove(field);
-			}
-		});
-
-		fields.add(field);
-		fieldsPanel.add(field);
-	}
 
 	@Override
 	public void addField(PasswordField field) {
+		Window.alert("a");
 		final PasswordFieldWidget fieldWidget = new PasswordFieldWidget();
 		fieldWidget.setTitlePlaceHolder("Field Title");
 		fieldWidget.setValuePlaceHolder("Value");
+		Window.alert("b");
 		fieldWidget.setTitle(field.getLibelle());
 		fieldWidget.setValue(field.getValue());
 		fieldWidget.setType(field.getType());
+		Window.alert("c");
 		fieldWidget.addDelClickHandler(new ClickHandler() {
 
 			@Override
