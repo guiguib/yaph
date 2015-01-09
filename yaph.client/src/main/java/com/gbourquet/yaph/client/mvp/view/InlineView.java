@@ -2,6 +2,7 @@ package com.gbourquet.yaph.client.mvp.view;
 
 import com.gbourquet.yaph.client.mvp.presenter.InlinePresenter;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -29,6 +30,13 @@ public class InlineView extends Composite implements InlinePresenter.View {
 			indication.setText("Inline");
 		else
 			indication.setText("Offline");
+	}
+
+
+	@Override
+	public HasClickHandlers getZone() {
+		// TODO Auto-generated method stub
+		return indication;
 	}
 
 	

@@ -448,4 +448,10 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 	}
 
+	@Override
+	public void refreshPasswordList() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -4,8 +4,8 @@ public class PasswordGenerator {
 
 	private int nbChar;
 	private boolean haveSpecialChar = true;
-	private final String specialChars = ",?;.:!ù_-#~&";
-	private final String letterChars = "abcdefghijklmnopqrstuvwxyz";
+	private final String specialChars = ",?;.:ù_-#~&";
+	private final String letterChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	private final String numberChars = "0123456789";
 
 	public PasswordGenerator(int nbChar, boolean haveSpecialChar) {

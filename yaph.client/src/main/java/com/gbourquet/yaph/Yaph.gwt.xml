@@ -6,7 +6,8 @@
 	<!-- Inherit Activities and Places. -->
 	<inherits name='com.google.gwt.activity.Activity' />
 	<inherits name='com.google.gwt.place.Place' />
-
+	<inherits name='com.googlecode.gwt.crypto.Crypto'/>
+	
 	<!-- Inherit the default GWT style sheet. You can change -->
 	<!-- the theme of your GWT application by uncommenting -->
 	<!-- any one of the following lines. -->

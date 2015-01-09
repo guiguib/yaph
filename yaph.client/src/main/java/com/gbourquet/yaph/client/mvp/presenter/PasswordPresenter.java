@@ -1,5 +1,6 @@
 package com.gbourquet.yaph.client.mvp.presenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.customware.gwt.dispatch.client.DispatchAsync;
@@ -15,14 +16,13 @@ import com.gbourquet.yaph.client.event.UpdatePasswordEvent;
 import com.gbourquet.yaph.client.event.UpdatedPasswordEvent;
 import com.gbourquet.yaph.client.event.UpdatedPasswordEventHandler;
 import com.gbourquet.yaph.client.mvp.ClientFactory;
+import com.gbourquet.yaph.client.utils.CryptoClient;
 import com.gbourquet.yaph.client.utils.DataAccess;
 import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.gbourquet.yaph.service.callback.MyAsyncCallback;
-import com.gbourquet.yaph.service.password.in.AllPasswordAction;
 import com.gbourquet.yaph.service.password.in.DeletePasswordAction;
-import com.gbourquet.yaph.service.password.out.AllPasswordResult;
 import com.gbourquet.yaph.service.password.out.DeletePasswordResult;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -60,6 +60,8 @@ public class PasswordPresenter extends AbstractPresenter {
 
 		void selectPassword(PasswordCard password);
 
+		void refreshPasswordList();
+
 		void updatePasswordList(List<PasswordCard> passwords);
 
 		void addSelectionChangeHandler(Handler handler);
@@ -87,26 +89,9 @@ public class PasswordPresenter extends AbstractPresenter {
 			@Override
 			public void onLogin(final LoginEvent event) {
 				final Account account = event.getAccount();
-				Boolean disconnected = ((Boolean) LocalSession.getInstance().getAttribute("disconnected") == null) ? false : (Boolean) LocalSession.getInstance().getAttribute(
-						"disconnected");
-				if (disconnected) {
-					getView().updatePasswordList(DataAccess.getInstance().getPasswords(account));
-				} else {
-					dispatcher.execute(new AllPasswordAction(account),
-
-					new MyAsyncCallback<AllPasswordResult>(getEventBus()) {
-						public void success(AllPasswordResult result) {
-							// On met à jour la base locale
-							DataAccess.getInstance().setPasswords(result.getPasswordCardList(), account);
-							DataAccess.getInstance().setFields(result.getPasswordFieldList());
-							getView().updatePasswordList(DataAccess.getInstance().getPasswords(account));
-						}
-
-						public void failure(Throwable caught) {
-						}
-					});
-				}
+				getView().updatePasswordList(decrypt(DataAccess.getInstance().getPasswords(account)));
 			}
+
 		});
 
 		getEventBus().addHandler(CreatedPasswordEvent.TYPE, new CreatedPasswordEventHandler() {
@@ -115,6 +100,12 @@ public class PasswordPresenter extends AbstractPresenter {
 			public void onCreatedPassword(CreatedPasswordEvent event) {
 				getView().addPassword(event.getPasswordCard());
 				getView().selectPassword(event.getPasswordCard());
+				fields = event.getFields();
+				getView().clearFields();
+				for (PasswordField field : fields) {
+					getView().addField(field);
+				}
+				getView().setFieldsVisible(true);
 			}
 		});
 
@@ -123,30 +114,20 @@ public class PasswordPresenter extends AbstractPresenter {
 			@Override
 			public void onUpdatedPassword(UpdatedPasswordEvent event) {
 				PasswordCard password = getView().getSelectedPassword();
-				// On récupère les données en local
-				fields = DataAccess.getInstance().getFields(password);
+				password.setAccount(event.getPasswordCard().getAccount());
+				password.setId(event.getPasswordCard().getId());
+				password.setTitre(event.getPasswordCard().getTitre());
+				getView().refreshPasswordList();
+
+				fields = event.getFields();
 				getView().clearFields();
 				for (PasswordField field : fields) {
 					getView().addField(field);
 				}
-				/*
-				 * dispatcher.execute(new AllFieldAction(password), new
-				 * MyAsyncCallback<AllFieldResult>( getEventBus()) {
-				 * 
-				 * @Override public void success(AllFieldResult result) { fields
-				 * = result.getFieldList(); getView().clearFields(); for
-				 * (PasswordField field : fields) { getView().addField(field); }
-				 * 
-				 * }
-				 * 
-				 * @Override public void failure(Throwable caught) {
-				 * GWT.log(caught.getMessage()); }
-				 * 
-				 * });
-				 */
 				getView().setFieldsVisible(true);
 
 			}
+
 		});
 
 		getView().getNewPasswordButton().addClickHandler(new ClickHandler() {
@@ -215,30 +196,16 @@ public class PasswordPresenter extends AbstractPresenter {
 				if (getView().getSelectedPassword() != null) {
 					PasswordCard password = getView().getSelectedPassword();
 					// On récupère les données en local
-					fields = DataAccess.getInstance().getFields(password);
+					fields = decryptF(DataAccess.getInstance().getFields(password));
 					getView().clearFields();
 					for (PasswordField field : fields) {
 						getView().addField(field);
 					}
-					/*
-					 * dispatcher.execute(new AllFieldAction(password), new
-					 * MyAsyncCallback<AllFieldResult>(getEventBus()) {
-					 * 
-					 * @Override public void success(AllFieldResult result) {
-					 * fields = result.getFieldList(); getView().clearFields();
-					 * for (PasswordField field : fields) {
-					 * getView().addField(field); }
-					 * 
-					 * }
-					 * 
-					 * @Override public void failure(Throwable caught) {
-					 * GWT.log(caught.getMessage()); }
-					 * 
-					 * });
-					 */
+
 					getView().setFieldsVisible(true);
 				}
 			}
+
 		});
 	}
 
@@ -261,4 +228,49 @@ public class PasswordPresenter extends AbstractPresenter {
 	public View getView() {
 		return view;
 	}
+
+	private List<PasswordCard> decrypt(List<PasswordCard> passwords) {
+		CryptoClient crypt = new CryptoClient();
+		Account account = (Account) LocalSession.getInstance().getAttribute("account");
+		String cryptKey = account.getPassword();
+		// String key = crypt.decrypt(cryptKey, "MacleLogiciel");
+		String key = cryptKey;
+		int ln = Math.min(key.length(), 23);
+		key = key.substring(0, ln);
+		StringBuffer sb = new StringBuffer(key);
+		for (int i = ln; i < 23; i++)
+			sb.append("0");
+		key = sb.toString();
+
+		List<PasswordCard> ret = new ArrayList<PasswordCard>();
+		for (PasswordCard password : passwords) {
+			PasswordCard local = crypt.decrypt(password, key);
+
+			ret.add(local);
+		}
+
+		return ret;
+	}
+
+	private List<PasswordField> decryptF(List<PasswordField> fieldsData) {
+		CryptoClient crypt = new CryptoClient();
+		Account account = (Account) LocalSession.getInstance().getAttribute("account");
+		String cryptKey = account.getPassword();
+		// String key = crypt.decrypt(cryptKey, "MacleLogiciel");
+		String key = cryptKey;
+		int ln = Math.min(key.length(), 23);
+		key = key.substring(0, ln);
+		StringBuffer sb = new StringBuffer(key);
+		for (int i = ln; i < 23; i++)
+			sb.append("0");
+		key = sb.toString();
+		List<PasswordField> ret = new ArrayList<PasswordField>();
+		for (PasswordField field : fieldsData) {
+			PasswordField local = crypt.decrypt(field, key);
+			ret.add(local);
+		}
+
+		return ret;
+	}
+
 }

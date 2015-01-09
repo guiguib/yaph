@@ -387,15 +387,12 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 	@Override
 	public void addField(PasswordField field) {
-		TypePassword type = "PASSWD".equals(field.getType()) ? TypePassword.PASSWD : TypePassword.TEXT; // TODO
-																										// gérer
-																										// tous
-																										// les
-																										// types
+		TypePassword type = "PASSWD".equals(field.getType()) ? TypePassword.PASSWD : TypePassword.TEXT; // TODO gérer tous les types
 		PasswordWidget fieldWidget = new PasswordWidget(type);
 		fieldWidget.setTitleText(field.getLibelle());
 		fieldWidget.setValueText(field.getValue());
-		fields.add(fieldWidget);
+		this.fields.add(fieldWidget);
+		this.fields.setVisible(true);
 	}
 
 	@Override
@@ -428,7 +425,8 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	@Override
 	public void selectPassword(PasswordCard password) {
 		selectionModel.setSelected(password, true);
-		pager.lastPage();
+		if (pager.getPageCount() > 0)
+			pager.lastPage();
 	}
 
 	@Override
@@ -439,6 +437,12 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	@Override
 	public HasClickHandlers getDeletePasswordButton() {
 		return deletePasswordButton;
+	}
+
+	@Override
+	public void refreshPasswordList() {
+		dataGrid.flush();
+		dataGrid.redraw();
 	}
 
 }

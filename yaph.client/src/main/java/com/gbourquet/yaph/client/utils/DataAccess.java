@@ -100,7 +100,7 @@ public class DataAccess {
 	public List<PasswordCard> getPasswords(Account account) {
 		JavaScriptObject sqlResults = sqlDb
 				.execute("select id, titre, user, password, adresse, account from passwordCard where account = "
-						+ account.getId());
+						+ account.getId()+" order by titre asc");
 
 		return deserializeRecords(sqlResults, "passwordCard");
 	}
@@ -234,14 +234,13 @@ public class DataAccess {
 		sb.append("'").append(password.getPassword()).append("',");
 		sb.append("'").append(password.getAdresse()).append("',");
 		sb.append(account.getId()).append(")");
-		JavaScriptObject jso;
 		try {
-			jso = sqlDb.execute(sb.toString());
+			sqlDb.execute(sb.toString());
 		} catch (RuntimeException exception) {
 			sb = new StringBuffer("update passwordCard set ");
 			sb.append("titre='").append(password.getTitre()).append("' ");
 			sb.append("where id=").append(password.getId());
-			jso = sqlDb.execute(sb.toString());
+			sqlDb.execute(sb.toString());
 		}
 
 		GWT.log(sb.toString());
@@ -284,31 +283,27 @@ public class DataAccess {
 
 	public void insertOrUpdatePasswordFields(PasswordCard password,
 			List<PasswordField> fields) {
+		
+		StringBuffer sb = new StringBuffer("delete from passwordField where idCard=").append(password.getId());
+		sqlDb.execute(sb.toString());
+		
+		GWT.log(sb.toString());
+		
 		for (PasswordField field : fields) {
-			StringBuffer sb = new StringBuffer("");
 			int id = field.getId() == null || field.getId() == 0 ? --minIdField
 					: field.getId();
-			sb.append("insert into passwordField (id, idCard, type, libelle, value) values(");
+			sb=new StringBuffer("insert into passwordField (id, idCard, type, libelle, value) values(");
 			sb.append(id).append(",");
 			sb.append(password.getId()).append(",");
 			sb.append("'").append(field.getType()).append("',");
 			sb.append("'").append(field.getLibelle()).append("',");
 			sb.append("'").append(field.getValue()).append("')");
-			JavaScriptObject jso;
-			try {
-				jso = sqlDb.execute(sb.toString());
-			} catch (RuntimeException exception) {
-				sb = new StringBuffer("update passwordField set ");
-				sb.append("type='").append(field.getType()).append("', ");
-				sb.append("libelle='").append(field.getLibelle()).append("', ");
-				sb.append("value='").append(field.getValue()).append("' ");
-				sb.append("where id=").append(field.getId());
-				jso = sqlDb.execute(sb.toString());
-			}
+			sqlDb.execute(sb.toString());
+			
 			GWT.log(sb.toString());
-			persistDB();
 		}
-
+		persistDB();
+		
 	}
 
 	public void deletePassword(PasswordCard password) {
@@ -354,6 +349,15 @@ public class DataAccess {
 					minIdField = row.getInt("id");
 		}
 		return minIdField;
+	}
+
+	public List<PasswordCard> getNewPasswd(Account account) {
+		JavaScriptObject sqlResults = sqlDb
+				.execute("select id, titre, user, password, adresse, account from passwordCard where account = "
+						+ account.getId()+" and id<0");
+
+		return deserializeRecords(sqlResults, "passwordCard");
+	
 	}
 
 }

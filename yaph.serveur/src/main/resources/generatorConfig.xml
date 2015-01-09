@@ -18,10 +18,10 @@
 
 		<javaModelGenerator targetPackage="com.gbourquet.yaph.serveur.metier.generated"
 			targetProject="src/main/java">
+			<property name="constructorBased" value="true" />
 			<property name="enableSubPackages" value="false" />
 			<property name="trimStrings" value="true" />
 			<property name="rootClass" value="com.gbourquet.yaph.serveur.metier.BaseDto" />
-
 		</javaModelGenerator>
 
 		<sqlMapGenerator targetPackage="maps" targetProject="src/main/resources">
@@ -36,6 +36,7 @@
 
 		<table schema="yaph" tableName="ACCOUNT" modelType=""
 			domainObjectName="Account">
+			<property name="constructorBased" value="true" />
 			<property name="useActualColumnNames" value="true" />
 			<generatedKey column="id" sqlStatement="SELECT last_insert_rowid()"/>
 			<columnOverride column="id"></columnOverride>
@@ -43,6 +44,7 @@
 		
 		<table schema="yaph" tableName="PASSWORDCARD" modelType=""
 			domainObjectName="PasswordCard">
+			<property name="constructorBased" value="true" />
 			<property name="useActualColumnNames" value="true" />
 			<generatedKey column="id" sqlStatement="SELECT last_insert_rowid()"/>
 			<columnOverride column="id"></columnOverride>
@@ -50,6 +52,7 @@
 		
 		<table schema="yaph" tableName="PASSWORDFIELD" modelType=""
 			domainObjectName="PasswordField">
+			<property name="constructorBased" value="true" />
 			<property name="useActualColumnNames" value="true" />
 			<generatedKey column="id" sqlStatement="SELECT last_insert_rowid()"/>
 			<columnOverride column="id"></columnOverride>

@@ -25,7 +25,7 @@ public class PasswordServiceImpl implements PasswordService {
 
 	@Override
 	public PasswordCard save(PasswordCard password,List<PasswordField> fields) throws ServiceException {
-		if (password.getId()==null || password.getId()==0)
+		if (password.getId()==null || password.getId()<=0)
 		{
 			//c'est un nouveau mot de passe à créer
 			password.setId(null);

@@ -1,5 +1,7 @@
 package com.gbourquet.yaph.client.mvp.presenter;
 
+import java.util.List;
+
 import net.customware.gwt.dispatch.client.DispatchAsync;
 
 import com.gbourquet.yaph.client.LocalSession;
@@ -7,14 +9,20 @@ import com.gbourquet.yaph.client.event.InlineEvent;
 import com.gbourquet.yaph.client.event.InlineEventHandler;
 import com.gbourquet.yaph.client.event.LoadApplicationEvent;
 import com.gbourquet.yaph.client.event.LoginEvent;
-import com.gbourquet.yaph.client.event.LoginEventHandler;
 import com.gbourquet.yaph.client.event.MenuEvent;
 import com.gbourquet.yaph.client.mvp.ClientFactory;
 import com.gbourquet.yaph.client.mvp.place.LoginPlace;
+import com.gbourquet.yaph.client.utils.DataAccess;
 import com.gbourquet.yaph.serveur.metier.generated.Account;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.gbourquet.yaph.service.callback.MyAsyncCallback;
 import com.gbourquet.yaph.service.login.in.LoginFromSessionAction;
 import com.gbourquet.yaph.service.login.out.LoginResult;
+import com.gbourquet.yaph.service.password.in.AllPasswordAction;
+import com.gbourquet.yaph.service.password.in.PasswordAction;
+import com.gbourquet.yaph.service.password.out.AllPasswordResult;
+import com.gbourquet.yaph.service.password.out.PasswordResult;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -40,19 +48,15 @@ public class AppPresenter extends AbstractPresenter {
 	public void bind() {
 
 		RootPanel.get("container").add(getView().asWidget());
-		// On s'inscrit aux evenements du Bus
-		getEventBus().addHandler(LoginEvent.TYPE, new LoginEventHandler() {
-
-			@Override
-			public void onLogin(final LoginEvent event) {
-			}
-		});
-
+		
 		getEventBus().addHandler(InlineEvent.TYPE, new InlineEventHandler() {
 
 			@Override
 			public void onInline(InlineEvent event) {
 				LocalSession.getInstance().setAttribute("disconnected", false);
+				Account account = (Account) LocalSession.getInstance().getAttribute("account");
+				//On synchronise les bases
+				synchData(account);
 			}
 
 			@Override
@@ -69,8 +73,7 @@ public class AppPresenter extends AbstractPresenter {
 				if (account != null) {
 					LocalSession.getInstance().setAttribute("token", result.getToken());
 					LocalSession.getInstance().setAttribute("account", account);
-					// On envoie un message dans le bus
-					getEventBus().fireEvent(new LoginEvent(account));
+					synchData(account);
 				} else {
 					// On redirige vers la vue de connexion
 					getFactory().getPlaceController().goTo(new LoginPlace(""));
@@ -103,5 +106,47 @@ public class AppPresenter extends AbstractPresenter {
 
 	public View getView() {
 		return view;
+	}
+	
+	private void synchData(final Account account) {
+		// On sauvegarde recursivement les passwd de la base locale
+		List<PasswordCard> passwords = DataAccess.getInstance().getNewPasswd(account);
+		if (passwords != null && passwords.size() != 0) {
+			final PasswordCard password = passwords.get(0);
+			final List<PasswordField> fields = DataAccess.getInstance().getFields(password);
+			dispatcher.execute(new PasswordAction(password, fields), new MyAsyncCallback<PasswordResult>(getEventBus()) {
+
+				@Override
+				public void success(PasswordResult result) {
+					// On peut supprimer en local
+					DataAccess.getInstance().deletePassword(password);
+					// On passe au suivant
+					synchData(account);
+				}
+
+				@Override
+				public void failure(Throwable caught) {
+					// TODO Auto-generated method stub
+
+				}
+
+			});
+
+		} else {
+			//On récupère la base distante
+			dispatcher.execute(new AllPasswordAction(account), new MyAsyncCallback<AllPasswordResult>(getEventBus()) {
+				public void success(AllPasswordResult result) {
+					// On met à jour la base locale
+					DataAccess.getInstance().setPasswords(result.getPasswordCardList(), account);
+					DataAccess.getInstance().setFields(result.getPasswordFieldList());
+					
+					//On envoie l'event de login
+					getEventBus().fireEvent(new LoginEvent(account));
+				}
+
+				public void failure(Throwable caught) {
+				}
+			});
+		}
 	}
 }
