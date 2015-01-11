@@ -29,3 +29,9 @@ CREATE TABLE passwordField (
 	CONSTRAINT PASSWORDFIELD_FK_PASSWORDCARD FOREIGN KEY (idCard) REFERENCES passwordCard(id)
 );
 
+CREATE TABLE toDelete (
+	id INTEGER,
+	type TEXT(80)
+)
+
+

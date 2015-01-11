@@ -13,7 +13,7 @@
 			<value>org.sqlite.JDBC</value>
 		</property>
 		<property name="url">
-			<value>jdbc:sqlite:d:\gbourquet\02 - Dev\workspace\yaph\yaph.serveur\yaph.db</value>
+			<value>jdbc:sqlite:yaph.db</value>
 		</property>
 	</bean>
 

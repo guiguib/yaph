@@ -54,7 +54,7 @@ public class NewPasswordPresenter extends AbstractPresenter {
 		void addField(PasswordField field);
 
 		List<PasswordField> getPasswordFields();
-
+		
 		void delFields();
 
 		void clear();
@@ -91,7 +91,7 @@ public class NewPasswordPresenter extends AbstractPresenter {
 					passwordData.setAccount(account.getId());
 				passwordData.setTitre(getView().getTitleText());
 				fieldsData = getView().getPasswordFields();
-
+				
 				// On encrypte les données
 				final PasswordCard cryptedPasswordData = crypt(passwordData);
 				final List<PasswordField> cryptedfieldsData = crypt(fieldsData);

@@ -171,6 +171,7 @@ public class DataAccess {
 			sb.append(account.getId()).append(")");
 			sqlDb.execute(sb.toString());
 		}
+		
 		persistDB();
 	}
 
@@ -353,11 +354,41 @@ public class DataAccess {
 
 	public List<PasswordCard> getNewPasswd(Account account) {
 		JavaScriptObject sqlResults = sqlDb
-				.execute("select id, titre, user, password, adresse, account from passwordCard where account = "
-						+ account.getId()+" and id<0");
+				.execute("select passwordCard.* from passwordCard "
+						+ "left join passwordField on passwordCard.id = passwordField.idCard "
+						+ "where account="+account.getId()+" and (passwordCard.id<0 or passwordField.id<0)");
 
 		return deserializeRecords(sqlResults, "passwordCard");
 	
+	}
+	
+	public List<PasswordCard> getDelPasswd() {
+		JavaScriptObject sqlResults = sqlDb
+				.execute("select id, 'titre', 'user', 'password', 'adresse', 0 from toDelete "
+						+ "where type='password'");
+
+		return deserializeRecords(sqlResults, "passwordCard");
+	
+	}
+	
+	public List<PasswordField> getDelField() {
+		JavaScriptObject sqlResults = sqlDb
+				.execute("select id, 0, 'type', 'libelle', 'value' from toDelete "
+						+ "where type='field'");
+
+		return deserializeRecords(sqlResults, "passwordField");
+	
+	}
+	
+	public void offLineDelete(PasswordCard password) {
+		sqlDb.execute("insert into toDelete(id,type) values ("+password.getId()+",'password')");
+		persistDB();
+	}
+	
+	public void offLineDelete(List<PasswordField> fields) {
+		for (PasswordField field : fields)
+			sqlDb.execute("insert into toDelete(id,type) values ("+field.getId()+",'field')");
+		persistDB();
 	}
 
 }

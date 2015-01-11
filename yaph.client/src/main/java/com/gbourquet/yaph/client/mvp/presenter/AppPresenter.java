@@ -20,8 +20,10 @@ import com.gbourquet.yaph.service.callback.MyAsyncCallback;
 import com.gbourquet.yaph.service.login.in.LoginFromSessionAction;
 import com.gbourquet.yaph.service.login.out.LoginResult;
 import com.gbourquet.yaph.service.password.in.AllPasswordAction;
+import com.gbourquet.yaph.service.password.in.DeleteAllAction;
 import com.gbourquet.yaph.service.password.in.PasswordAction;
 import com.gbourquet.yaph.service.password.out.AllPasswordResult;
+import com.gbourquet.yaph.service.password.out.DeleteAllResult;
 import com.gbourquet.yaph.service.password.out.PasswordResult;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -48,14 +50,14 @@ public class AppPresenter extends AbstractPresenter {
 	public void bind() {
 
 		RootPanel.get("container").add(getView().asWidget());
-		
+
 		getEventBus().addHandler(InlineEvent.TYPE, new InlineEventHandler() {
 
 			@Override
 			public void onInline(InlineEvent event) {
 				LocalSession.getInstance().setAttribute("disconnected", false);
 				Account account = (Account) LocalSession.getInstance().getAttribute("account");
-				//On synchronise les bases
+				// On synchronise les bases
 				synchData(account);
 			}
 
@@ -107,7 +109,7 @@ public class AppPresenter extends AbstractPresenter {
 	public View getView() {
 		return view;
 	}
-	
+
 	private void synchData(final Account account) {
 		// On sauvegarde recursivement les passwd de la base locale
 		List<PasswordCard> passwords = DataAccess.getInstance().getNewPasswd(account);
@@ -133,20 +135,38 @@ public class AppPresenter extends AbstractPresenter {
 			});
 
 		} else {
-			//On récupère la base distante
+			// On récupère la base distante
 			dispatcher.execute(new AllPasswordAction(account), new MyAsyncCallback<AllPasswordResult>(getEventBus()) {
 				public void success(AllPasswordResult result) {
 					// On met à jour la base locale
 					DataAccess.getInstance().setPasswords(result.getPasswordCardList(), account);
 					DataAccess.getInstance().setFields(result.getPasswordFieldList());
 					
-					//On envoie l'event de login
-					getEventBus().fireEvent(new LoginEvent(account));
+					// on supprime les password et field de la table delete
+					List<PasswordCard> passwordsToDelete = DataAccess.getInstance().getDelPasswd();
+					List<PasswordField> fieldsToDelete = DataAccess.getInstance().getDelField();
+					dispatcher.execute(new DeleteAllAction(passwordsToDelete, fieldsToDelete), new MyAsyncCallback<DeleteAllResult>(getEventBus()) {
+
+						@Override
+						public void success(DeleteAllResult result) {
+							// On envoie l'event de login
+							getEventBus().fireEvent(new LoginEvent(account));
+						}
+						
+						@Override
+						public void failure(Throwable caught) {
+							// TODO Stub de la méthode généré automatiquement
+							
+						}
+						
+					});
+					
 				}
 
 				public void failure(Throwable caught) {
 				}
 			});
 		}
+
 	}
 }
