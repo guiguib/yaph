@@ -24,13 +24,14 @@
 	<entry-point class='com.gbourquet.yaph.client.Yaph' />
 
 	<!-- Specify the paths for translatable code -->
-	<source path="service/callback" excludes="*/*Test*.java" />
-	<source path="service/in" excludes="*/*Test*.java" />
-	<source path="service/login/in" excludes="*/*Test*.java" />
-	<source path="service/login/out" excludes="*/*Test*.java" />
-	<source path="service/password/in" excludes="*/*Test*.java" />
-	<source path="service/password/out" excludes="*/*Test*.java" />
+	<source path="serveur/callback" excludes="*/*Test*.java" />
+	<source path="serveur/in" excludes="*/*Test*.java" />
+	<source path="serveur/login/in" excludes="*/*Test*.java" />
+	<source path="serveur/login/out" excludes="*/*Test*.java" />
+	<source path="serveur/password/in" excludes="*/*Test*.java" />
+	<source path="serveur/password/out" excludes="*/*Test*.java" />
 	<source path="client" excludes="*/*Test*.java,**/HudsonTest.java" />
+	<source path="service" excludes="*/*Test*.java,**/HudsonTest.java" />
 	<source path="serveur/metier" excludes="*/*Test*.java" />
 
 	<extend-property name="locale" values="fr_FR" />

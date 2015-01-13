@@ -5,9 +5,9 @@ import net.customware.gwt.dispatch.client.DispatchAsync;
 import com.gbourquet.yaph.client.LocalSession;
 import com.gbourquet.yaph.client.event.LogoutEvent;
 import com.gbourquet.yaph.client.mvp.ClientFactory;
-import com.gbourquet.yaph.service.callback.MyAsyncCallback;
-import com.gbourquet.yaph.service.login.in.LogoutAction;
-import com.gbourquet.yaph.service.login.out.LoginResult;
+import com.gbourquet.yaph.serveur.callback.MyAsyncCallback;
+import com.gbourquet.yaph.serveur.login.in.LogoutAction;
+import com.gbourquet.yaph.serveur.login.out.LoginResult;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 

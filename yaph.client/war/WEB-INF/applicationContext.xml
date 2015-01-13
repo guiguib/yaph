@@ -15,13 +15,13 @@
 		class="net.customware.gwt.dispatch.server.DefaultActionHandlerRegistry">
 		<property name="actionHandlers">
 			<list>
-				<bean class="com.gbourquet.yaph.service.login.handler.LoginHandler"/>
-				<bean class="com.gbourquet.yaph.service.login.handler.LoginFromSessionHandler"/>
-				<bean class="com.gbourquet.yaph.service.login.handler.LogoutHandler"/>
-				<bean class="com.gbourquet.yaph.service.password.handler.PasswordHandler"/>
-				<bean class="com.gbourquet.yaph.service.password.handler.DeletePasswordHandler"/>
-				<bean class="com.gbourquet.yaph.service.password.handler.AllPasswordFromAccountHandler"/>
-				<bean class="com.gbourquet.yaph.service.password.handler.AllFieldFromPasswordHandler"/>
+				<bean class="com.gbourquet.yaph.serveur.login.handler.LoginHandler"/>
+				<bean class="com.gbourquet.yaph.serveur.login.handler.LoginFromSessionHandler"/>
+				<bean class="com.gbourquet.yaph.serveur.login.handler.LogoutHandler"/>
+				<bean class="com.gbourquet.yaph.serveur.password.handler.PasswordHandler"/>
+				<bean class="com.gbourquet.yaph.serveur.password.handler.DeletePasswordHandler"/>
+				<bean class="com.gbourquet.yaph.serveur.password.handler.AllPasswordFromAccountHandler"/>
+				<bean class="com.gbourquet.yaph.serveur.password.handler.AllFieldFromPasswordHandler"/>
 			</list>
 		</property>
 	</bean>
