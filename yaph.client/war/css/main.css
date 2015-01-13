@@ -497,8 +497,41 @@ div.active a {
 	padding: 10px;
 }
 
-.inline {
+.online, .offline {
 	position: absolute;
 	bottom: 10px;
 	left: 10px;
+	width: 30px;
+	padding: 0px;
+	margin: 0px;
 }
+
+.online button, .offline button {
+	-webkit-appearance: none;
+	cursor: pointer;
+	border: none;
+	outline: none;
+	padding: 0px;
+	margin: 0px;
+	background: transparent;
+	vertical-align: bottom;
+}
+.online .gwt-Label, .offline .gwt-Label {
+	font-size: 10px;
+	color: #ccc;
+	padding: 0px;
+	margin: 0px;
+	height:10px;
+	vertical-align: top;
+}
+
+.online {
+	background : url('../img/online.png') no-repeat;
+}
+	
+.offline {
+	background : url('../img/offline.png') no-repeat;
+}
+
+
+	
