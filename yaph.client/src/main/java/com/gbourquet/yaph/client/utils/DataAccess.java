@@ -289,19 +289,19 @@ public class DataAccess {
 		StringBuffer sb = new StringBuffer(
 				"delete from passwordField where idCard=");
 		sb.append(password.getId());
-		JavaScriptObject jso = sqlDb.execute(sb.toString());
-		GWT.log(jso.toString());
+		sqlDb.execute(sb.toString());
+		GWT.log(sb.toString());
 
 		sb = new StringBuffer("delete from passwordCard where id=");
 		sb.append(password.getId());
-		jso = sqlDb.execute(sb.toString());
-		GWT.log(jso.toString());
+		sqlDb.execute(sb.toString());
+		GWT.log(sb.toString());
 
 		sb = new StringBuffer("delete from toDelete where id=");
 		sb.append(password.getId());
 		sb.append(" and type='password'");
-		jso = sqlDb.execute(sb.toString());
-		GWT.log(jso.toString());
+		sqlDb.execute(sb.toString());
+		GWT.log(sb.toString());
 
 		persistDB();
 	}
@@ -318,7 +318,7 @@ public class DataAccess {
 	
 	public List<PasswordCard> getDelPasswd() {
 		JavaScriptObject sqlResults = sqlDb
-				.execute("select id, 'titre', 'user', 'password', 'adresse', 0 from toDelete "
+				.execute("select id, 'titre' as titre, 'user' as user, 'password' as password, 'adresse' as adresse, 0 as account from toDelete "
 						+ "where type='password'");
 
 		return deserializeRecords(sqlResults, "passwordCard");

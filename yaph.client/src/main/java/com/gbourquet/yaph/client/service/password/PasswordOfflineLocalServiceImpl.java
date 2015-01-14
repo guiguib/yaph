@@ -71,4 +71,9 @@ public class PasswordOfflineLocalServiceImpl implements PasswordService {
 		
 	}
 
+	@Override
+	public void syncData(Account account) {
+		// Sans aucun interet		
+	}
+
 }

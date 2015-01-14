@@ -73,4 +73,10 @@ public class PasswordOnlineLocalServiceImpl implements PasswordService {
 		
 	}
 
+	@Override
+	public void syncData(Account account) {
+		// Sans interet
+		
+	}
+
 }

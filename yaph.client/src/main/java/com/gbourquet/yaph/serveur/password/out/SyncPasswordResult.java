@@ -8,15 +8,15 @@ import net.customware.gwt.dispatch.shared.Result;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 
-public class AllPasswordResult implements Result {
+public class SyncPasswordResult implements Result {
 
-	private HashMap<PasswordCard, List<PasswordField>> data;
-
+	private HashMap<PasswordCard,List<PasswordField>> data;
+	
 	/** For serialization only. */
-	AllPasswordResult() {
+	SyncPasswordResult() {
 	}
 
-	public AllPasswordResult(HashMap<PasswordCard, List<PasswordField>> data) {
+	public SyncPasswordResult(HashMap<PasswordCard, List<PasswordField>> data) {
 		super();
 		this.data = data;
 	}
@@ -24,4 +24,6 @@ public class AllPasswordResult implements Result {
 	public HashMap<PasswordCard, List<PasswordField>> getData() {
 		return data;
 	}
+
+	
 }

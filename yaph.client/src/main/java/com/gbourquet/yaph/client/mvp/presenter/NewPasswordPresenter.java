@@ -170,7 +170,6 @@ public class NewPasswordPresenter extends AbstractPresenter {
 				// On enregistre en local
 				// On chiffre les données
 				localOfflineService.savePassword(event.getPasswordCard(), event.getFields());
-
 			}
 
 			@Override

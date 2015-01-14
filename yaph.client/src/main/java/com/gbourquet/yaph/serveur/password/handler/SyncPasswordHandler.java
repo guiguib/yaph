@@ -10,37 +10,38 @@ import com.gbourquet.yaph.serveur.handler.AbstractHandler;
 import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
-import com.gbourquet.yaph.serveur.password.in.AllPasswordAction;
-import com.gbourquet.yaph.serveur.password.out.AllPasswordResult;
+import com.gbourquet.yaph.serveur.password.in.SyncPasswordAction;
+import com.gbourquet.yaph.serveur.password.out.SyncPasswordResult;
 import com.gbourquet.yaph.serveur.service.PasswordService;
 import com.gbourquet.yaph.serveur.service.exception.ServiceException;
 import com.gbourquet.yaph.serveur.util.BeanFactory;
 
-public class AllPasswordFromAccountHandler extends AbstractHandler<AllPasswordAction, AllPasswordResult> {
+public class SyncPasswordHandler extends AbstractHandler<SyncPasswordAction, SyncPasswordResult> {
 
-	public AllPasswordResult exec(AllPasswordAction in, ExecutionContext context) throws ActionException {
+	public SyncPasswordResult exec(SyncPasswordAction in, ExecutionContext context) throws ActionException {
 
+		final List<PasswordCard> passwordToDelete = in.getPasswordsToDelete();
+		final HashMap<PasswordCard, List<PasswordField>> dataToUpdate = in.getDataToUpdate();
 		final Account account = in.getAccount();
-
-		HashMap<PasswordCard, List<PasswordField>> outData = null;
+		HashMap<PasswordCard, List<PasswordField>> outData;
 		PasswordService service = (PasswordService) BeanFactory.getInstance().getService("passwordService");
 		try {
-			outData = service.getPasswords(account);
+			outData = service.sync(account,passwordToDelete, dataToUpdate);
 		} catch (ServiceException e) {
 			throw new ActionException(e.getMessage());
 		}
-		
-		return new AllPasswordResult(outData);
+
+		return new SyncPasswordResult(outData);
 
 	}
 
 	@Override
-	public void rollback(final AllPasswordAction action, final AllPasswordResult result, final ExecutionContext context) throws ActionException {
+	public void rollback(final SyncPasswordAction action, final SyncPasswordResult result, final ExecutionContext context) throws ActionException {
 		// Nothing to do here
 	}
 
 	@Override
-	public Class<AllPasswordAction> getActionType() {
-		return AllPasswordAction.class;
+	public Class<SyncPasswordAction> getActionType() {
+		return SyncPasswordAction.class;
 	}
 }

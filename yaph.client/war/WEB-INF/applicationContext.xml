@@ -19,6 +19,7 @@
 				<bean class="com.gbourquet.yaph.serveur.login.handler.LoginFromSessionHandler"/>
 				<bean class="com.gbourquet.yaph.serveur.login.handler.LogoutHandler"/>
 				<bean class="com.gbourquet.yaph.serveur.password.handler.SavePasswordHandler"/>
+				<bean class="com.gbourquet.yaph.serveur.password.handler.SyncPasswordHandler"/>
 				<bean class="com.gbourquet.yaph.serveur.password.handler.DeletePasswordHandler"/>
 				<bean class="com.gbourquet.yaph.serveur.password.handler.AllPasswordFromAccountHandler"/>
 				<bean class="com.gbourquet.yaph.serveur.password.handler.AllFieldFromPasswordHandler"/>

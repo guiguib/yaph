@@ -6,14 +6,14 @@ import java.util.List;
 
 import com.gbourquet.yaph.client.LocalSession;
 import com.gbourquet.yaph.client.event.MenuEvent;
-import com.gbourquet.yaph.client.event.login.LoginEvent;
-import com.gbourquet.yaph.client.event.login.LoginEventHandler;
-import com.gbourquet.yaph.client.event.login.NotLoggedEvent;
 import com.gbourquet.yaph.client.event.password.NewPasswordEvent;
 import com.gbourquet.yaph.client.event.password.UpdatePasswordEvent;
 import com.gbourquet.yaph.client.event.password.deleted.DeletedPasswordEvent;
 import com.gbourquet.yaph.client.event.password.deleted.DeletedPasswordEventHandler;
 import com.gbourquet.yaph.client.event.password.deleted.DeletingErrorPasswordEvent;
+import com.gbourquet.yaph.client.event.password.read.ReadErrorPasswordEvent;
+import com.gbourquet.yaph.client.event.password.read.ReadPasswordEvent;
+import com.gbourquet.yaph.client.event.password.read.ReadPasswordEventHandler;
 import com.gbourquet.yaph.client.event.password.saved.SavedPasswordEvent;
 import com.gbourquet.yaph.client.event.password.saved.SavedPasswordEventHandler;
 import com.gbourquet.yaph.client.event.password.saved.SavingErrorPasswordEvent;
@@ -24,10 +24,9 @@ import com.gbourquet.yaph.client.service.password.PasswordOfflineLocalServiceImp
 import com.gbourquet.yaph.client.service.password.PasswordOnlineLocalServiceImpl;
 import com.gbourquet.yaph.client.service.password.PasswordRemoteServiceImpl;
 import com.gbourquet.yaph.client.service.password.PasswordService;
-import com.gbourquet.yaph.client.utils.DataAccess;
-import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -45,20 +44,31 @@ public class PasswordPresenter extends AbstractPresenter {
 	public interface View extends IsWidget {
 
 		HasClickHandlers getNewPasswordButton();
+
 		HasClickHandlers getUpdatePasswordButton();
+
 		HasClickHandlers getDeletePasswordButton();
 
 		void addPassword(PasswordCard password);
+
 		void removePassword(PasswordCard password);
+
 		void addField(PasswordField field);
 
 		void clearFields();
+
 		void unselectPassword();
+
 		void selectPassword(PasswordCard password);
+
 		void refreshPasswordList();
+
 		void updatePasswordList(List<PasswordCard> passwords);
+
 		void addSelectionChangeHandler(Handler handler);
+
 		PasswordCard getSelectedPassword();
+
 		void setFieldsVisible(Boolean isVisible);
 
 	}
@@ -67,29 +77,32 @@ public class PasswordPresenter extends AbstractPresenter {
 
 	private List<PasswordCard> passwords;
 	private HashMap<PasswordCard, List<PasswordField>> fields;
-	
+
 	private PasswordService remoteService;
 	private PasswordService localOnlineService;
 	private PasswordService localOfflineService;
-	
+	private CryptService cryptService;
+
 	public PasswordPresenter(ClientFactory factory) {
 		super(factory);
 		view = factory.getPasswordView();
-		//TODO à fabriquer par la factory
+		// TODO à fabriquer par la factory
 		remoteService = new PasswordRemoteServiceImpl(factory);
 		localOnlineService = new PasswordOnlineLocalServiceImpl(factory);
 		localOfflineService = new PasswordOfflineLocalServiceImpl(factory);
-		
+		cryptService = new DefaultCryptServiceImpl();
+
 		bind();
 	}
 
 	public void bind() {
-		//Evenements de la vue
+		// Evenements de la vue
 		getView().getNewPasswordButton().addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				// On envoi un message au presenter de la vue de création de mot de passe
+				// On envoi un message au presenter de la vue de création de mot
+				// de passe
 				getEventBus().fireEvent(new NewPasswordEvent());
 			}
 		});
@@ -98,15 +111,15 @@ public class PasswordPresenter extends AbstractPresenter {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				//on retire le mot de passe des données du presenter
+				// on retire le mot de passe des données du presenter
 				PasswordCard uPassword = getView().getSelectedPassword();
 				List<PasswordField> uFields = fields.get(uPassword);
-				
+
 				passwords.remove(uPassword);
 				fields.remove(uFields);
-				
-				// On envoi un message au presenter de la vue de création de mot de passe
-				// avec le mot de passe à modifier et les champs
+
+				// On envoi un message au presenter de la vue de création de mot
+				// de passe avec le mot de passe à modifier et les champs
 				getEventBus().fireEvent(new UpdatePasswordEvent(uPassword, uFields));
 			}
 		});
@@ -117,7 +130,7 @@ public class PasswordPresenter extends AbstractPresenter {
 			public void onClick(ClickEvent event) {
 				if (Window.confirm("Confirmez vous la suppression ?")) {
 
-					PasswordCard sPassword = getView().getSelectedPassword(); 
+					PasswordCard sPassword = getView().getSelectedPassword();
 					Boolean disconnected = ((Boolean) LocalSession.getInstance().getAttribute("disconnected") == null) ? false : (Boolean) LocalSession.getInstance().getAttribute(
 							"disconnected");
 					if (disconnected) {
@@ -135,7 +148,9 @@ public class PasswordPresenter extends AbstractPresenter {
 			public void onSelectionChange(SelectionChangeEvent event) {
 				if (getView().getSelectedPassword() != null) {
 					PasswordCard sPassword = getView().getSelectedPassword();
+					GWT.log("Passwd selecté :" + sPassword.getTitre());
 					List<PasswordField> sFields = fields.get(sPassword);
+					GWT.log("Nb fields :" + (sFields == null ? "null" : sFields.size()));
 					getView().clearFields();
 					for (PasswordField field : sFields) {
 						getView().addField(field);
@@ -146,9 +161,9 @@ public class PasswordPresenter extends AbstractPresenter {
 			}
 
 		});
-		
-		//Evenements du bus
-		getEventBus().addHandler(LoginEvent.TYPE, new LoginEventHandler() {
+
+		// Evenements du bus
+		/*getEventBus().addHandler(LoginEvent.TYPE, new LoginEventHandler() {
 
 			@Override
 			public void onLogin(final LoginEvent event) {
@@ -157,8 +172,7 @@ public class PasswordPresenter extends AbstractPresenter {
 				passwords = new ArrayList<PasswordCard>();
 				fields = new HashMap<PasswordCard, List<PasswordField>>();
 				List<PasswordCard> cPasswords = DataAccess.getInstance().getPasswords(account);
-				for (PasswordCard sPassword : cPasswords)
-				{
+				for (PasswordCard sPassword : cPasswords) {
 					PasswordCard dsPassword = cryptService.decrypt(sPassword);
 					List<PasswordField> sFields = cryptService.decrypt(DataAccess.getInstance().getFields(dsPassword));
 					passwords.add(dsPassword);
@@ -172,7 +186,7 @@ public class PasswordPresenter extends AbstractPresenter {
 				// rien à faire
 			}
 
-		});
+		});*/
 
 		getEventBus().addHandler(SavedPasswordEvent.TYPE, new SavedPasswordEventHandler() {
 
@@ -184,15 +198,13 @@ public class PasswordPresenter extends AbstractPresenter {
 			@Override
 			public void onLocalSavedPassword(SavedPasswordEvent event) {
 				// On met à jour la liste et on actualise la vue
-				//On dechiffre les données
-				CryptService cryptService = new DefaultCryptServiceImpl();
+				// On dechiffre les données
 				PasswordCard sPassword = cryptService.decrypt(event.getPasswordCard());
 				List<PasswordField> sFields = cryptService.decrypt(event.getFields());
-				
-				//TODO
+
+				// TODO
 				PasswordCard selectedPassword = getView().getSelectedPassword();
-				if (selectedPassword == null)
-				{
+				if (selectedPassword == null) {
 					getView().addPassword(sPassword);
 					getView().selectPassword(sPassword);
 					passwords.add(sPassword);
@@ -202,62 +214,103 @@ public class PasswordPresenter extends AbstractPresenter {
 					selectedPassword.setTitre(sPassword.getTitre());
 					getView().refreshPasswordList();
 				}
-				
+
 				getView().clearFields();
 				for (PasswordField field : sFields) {
 					getView().addField(field);
 				}
 				getView().setFieldsVisible(true);
-				
+
 				fields.remove(sPassword);
 				fields.put(sPassword, sFields);
-				
+
 			}
 
 			@Override
 			public void onRemoteErrorPassword(SavingErrorPasswordEvent event) {
 				// Rien à faire
-				
+
 			}
 
 			@Override
 			public void onLocalErrorPassword(SavingErrorPasswordEvent event) {
 				// Rien à faire
-				
+
 			}
 		});
 
 		getEventBus().addHandler(DeletedPasswordEvent.TYPE, new DeletedPasswordEventHandler() {
-			
+
 			@Override
 			public void onRemoteErrorPassword(DeletingErrorPasswordEvent event) {
-				//On supprime en local
+				// On supprime en local
 				localOfflineService.deletePassword(event.getPasswordCard());
 			}
-			
+
 			@Override
 			public void onRemoteDeletedPassword(DeletedPasswordEvent event) {
 				// On supprime en local
 				localOnlineService.deletePassword(event.getPasswordCard());
 			}
-			
+
 			@Override
 			public void onLocalErrorPassword(DeletingErrorPasswordEvent event) {
-				//On affiche l'erreur				
+				// On affiche l'erreur
 			}
-			
+
 			@Override
 			public void onLocalDeletedPassword(DeletedPasswordEvent event) {
-				PasswordCard sPassword=event.getPasswordCard();
-				//On met les data à jour
+				PasswordCard sPassword = event.getPasswordCard();
+				// On met les data à jour
 				passwords.remove(sPassword);
 				fields.remove(sPassword);
-				
-				//On met la vue à jour
+
+				// On met la vue à jour
 				getView().removePassword(sPassword);
 				getView().clearFields();
 				getView().unselectPassword();
-				
+
+			}
+		});
+
+		getEventBus().addHandler(ReadPasswordEvent.TYPE, new ReadPasswordEventHandler() {
+
+			@Override
+			public void onRemoteReadPassword(ReadPasswordEvent event) {
+
+				GWT.log("NB Passwd :" + event.getData().size());
+				passwords = new ArrayList<PasswordCard>();
+				fields = new HashMap<PasswordCard, List<PasswordField>>();
+
+				for (PasswordCard lPassword : event.getData().keySet()) {
+					List<PasswordField> lFields = event.getData().get(lPassword);
+					
+					PasswordCard clearPassword = cryptService.decrypt(lPassword);
+					List<PasswordField> clearFields = cryptService.decrypt(lFields);
+					passwords.add(clearPassword);
+					fields.put(clearPassword, clearFields);
+					GWT.log("Passwd " + clearPassword.getTitre() + " ajouté. Nb fields :" + clearFields.size());
+
+				}
+				getView().updatePasswordList(passwords);
+			}
+
+			@Override
+			public void onRemoteErrorPassword(ReadErrorPasswordEvent event) {
+				GWT.log("onRemoteErrorPassword");
+
+			}
+
+			@Override
+			public void onLocalReadPassword(ReadPasswordEvent event) {
+				GWT.log("onLocalReadPassword");
+
+			}
+
+			@Override
+			public void onLocalErrorPassword(ReadErrorPasswordEvent event) {
+				GWT.log("onLocalErrorPassword");
+
 			}
 		});
 	}

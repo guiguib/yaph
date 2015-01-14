@@ -1,6 +1,6 @@
 package com.gbourquet.yaph.serveur.service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.gbourquet.yaph.dao.DaoFactory;
@@ -48,13 +48,18 @@ public class PasswordServiceImpl implements PasswordService {
 	}
 
 	@Override
-	public List<PasswordCard> getPasswords(Account account) throws ServiceException {
+	public HashMap<PasswordCard,List<PasswordField>> getPasswords(Account account) throws ServiceException {
 
 		PasswordCardExample passwordExample = new PasswordCardExample();
 		com.gbourquet.yaph.serveur.metier.generated.PasswordCardExample.Criteria critere = passwordExample.createCriteria();
 		critere.andAccountEqualTo(account.getId());
 
-		return daoFactory.getPasswordDAO().selectByExample(passwordExample);
+		HashMap<PasswordCard, List<PasswordField>> retour = new HashMap<PasswordCard,List<PasswordField>>(); 
+		List<PasswordCard> passwords = daoFactory.getPasswordDAO().selectByExample(passwordExample);
+		for (PasswordCard lPassword : passwords)
+			retour.put(lPassword, getFields(lPassword));
+				
+		return retour;
 
 	}
 
@@ -81,21 +86,15 @@ public class PasswordServiceImpl implements PasswordService {
 	}
 
 	@Override
-	public void delete(List<PasswordCard> passwords, List<PasswordField> fields) throws ServiceException {
+	public HashMap<PasswordCard, List<PasswordField>> sync(Account account, List<PasswordCard> passwordToDelete, HashMap<PasswordCard,List<PasswordField>> dataToUpdate) throws ServiceException {
+		for (PasswordCard lPassword : passwordToDelete)
+			delete(lPassword);
+		for (PasswordCard lPassword : dataToUpdate.keySet()) {
+			List<PasswordField> lFields = dataToUpdate.get(lPassword);
+			save(lPassword,lFields);
+		}
 		
-		// Suppression des champs
-		List<Integer> ids = new ArrayList<Integer>();
-		for (PasswordField field : fields){
-			ids.add(field.getId());
-		}
-		PasswordFieldExample example = new PasswordFieldExample();
-		example.createCriteria().andIdIn(ids);
-		daoFactory.getPasswordFieldDAO().deleteByExample(example);
-
-		// Suppression des passwd (et de leurs champs)
-		for (PasswordCard password : passwords){
-			delete(password);
-		}
+		return getPasswords(account);
 	}
 
 }

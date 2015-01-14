@@ -1,5 +1,6 @@
 package com.gbourquet.yaph.serveur.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.gbourquet.yaph.serveur.metier.generated.Account;
@@ -13,17 +14,10 @@ import com.gbourquet.yaph.serveur.service.exception.ServiceException;
  */
 public interface PasswordService extends Service {
 
-    /**
-     * service pour enregistrer un mot de passe.
-     * @param password
-     *            mot de passe à enregistrer
-     * @return password
-     * @throws ServiceException 
-     */
-    List<PasswordCard> getPasswords(final Account account) throws ServiceException;
+    HashMap<PasswordCard, List<PasswordField>> getPasswords(final Account account) throws ServiceException;
 	PasswordCard save(PasswordCard password, List<PasswordField> fields) throws ServiceException;
 	List<PasswordField> getFields(final PasswordCard password) throws ServiceException;
 	void delete(PasswordCard password) throws ServiceException;
-	void delete(List<PasswordCard> passwords, List<PasswordField> fields) throws ServiceException;
+	HashMap<PasswordCard,List<PasswordField>> sync(Account account, List<PasswordCard> passwordToDelete, HashMap<PasswordCard, List<PasswordField>> dataToUpdate) throws ServiceException;
 	
 }

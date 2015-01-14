@@ -1,5 +1,6 @@
 package com.gbourquet.yaph.client.event.password.read;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
@@ -11,8 +12,8 @@ public class ReadErrorPasswordEvent extends ReadPasswordEvent  {
 	private String errorMessage;
 	
 	
-	public ReadErrorPasswordEvent(List<PasswordCard> passwords, List<PasswordField> fields, String message) {
-		super(passwords,fields);
+	public ReadErrorPasswordEvent(HashMap<PasswordCard,List<PasswordField>> data, String message) {
+		super(data);
 		this.errorMessage = message;
 	}
 
