@@ -5,31 +5,29 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.gbourquet.yaph.client.LocalSession;
-import com.gbourquet.yaph.client.event.LoginEvent;
-import com.gbourquet.yaph.client.event.LoginEventHandler;
 import com.gbourquet.yaph.client.event.MenuEvent;
+import com.gbourquet.yaph.client.event.login.LoginEvent;
+import com.gbourquet.yaph.client.event.login.LoginEventHandler;
+import com.gbourquet.yaph.client.event.login.NotLoggedEvent;
 import com.gbourquet.yaph.client.event.password.NewPasswordEvent;
 import com.gbourquet.yaph.client.event.password.UpdatePasswordEvent;
-import com.gbourquet.yaph.client.event.password.created.CreatedPasswordEvent;
-import com.gbourquet.yaph.client.event.password.created.CreatedPasswordEventHandler;
-import com.gbourquet.yaph.client.event.password.created.CreatingErrorPasswordEvent;
 import com.gbourquet.yaph.client.event.password.deleted.DeletedPasswordEvent;
 import com.gbourquet.yaph.client.event.password.deleted.DeletedPasswordEventHandler;
 import com.gbourquet.yaph.client.event.password.deleted.DeletingErrorPasswordEvent;
-import com.gbourquet.yaph.client.event.password.updated.UpdatedPasswordEvent;
-import com.gbourquet.yaph.client.event.password.updated.UpdatedPasswordEventHandler;
-import com.gbourquet.yaph.client.event.password.updated.UpdatingErrorPasswordEvent;
+import com.gbourquet.yaph.client.event.password.saved.SavedPasswordEvent;
+import com.gbourquet.yaph.client.event.password.saved.SavedPasswordEventHandler;
+import com.gbourquet.yaph.client.event.password.saved.SavingErrorPasswordEvent;
 import com.gbourquet.yaph.client.mvp.ClientFactory;
+import com.gbourquet.yaph.client.service.crypt.CryptService;
+import com.gbourquet.yaph.client.service.crypt.DefaultCryptServiceImpl;
+import com.gbourquet.yaph.client.service.password.PasswordOfflineLocalServiceImpl;
+import com.gbourquet.yaph.client.service.password.PasswordOnlineLocalServiceImpl;
+import com.gbourquet.yaph.client.service.password.PasswordRemoteServiceImpl;
+import com.gbourquet.yaph.client.service.password.PasswordService;
 import com.gbourquet.yaph.client.utils.DataAccess;
 import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
-import com.gbourquet.yaph.service.crypt.CryptService;
-import com.gbourquet.yaph.service.crypt.DefaultCryptServiceImpl;
-import com.gbourquet.yaph.service.password.PasswordOfflineLocalServiceImpl;
-import com.gbourquet.yaph.service.password.PasswordOnlineLocalServiceImpl;
-import com.gbourquet.yaph.service.password.PasswordRemoteServiceImpl;
-import com.gbourquet.yaph.service.password.PasswordService;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -169,89 +167,64 @@ public class PasswordPresenter extends AbstractPresenter {
 				getView().updatePasswordList(passwords);
 			}
 
+			@Override
+			public void onNotLogged(NotLoggedEvent notLoggedEvent) {
+				// rien à faire
+			}
+
 		});
 
-		getEventBus().addHandler(CreatedPasswordEvent.TYPE, new CreatedPasswordEventHandler() {
+		getEventBus().addHandler(SavedPasswordEvent.TYPE, new SavedPasswordEventHandler() {
 
 			@Override
-			public void onRemoteCreatedPassword(CreatedPasswordEvent event) {
+			public void onRemoteSavedPassword(SavedPasswordEvent event) {
 				// Rien à faire
-				
 			}
 
 			@Override
-			public void onLocalCreatedPassword(CreatedPasswordEvent event) {
+			public void onLocalSavedPassword(SavedPasswordEvent event) {
 				// On met à jour la liste et on actualise la vue
 				//On dechiffre les données
 				CryptService cryptService = new DefaultCryptServiceImpl();
 				PasswordCard sPassword = cryptService.decrypt(event.getPasswordCard());
 				List<PasswordField> sFields = cryptService.decrypt(event.getFields());
-				getView().addPassword(sPassword);
-				getView().selectPassword(sPassword);
+				
+				//TODO
+				PasswordCard selectedPassword = getView().getSelectedPassword();
+				if (selectedPassword == null)
+				{
+					getView().addPassword(sPassword);
+					getView().selectPassword(sPassword);
+					passwords.add(sPassword);
+				} else {
+					selectedPassword.setAccount(sPassword.getAccount());
+					selectedPassword.setId(sPassword.getId());
+					selectedPassword.setTitre(sPassword.getTitre());
+					getView().refreshPasswordList();
+				}
+				
 				getView().clearFields();
 				for (PasswordField field : sFields) {
 					getView().addField(field);
 				}
 				getView().setFieldsVisible(true);
 				
-				passwords.add(sPassword);
+				fields.remove(sPassword);
 				fields.put(sPassword, sFields);
 				
 			}
 
 			@Override
-			public void onRemoteErrorPassword(CreatingErrorPasswordEvent event) {
+			public void onRemoteErrorPassword(SavingErrorPasswordEvent event) {
 				// Rien à faire
 				
 			}
 
 			@Override
-			public void onLocalErrorPassword(CreatingErrorPasswordEvent event) {
+			public void onLocalErrorPassword(SavingErrorPasswordEvent event) {
 				// Rien à faire
 				
 			}
-		});
-
-		getEventBus().addHandler(UpdatedPasswordEvent.TYPE, new UpdatedPasswordEventHandler() {
-
-			@Override
-			public void onRemoteUpdatedPassword(UpdatedPasswordEvent event) {
-				// Rien à faire
-			}
-
-			@Override
-			public void onLocalUpdatedPassword(UpdatedPasswordEvent event) {
-				CryptService cryptService = new DefaultCryptServiceImpl();
-				PasswordCard sPassword = getView().getSelectedPassword();
-				sPassword.setAccount(event.getPasswordCard().getAccount());
-				sPassword.setId(event.getPasswordCard().getId());
-				sPassword.setTitre(cryptService.decrypt(event.getPasswordCard().getTitre()));
-				getView().refreshPasswordList();
-
-				List<PasswordField> sFields = cryptService.decrypt(event.getFields());
-				getView().clearFields();
-				for (PasswordField field : sFields) {
-					getView().addField(field);
-				}
-				getView().setFieldsVisible(true);
-				
-				passwords.add(sPassword);
-				fields.put(sPassword, sFields);
-				
-			}
-
-			@Override
-			public void onRemoteErrorPassword(UpdatingErrorPasswordEvent event) {
-				// Rien à faire
-				
-			}
-
-			@Override
-			public void onLocalErrorPassword(UpdatingErrorPasswordEvent event) {
-				// Rien à faire
-				
-			}
-
 		});
 
 		getEventBus().addHandler(DeletedPasswordEvent.TYPE, new DeletedPasswordEventHandler() {

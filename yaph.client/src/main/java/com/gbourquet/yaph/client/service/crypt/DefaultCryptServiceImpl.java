@@ -1,4 +1,4 @@
-package com.gbourquet.yaph.service.crypt;
+package com.gbourquet.yaph.client.service.crypt;
 
 import java.util.ArrayList;
 import java.util.List;

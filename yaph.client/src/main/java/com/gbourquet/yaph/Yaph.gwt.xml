@@ -31,7 +31,6 @@
 	<source path="serveur/password/in" excludes="*/*Test*.java" />
 	<source path="serveur/password/out" excludes="*/*Test*.java" />
 	<source path="client" excludes="*/*Test*.java,**/HudsonTest.java" />
-	<source path="service" excludes="*/*Test*.java,**/HudsonTest.java" />
 	<source path="serveur/metier" excludes="*/*Test*.java" />
 
 	<extend-property name="locale" values="fr_FR" />

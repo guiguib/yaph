@@ -7,16 +7,16 @@ import net.customware.gwt.dispatch.shared.Result;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 
-public class PasswordResult implements Result {
+public class SavePasswordResult implements Result {
 
 	private PasswordCard password;
 	private List<PasswordField> fields;
 
 	/** For serialization only. */
-	PasswordResult() {
+	SavePasswordResult() {
 	}
 
-	public PasswordResult(PasswordCard password, List<PasswordField> fields) {
+	public SavePasswordResult(PasswordCard password, List<PasswordField> fields) {
 		this.password = password;
 		this.fields = fields;
 	}

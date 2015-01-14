@@ -6,25 +6,20 @@ import java.util.List;
 import com.gbourquet.yaph.client.LocalSession;
 import com.gbourquet.yaph.client.event.password.NewPasswordEvent;
 import com.gbourquet.yaph.client.event.password.NewPasswordEventHandler;
-import com.gbourquet.yaph.client.event.password.UpdatePasswordEvent;
-import com.gbourquet.yaph.client.event.password.UpdatePasswordEventHandler;
-import com.gbourquet.yaph.client.event.password.created.CreatedPasswordEvent;
-import com.gbourquet.yaph.client.event.password.created.CreatedPasswordEventHandler;
-import com.gbourquet.yaph.client.event.password.created.CreatingErrorPasswordEvent;
-import com.gbourquet.yaph.client.event.password.updated.UpdatedPasswordEvent;
-import com.gbourquet.yaph.client.event.password.updated.UpdatedPasswordEventHandler;
-import com.gbourquet.yaph.client.event.password.updated.UpdatingErrorPasswordEvent;
+import com.gbourquet.yaph.client.event.password.saved.SavedPasswordEvent;
+import com.gbourquet.yaph.client.event.password.saved.SavedPasswordEventHandler;
+import com.gbourquet.yaph.client.event.password.saved.SavingErrorPasswordEvent;
 import com.gbourquet.yaph.client.mvp.ClientFactory;
 import com.gbourquet.yaph.client.mvp.place.PasswordPlace;
+import com.gbourquet.yaph.client.service.crypt.CryptService;
+import com.gbourquet.yaph.client.service.crypt.DefaultCryptServiceImpl;
+import com.gbourquet.yaph.client.service.password.PasswordOfflineLocalServiceImpl;
+import com.gbourquet.yaph.client.service.password.PasswordOnlineLocalServiceImpl;
+import com.gbourquet.yaph.client.service.password.PasswordRemoteServiceImpl;
+import com.gbourquet.yaph.client.service.password.PasswordService;
 import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
-import com.gbourquet.yaph.service.crypt.CryptService;
-import com.gbourquet.yaph.service.crypt.DefaultCryptServiceImpl;
-import com.gbourquet.yaph.service.password.PasswordOfflineLocalServiceImpl;
-import com.gbourquet.yaph.service.password.PasswordOnlineLocalServiceImpl;
-import com.gbourquet.yaph.service.password.PasswordRemoteServiceImpl;
-import com.gbourquet.yaph.service.password.PasswordService;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -92,7 +87,7 @@ public class NewPasswordPresenter extends AbstractPresenter {
 
 		RootPanel.get("dialog").add(getView().asWidget());
 
-		//Evenements de la vue
+		// Evenements de la vue
 		// Valid nouveau mot de passe
 		getView().getValidButton().addClickHandler(new ClickHandler() {
 
@@ -103,26 +98,19 @@ public class NewPasswordPresenter extends AbstractPresenter {
 					passwordData.setAccount(account.getId());
 				passwordData.setTitre(getView().getTitleText());
 				fieldsData = getView().getPasswordFields();
-				
+
 				// On chiffre les données
 				CryptService cryptService = new DefaultCryptServiceImpl();
 				final PasswordCard cryptedPasswordData = cryptService.crypt(passwordData);
 				final List<PasswordField> cryptedfieldsData = cryptService.crypt(fieldsData);
-				
-				
+
 				Boolean disconnected = ((Boolean) LocalSession.getInstance().getAttribute("disconnected") == null) ? false : (Boolean) LocalSession.getInstance().getAttribute(
 						"disconnected");
 				if (disconnected) {
-					//On enregistre en local
-					if (modeUpdate)
-						localOfflineService.updatePassword(cryptedPasswordData, cryptedfieldsData);
-					else
-						localOfflineService.insertPassword(cryptedPasswordData, cryptedfieldsData);
+					// On enregistre en local
+					localOfflineService.savePassword(cryptedPasswordData, cryptedfieldsData);
 				} else {
-					if (modeUpdate)
-						remoteService.updatePassword(cryptedPasswordData, cryptedfieldsData);
-					else
-						remoteService.insertPassword(cryptedPasswordData, cryptedfieldsData);
+					remoteService.savePassword(cryptedPasswordData, cryptedfieldsData);
 				}
 
 				getView().clear();
@@ -174,89 +162,36 @@ public class NewPasswordPresenter extends AbstractPresenter {
 			}
 		});
 
-		getEventBus().addHandler(CreatedPasswordEvent.TYPE,new CreatedPasswordEventHandler() {
-			
-			@Override
-			public void onRemoteErrorPassword(CreatingErrorPasswordEvent event) {
-				// Erreur lors de l'enregistrement en base serveur
-				//On enregistre en local 
-				// On chiffre les données
-				localOfflineService.insertPassword(event.getPasswordCard(), event.getFields());
-				
-			}
-			
-			@Override
-			public void onRemoteCreatedPassword(CreatedPasswordEvent event) {
-				//Le mot de passe est enregistré en base serveur
-				//On l'enregistre en local
-				localOnlineService.insertPassword(event.getPasswordCard(), event.getFields());
-			}
-			
-			@Override
-			public void onLocalErrorPassword(CreatingErrorPasswordEvent event) {
-				//On affiche le message d'erreur
-				getView().getErrorLabel().setText(event.getErrorMessage());
-			}
-			
-			@Override
-			public void onLocalCreatedPassword(CreatedPasswordEvent event) {
-				//Password enregistré en base local.On réinitialise les données
-				passwordData = new PasswordCard();
-				fieldsData = new ArrayList<PasswordField>();
-				//On ferme la fenetre
-				getView().clear();
-				getView().close();
-			}
-		});
-			
-		getEventBus().addHandler(UpdatePasswordEvent.TYPE, new UpdatePasswordEventHandler() {
+		getEventBus().addHandler(SavedPasswordEvent.TYPE, new SavedPasswordEventHandler() {
 
 			@Override
-			public void onUpdatePassword(UpdatePasswordEvent event) {
-				modeUpdate = true;
-				passwordData = event.getPasswordCard();
-				fieldsData = event.getPasswordFields();
-				getView().clear();
-				getView().setHeaderText("Update Password");
-				getView().delFields();
-				getView().setTitleText(passwordData.getTitre());
-				for (PasswordField field : fieldsData) {
-					getView().addField(field);
-				}
-				getView().show();
-			}
-		});
-		
-		getEventBus().addHandler(UpdatedPasswordEvent.TYPE,new UpdatedPasswordEventHandler() {
-			
-			@Override
-			public void onRemoteErrorPassword(UpdatingErrorPasswordEvent event) {
+			public void onRemoteErrorPassword(SavingErrorPasswordEvent event) {
 				// Erreur lors de l'enregistrement en base serveur
-				//On enregistre en local 
+				// On enregistre en local
 				// On chiffre les données
-				localOfflineService.updatePassword(event.getPasswordCard(), event.getFields());
-				
+				localOfflineService.savePassword(event.getPasswordCard(), event.getFields());
+
 			}
-			
+
 			@Override
-			public void onRemoteUpdatedPassword(UpdatedPasswordEvent event) {
-				//Le mot de passe est enregistré en base serveur
-				//On l'enregistre en local
-				localOnlineService.updatePassword(event.getPasswordCard(), event.getFields());
+			public void onRemoteSavedPassword(SavedPasswordEvent event) {
+				// Le mot de passe est enregistré en base serveur
+				// On l'enregistre en local
+				localOnlineService.savePassword(event.getPasswordCard(), event.getFields());
 			}
-			
+
 			@Override
-			public void onLocalErrorPassword(UpdatingErrorPasswordEvent event) {
-				//On affiche le message d'erreur
+			public void onLocalErrorPassword(SavingErrorPasswordEvent event) {
+				// On affiche le message d'erreur
 				getView().getErrorLabel().setText(event.getErrorMessage());
 			}
-			
+
 			@Override
-			public void onLocalUpdatedPassword(UpdatedPasswordEvent event) {
-				//Password enregistré en base local.On réinitialise les données
+			public void onLocalSavedPassword(SavedPasswordEvent event) {
+				// Password enregistré en base local.On réinitialise les données
 				passwordData = new PasswordCard();
 				fieldsData = new ArrayList<PasswordField>();
-				//On ferme la fenetre
+				// On ferme la fenetre
 				getView().clear();
 				getView().close();
 			}

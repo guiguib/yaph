@@ -2,12 +2,13 @@ package com.gbourquet.yaph.client.mvp.presenter;
 
 import com.gbourquet.yaph.client.event.LoadApplicationEvent;
 import com.gbourquet.yaph.client.event.LoadApplicationEventHandler;
-import com.gbourquet.yaph.client.event.LoginEvent;
-import com.gbourquet.yaph.client.event.LoginEventHandler;
 import com.gbourquet.yaph.client.event.LogoutEvent;
 import com.gbourquet.yaph.client.event.LogoutEventHandler;
 import com.gbourquet.yaph.client.event.MenuEvent;
 import com.gbourquet.yaph.client.event.MenuEventHandler;
+import com.gbourquet.yaph.client.event.login.LoginEvent;
+import com.gbourquet.yaph.client.event.login.LoginEventHandler;
+import com.gbourquet.yaph.client.event.login.NotLoggedEvent;
 import com.gbourquet.yaph.client.mvp.ClientFactory;
 import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -61,6 +62,12 @@ public class MenuPresenter extends AbstractPresenter {
 				getView().updateActionLabel("Sign out", "logout:");
 				getView().setVisiblePassword(true);
 
+			}
+
+			@Override
+			public void onNotLogged(NotLoggedEvent notLoggedEvent) {
+				// rien à faire
+				
 			}
 		});
 		getEventBus().addHandler(LogoutEvent.TYPE, new LogoutEventHandler() {

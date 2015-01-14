@@ -3,7 +3,7 @@ package com.gbourquet.yaph.client.mvp.presenter;
 import net.customware.gwt.dispatch.client.DispatchAsync;
 
 import com.gbourquet.yaph.client.LocalSession;
-import com.gbourquet.yaph.client.event.LoginEvent;
+import com.gbourquet.yaph.client.event.login.LoginEvent;
 import com.gbourquet.yaph.client.mvp.ClientFactory;
 import com.gbourquet.yaph.client.mvp.place.AppPlace;
 import com.gbourquet.yaph.client.utils.DataAccess;
@@ -139,7 +139,7 @@ public class LoginPresenter extends AbstractPresenter {
 		DataAccess.getInstance().setAccount(account);
 
 		// On envoie un message dans le bus
-		getEventBus().fireEvent(new LoginEvent(account));
+		getEventBus().fireEvent(new LoginEvent(account,token));
 		getView().setLoginText("");
 		getView().setPasswdText("");
 		getView().errorLogin("");

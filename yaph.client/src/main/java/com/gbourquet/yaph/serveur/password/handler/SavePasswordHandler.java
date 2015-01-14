@@ -8,15 +8,15 @@ import net.customware.gwt.dispatch.shared.ActionException;
 import com.gbourquet.yaph.serveur.handler.AbstractHandler;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
-import com.gbourquet.yaph.serveur.password.in.PasswordAction;
-import com.gbourquet.yaph.serveur.password.out.PasswordResult;
+import com.gbourquet.yaph.serveur.password.in.SavePasswordAction;
+import com.gbourquet.yaph.serveur.password.out.SavePasswordResult;
 import com.gbourquet.yaph.serveur.service.PasswordService;
 import com.gbourquet.yaph.serveur.service.exception.ServiceException;
 import com.gbourquet.yaph.serveur.util.BeanFactory;
 
-public class PasswordHandler extends AbstractHandler<PasswordAction, PasswordResult> {
+public class SavePasswordHandler extends AbstractHandler<SavePasswordAction, SavePasswordResult> {
 
-	public PasswordResult exec(PasswordAction in, ExecutionContext context) throws ActionException {
+	public SavePasswordResult exec(SavePasswordAction in, ExecutionContext context) throws ActionException {
 
 		final PasswordCard password = in.getPasswordCard();
 		final List<PasswordField> fields = in.getFields();
@@ -36,17 +36,17 @@ public class PasswordHandler extends AbstractHandler<PasswordAction, PasswordRes
 			throw new ActionException(e.getMessage());
 		}
 
-		return new PasswordResult(outPassword, outFields);
+		return new SavePasswordResult(outPassword, outFields);
 
 	}
 
 	@Override
-	public void rollback(final PasswordAction action, final PasswordResult result, final ExecutionContext context) throws ActionException {
+	public void rollback(final SavePasswordAction action, final SavePasswordResult result, final ExecutionContext context) throws ActionException {
 		// Nothing to do here
 	}
 
 	@Override
-	public Class<PasswordAction> getActionType() {
-		return PasswordAction.class;
+	public Class<SavePasswordAction> getActionType() {
+		return SavePasswordAction.class;
 	}
 }

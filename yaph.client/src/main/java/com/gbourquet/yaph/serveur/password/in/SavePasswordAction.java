@@ -5,18 +5,18 @@ import java.util.List;
 import com.gbourquet.yaph.serveur.in.AbstractAction;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
-import com.gbourquet.yaph.serveur.password.out.PasswordResult;
+import com.gbourquet.yaph.serveur.password.out.SavePasswordResult;
 
-public class PasswordAction extends AbstractAction<PasswordResult> {
+public class SavePasswordAction extends AbstractAction<SavePasswordResult> {
 
 	private PasswordCard password;
 	private List<PasswordField> fields;
 
 	/** For serialization only. */
-	PasswordAction() {
+	SavePasswordAction() {
 	}
 
-	public PasswordAction(PasswordCard password, List<PasswordField> fields) {
+	public SavePasswordAction(PasswordCard password, List<PasswordField> fields) {
 		super();
 		this.password = password;
 		this.fields = fields;
