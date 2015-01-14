@@ -40,11 +40,11 @@ public class InlineView extends Composite implements InlinePresenter.View {
 	public void setInline(Boolean inline) {
 		if (inline){
 			indication.setStyleName("online");
-			state.setText("online");
+			state.setText("Online");
 		}
 		else {
 			indication.setStyleName("offline");
-			state.setText("offline");
+			state.setText("Offline");
 		}
 	}
 

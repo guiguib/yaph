@@ -499,11 +499,12 @@ div.active a {
 
 .online, .offline {
 	position: absolute;
-	bottom: 10px;
-	left: 10px;
+	bottom: 20px;
+	left: 20px;
 	width: 30px;
+	height:40px;
 	padding: 0px;
-	margin: 0px;
+	margin: 10px 0 0 0;
 }
 
 .online button, .offline button {
@@ -511,8 +512,8 @@ div.active a {
 	cursor: pointer;
 	border: none;
 	outline: none;
-	padding: 0px;
-	margin: 0px;
+	padding: 0;
+	margin: -10px 0 0 0;
 	background: transparent;
 	vertical-align: bottom;
 }

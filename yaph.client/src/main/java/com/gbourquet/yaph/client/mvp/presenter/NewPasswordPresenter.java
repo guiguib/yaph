@@ -21,6 +21,7 @@ import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.gbourquet.yaph.service.crypt.CryptService;
 import com.gbourquet.yaph.service.crypt.DefaultCryptServiceImpl;
+import com.gbourquet.yaph.service.password.PasswordOfflineLocalServiceImpl;
 import com.gbourquet.yaph.service.password.PasswordOnlineLocalServiceImpl;
 import com.gbourquet.yaph.service.password.PasswordRemoteServiceImpl;
 import com.gbourquet.yaph.service.password.PasswordService;
@@ -34,13 +35,16 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class NewPasswordPresenter extends AbstractPresenter {
 
 	boolean modeUpdate = false;
+
 	/*
 	 * Contrat echangé avec la vue
 	 */
 	public interface View extends IsWidget {
 
 		HasClickHandlers getCancelButton();
+
 		HasClickHandlers getValidButton();
+
 		HasClickHandlers getAddFieldButton();
 
 		String getTitleText();
@@ -54,7 +58,7 @@ public class NewPasswordPresenter extends AbstractPresenter {
 		void addField(PasswordField field);
 
 		List<PasswordField> getPasswordFields();
-		
+
 		void delFields();
 
 		void clear();
@@ -70,9 +74,17 @@ public class NewPasswordPresenter extends AbstractPresenter {
 	private PasswordCard passwordData = new PasswordCard();
 	private List<PasswordField> fieldsData = new ArrayList<PasswordField>();
 
+	private PasswordService remoteService;
+	private PasswordService localOnlineService;
+	private PasswordService localOfflineService;
+
 	public NewPasswordPresenter(ClientFactory factory) {
 		super(factory);
 		view = factory.getNewPasswordView();
+		// TODO à fabriquer par la factory
+		remoteService = new PasswordRemoteServiceImpl(factory);
+		localOnlineService = new PasswordOnlineLocalServiceImpl(factory);
+		localOfflineService = new PasswordOfflineLocalServiceImpl(factory);
 		bind(factory);
 	}
 
@@ -102,13 +114,11 @@ public class NewPasswordPresenter extends AbstractPresenter {
 						"disconnected");
 				if (disconnected) {
 					//On enregistre en local
-					PasswordService localService = new PasswordOnlineLocalServiceImpl(factory);
 					if (modeUpdate)
-						localService.updatePassword(cryptedPasswordData, cryptedfieldsData);
+						localOfflineService.updatePassword(cryptedPasswordData, cryptedfieldsData);
 					else
-						localService.insertPassword(cryptedPasswordData, cryptedfieldsData);
+						localOfflineService.insertPassword(cryptedPasswordData, cryptedfieldsData);
 				} else {
-					PasswordService remoteService = new PasswordRemoteServiceImpl(factory);
 					if (modeUpdate)
 						remoteService.updatePassword(cryptedPasswordData, cryptedfieldsData);
 					else
@@ -171,8 +181,7 @@ public class NewPasswordPresenter extends AbstractPresenter {
 				// Erreur lors de l'enregistrement en base serveur
 				//On enregistre en local 
 				// On chiffre les données
-				PasswordService localService = new PasswordOnlineLocalServiceImpl(factory);
-				localService.insertPassword(event.getPasswordCard(), event.getFields());
+				localOfflineService.insertPassword(event.getPasswordCard(), event.getFields());
 				
 			}
 			
@@ -180,8 +189,7 @@ public class NewPasswordPresenter extends AbstractPresenter {
 			public void onRemoteCreatedPassword(CreatedPasswordEvent event) {
 				//Le mot de passe est enregistré en base serveur
 				//On l'enregistre en local
-				PasswordService localService = new PasswordOnlineLocalServiceImpl(factory);
-				localService.insertPassword(event.getPasswordCard(), event.getFields());
+				localOnlineService.insertPassword(event.getPasswordCard(), event.getFields());
 			}
 			
 			@Override
@@ -226,8 +234,7 @@ public class NewPasswordPresenter extends AbstractPresenter {
 				// Erreur lors de l'enregistrement en base serveur
 				//On enregistre en local 
 				// On chiffre les données
-				PasswordService localService = new PasswordOnlineLocalServiceImpl(factory);
-				localService.updatePassword(event.getPasswordCard(), event.getFields());
+				localOfflineService.updatePassword(event.getPasswordCard(), event.getFields());
 				
 			}
 			
@@ -235,8 +242,7 @@ public class NewPasswordPresenter extends AbstractPresenter {
 			public void onRemoteUpdatedPassword(UpdatedPasswordEvent event) {
 				//Le mot de passe est enregistré en base serveur
 				//On l'enregistre en local
-				PasswordService localService = new PasswordOnlineLocalServiceImpl(factory);
-				localService.updatePassword(event.getPasswordCard(), event.getFields());
+				localOnlineService.updatePassword(event.getPasswordCard(), event.getFields());
 			}
 			
 			@Override
