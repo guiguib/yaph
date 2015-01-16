@@ -23,6 +23,7 @@ import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -37,29 +38,21 @@ public class NewPasswordPresenter extends AbstractPresenter {
 	public interface View extends IsWidget {
 
 		HasClickHandlers getCancelButton();
-
 		HasClickHandlers getValidButton();
-
 		HasClickHandlers getAddFieldButton();
 
 		String getTitleText();
-
 		void setTitleText(String title);
-
 		void setHeaderText(String header);
-
 		Label getErrorLabel();
 
 		void addField(PasswordField field);
-
 		List<PasswordField> getPasswordFields();
 
 		void delFields();
-
 		void clear();
-
 		void show();
-
+		void center();
 		void close();
 
 	}
@@ -142,6 +135,8 @@ public class NewPasswordPresenter extends AbstractPresenter {
 				field.setType("TEXT");
 				field.setValue("");
 				getView().addField(field);
+				if (fieldsData.size()==0)
+					getView().center();
 				fieldsData.add(field);
 
 			}

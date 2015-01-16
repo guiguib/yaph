@@ -171,4 +171,9 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 		this.header.setText(header);
 	}
 
+	@Override
+	public void center() {
+		dialog.center();		
+	}
+
 }
