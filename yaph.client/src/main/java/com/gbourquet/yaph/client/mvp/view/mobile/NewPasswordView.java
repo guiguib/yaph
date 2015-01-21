@@ -175,4 +175,10 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 
 	}
 
+	@Override
+	public void center() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
