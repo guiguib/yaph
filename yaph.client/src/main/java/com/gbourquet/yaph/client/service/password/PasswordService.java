@@ -8,7 +8,7 @@ import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 
 public interface PasswordService {
 
-	public void savePassword(PasswordCard password, List<PasswordField> fields);
+	public void savePassword(PasswordCard password, List<PasswordField> fields, boolean modeUpdate);
 	public void deletePassword(PasswordCard password);
 	public void getAllPassword(Account account);
 	public void savePasswords(Account account, List<PasswordCard> passwords, List<PasswordField> fields);

@@ -338,5 +338,13 @@ public class DataAccess {
 		sqlDb.execute("insert into toDelete(id,type) values ("+password.getId()+",'password')");
 		persistDB();
 	}
+	
+	public void deleteToDelete() {
+		StringBuffer sb = new StringBuffer("delete from toDelete");
+		sqlDb.execute(sb.toString());
+		GWT.log(sb.toString());
+
+		persistDB();
+	}
 
 }

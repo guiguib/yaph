@@ -26,7 +26,6 @@ import com.gbourquet.yaph.client.service.password.PasswordRemoteServiceImpl;
 import com.gbourquet.yaph.client.service.password.PasswordService;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -115,9 +114,6 @@ public class PasswordPresenter extends AbstractPresenter {
 				PasswordCard uPassword = getView().getSelectedPassword();
 				List<PasswordField> uFields = fields.get(uPassword);
 
-				passwords.remove(uPassword);
-				fields.remove(uFields);
-
 				// On envoi un message au presenter de la vue de création de mot
 				// de passe avec le mot de passe à modifier et les champs
 				getEventBus().fireEvent(new UpdatePasswordEvent(uPassword, uFields));
@@ -148,9 +144,7 @@ public class PasswordPresenter extends AbstractPresenter {
 			public void onSelectionChange(SelectionChangeEvent event) {
 				if (getView().getSelectedPassword() != null) {
 					PasswordCard sPassword = getView().getSelectedPassword();
-					GWT.log("Passwd selecté :" + sPassword.getTitre());
 					List<PasswordField> sFields = fields.get(sPassword);
-					GWT.log("Nb fields :" + (sFields == null ? "null" : sFields.size()));
 					getView().clearFields();
 					for (PasswordField field : sFields) {
 						getView().addField(field);
@@ -202,27 +196,24 @@ public class PasswordPresenter extends AbstractPresenter {
 				PasswordCard sPassword = cryptService.decrypt(event.getPasswordCard());
 				List<PasswordField> sFields = cryptService.decrypt(event.getFields());
 
-				// TODO
 				PasswordCard selectedPassword = getView().getSelectedPassword();
-				if (selectedPassword == null) {
-					getView().addPassword(sPassword);
-					getView().selectPassword(sPassword);
-					passwords.add(sPassword);
-				} else {
-					selectedPassword.setAccount(sPassword.getAccount());
-					selectedPassword.setId(sPassword.getId());
-					selectedPassword.setTitre(sPassword.getTitre());
+				if (event.isModeUpdate()) {
+					getView().removePassword(selectedPassword);
+					passwords.remove(selectedPassword);
+					fields.remove(selectedPassword);
 					getView().refreshPasswordList();
-				}
-
+				} 
+				getView().addPassword(sPassword);
+				getView().selectPassword(sPassword);
+				passwords.add(sPassword);
+				fields.put(sPassword, sFields);
+			
 				getView().clearFields();
 				for (PasswordField field : sFields) {
 					getView().addField(field);
 				}
+				getView().selectPassword(sPassword);
 				getView().setFieldsVisible(true);
-
-				fields.remove(sPassword);
-				fields.put(sPassword, sFields);
 
 			}
 
@@ -278,7 +269,6 @@ public class PasswordPresenter extends AbstractPresenter {
 			@Override
 			public void onRemoteReadPassword(ReadPasswordEvent event) {
 
-				GWT.log("NB Passwd :" + event.getData().size());
 				passwords = new ArrayList<PasswordCard>();
 				fields = new HashMap<PasswordCard, List<PasswordField>>();
 
@@ -289,28 +279,24 @@ public class PasswordPresenter extends AbstractPresenter {
 					List<PasswordField> clearFields = cryptService.decrypt(lFields);
 					passwords.add(clearPassword);
 					fields.put(clearPassword, clearFields);
-					GWT.log("Passwd " + clearPassword.getTitre() + " ajouté. Nb fields :" + clearFields.size());
-
+				
 				}
 				getView().updatePasswordList(passwords);
 			}
 
 			@Override
 			public void onRemoteErrorPassword(ReadErrorPasswordEvent event) {
-				GWT.log("onRemoteErrorPassword");
-
+			
 			}
 
 			@Override
 			public void onLocalReadPassword(ReadPasswordEvent event) {
-				GWT.log("onLocalReadPassword");
-
+			
 			}
 
 			@Override
 			public void onLocalErrorPassword(ReadErrorPasswordEvent event) {
-				GWT.log("onLocalErrorPassword");
-
+			
 			}
 		});
 	}

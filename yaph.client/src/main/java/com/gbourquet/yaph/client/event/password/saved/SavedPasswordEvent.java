@@ -11,10 +11,12 @@ public abstract class SavedPasswordEvent extends GwtEvent<SavedPasswordEventHand
 
 	private final PasswordCard password;
 	private final List<PasswordField> fields;
-
-	public SavedPasswordEvent(final PasswordCard password, List<PasswordField> fields) {
+	private final boolean modeUpdate;
+	
+	public SavedPasswordEvent(final PasswordCard password, List<PasswordField> fields,boolean modeUpdate) {
 		this.password = password;
 		this.fields = fields;
+		this.modeUpdate = modeUpdate;
 	}
 
 	public PasswordCard getPasswordCard() {
@@ -23,6 +25,10 @@ public abstract class SavedPasswordEvent extends GwtEvent<SavedPasswordEventHand
 
 	public List<PasswordField> getFields() {
 		return fields;
+	}
+
+	public boolean isModeUpdate() {
+		return modeUpdate;
 	}
 
 	@Override

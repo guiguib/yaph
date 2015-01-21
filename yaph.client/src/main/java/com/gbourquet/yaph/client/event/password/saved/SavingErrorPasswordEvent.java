@@ -10,8 +10,8 @@ public abstract class SavingErrorPasswordEvent extends SavedPasswordEvent  {
 	private String errorMessage;
 	
 	
-	public SavingErrorPasswordEvent(final PasswordCard password, List<PasswordField> fields, String message) {
-		super(password,fields);
+	public SavingErrorPasswordEvent(final PasswordCard password, List<PasswordField> fields, String message,boolean modeUpdate) {
+		super(password,fields,modeUpdate);
 		this.errorMessage = message;
 	}
 

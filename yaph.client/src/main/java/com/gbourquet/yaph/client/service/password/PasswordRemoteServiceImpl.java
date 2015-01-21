@@ -41,11 +41,11 @@ public class PasswordRemoteServiceImpl implements PasswordService {
 	}
 
 	@Override
-	public void savePassword(final PasswordCard password, final List<PasswordField> fields) {
+	public void savePassword(final PasswordCard password, final List<PasswordField> fields,final boolean modeUpdate) {
 
 		dispatcher.execute(new SavePasswordAction(password, fields), new MyAsyncCallback<SavePasswordResult>(eventBus) {
 			public void success(SavePasswordResult result) {
-				eventBus.fireEvent(new SavedPasswordEvent(result.getPasswordCard(), result.getPasswordFields()) {
+				eventBus.fireEvent(new SavedPasswordEvent(result.getPasswordCard(), result.getPasswordFields(),modeUpdate) {
 
 					@Override
 					protected void dispatch(SavedPasswordEventHandler handler) {
@@ -56,7 +56,7 @@ public class PasswordRemoteServiceImpl implements PasswordService {
 
 			public void failure(Throwable caught) {
 				GWT.log("Remote Erreur " + caught.getMessage());
-				eventBus.fireEvent(new SavingErrorPasswordEvent(password, fields, caught.getLocalizedMessage()) {
+				eventBus.fireEvent(new SavingErrorPasswordEvent(password, fields, caught.getLocalizedMessage(),modeUpdate) {
 					
 					@Override
 					protected void dispatch(SavedPasswordEventHandler handler) {
@@ -144,6 +144,7 @@ public class PasswordRemoteServiceImpl implements PasswordService {
 			@Override
 			public void success(SyncPasswordResult result) {
 				GWT.log("Synchro terminée. "+ result.getData().size()+" passwords récupérés");
+				DataAccess.getInstance().deleteToDelete();
 				eventBus.fireEvent(new ReadPasswordEvent(result.getData()) {
 					
 					@Override

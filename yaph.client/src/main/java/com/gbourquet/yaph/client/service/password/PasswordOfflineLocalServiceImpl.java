@@ -24,7 +24,7 @@ public class PasswordOfflineLocalServiceImpl implements PasswordService {
 	}
 
 	@Override
-	public void savePassword(PasswordCard password, List<PasswordField> fields) {
+	public void savePassword(PasswordCard password, List<PasswordField> fields,boolean modeUpdate) {
 
 		// On insère en base locale
 		Account account = (Account) LocalSession.getInstance().getAttribute("account");
@@ -34,7 +34,7 @@ public class PasswordOfflineLocalServiceImpl implements PasswordService {
 		DataAccess.getInstance().savePasswordFields(password, fields);
 
 		// On envoit un message dans le bus
-		eventBus.fireEvent(new SavedPasswordEvent(password, fields) {
+		eventBus.fireEvent(new SavedPasswordEvent(password, fields,modeUpdate) {
 
 			@Override
 			protected void dispatch(SavedPasswordEventHandler handler) {

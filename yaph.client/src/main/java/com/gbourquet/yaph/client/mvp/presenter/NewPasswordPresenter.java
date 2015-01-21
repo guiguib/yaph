@@ -6,6 +6,8 @@ import java.util.List;
 import com.gbourquet.yaph.client.LocalSession;
 import com.gbourquet.yaph.client.event.password.NewPasswordEvent;
 import com.gbourquet.yaph.client.event.password.NewPasswordEventHandler;
+import com.gbourquet.yaph.client.event.password.UpdatePasswordEvent;
+import com.gbourquet.yaph.client.event.password.UpdatePasswordEventHandler;
 import com.gbourquet.yaph.client.event.password.saved.SavedPasswordEvent;
 import com.gbourquet.yaph.client.event.password.saved.SavedPasswordEventHandler;
 import com.gbourquet.yaph.client.event.password.saved.SavingErrorPasswordEvent;
@@ -29,7 +31,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class NewPasswordPresenter extends AbstractPresenter {
 
-	boolean modeUpdate = false;
+	boolean modeUpdate = true;
 
 	/*
 	 * Contrat echangé avec la vue
@@ -108,9 +110,9 @@ public class NewPasswordPresenter extends AbstractPresenter {
 						"disconnected");
 				if (disconnected) {
 					// On enregistre en local
-					localOfflineService.savePassword(cryptedPasswordData, cryptedfieldsData);
+					localOfflineService.savePassword(cryptedPasswordData, cryptedfieldsData, modeUpdate);
 				} else {
-					remoteService.savePassword(cryptedPasswordData, cryptedfieldsData);
+					remoteService.savePassword(cryptedPasswordData, cryptedfieldsData, modeUpdate);
 				}
 
 				getView().clear();
@@ -162,21 +164,37 @@ public class NewPasswordPresenter extends AbstractPresenter {
 			}
 		});
 
+		getEventBus().addHandler(UpdatePasswordEvent.TYPE, new UpdatePasswordEventHandler() {
+
+			@Override
+			public void onUpdatePassword(UpdatePasswordEvent event) {
+				modeUpdate = true;
+				// TODO
+				passwordData = event.getPasswordCard();
+				fieldsData = event.getPasswordFields();
+				getView().clear();
+				getView().setTitleText(event.getPasswordCard().getTitre());
+				for (PasswordField lField : event.getPasswordFields()) {
+					getView().addField(lField);
+				}
+				getView().show();
+			}
+		});
+
 		getEventBus().addHandler(SavedPasswordEvent.TYPE, new SavedPasswordEventHandler() {
 
 			@Override
 			public void onRemoteErrorPassword(SavingErrorPasswordEvent event) {
 				// Erreur lors de l'enregistrement en base serveur
 				// On enregistre en local
-				// On chiffre les données
-				localOfflineService.savePassword(event.getPasswordCard(), event.getFields());
+				localOfflineService.savePassword(event.getPasswordCard(), event.getFields(), modeUpdate);
 			}
 
 			@Override
 			public void onRemoteSavedPassword(SavedPasswordEvent event) {
 				// Le mot de passe est enregistré en base serveur
 				// On l'enregistre en local
-				localOnlineService.savePassword(event.getPasswordCard(), event.getFields());
+				localOnlineService.savePassword(event.getPasswordCard(), event.getFields(), modeUpdate);
 			}
 
 			@Override
@@ -187,7 +205,7 @@ public class NewPasswordPresenter extends AbstractPresenter {
 
 			@Override
 			public void onLocalSavedPassword(SavedPasswordEvent event) {
-				// Password enregistré en base local.On réinitialise les données
+				// Password enregistré en base local.On réinitialise les champs
 				passwordData = new PasswordCard();
 				fieldsData = new ArrayList<PasswordField>();
 				// On ferme la fenetre
