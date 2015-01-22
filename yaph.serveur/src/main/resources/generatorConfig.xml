@@ -7,6 +7,7 @@
 
 	<context id="sqlite" targetRuntime="MyBatis3">
 		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
+		<plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"></plugin> 
 
 		<jdbcConnection driverClass="org.sqlite.JDBC"
 			connectionURL="jdbc:sqlite:yaph.db">

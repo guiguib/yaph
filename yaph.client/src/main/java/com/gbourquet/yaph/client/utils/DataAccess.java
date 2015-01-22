@@ -129,7 +129,7 @@ public class DataAccess {
 
 	public List<PasswordCard> getPasswords(Account account) {
 		JavaScriptObject sqlResults = sqlDb
-				.execute("select id, titre, user, password, adresse, account from passwordCard where account = "
+				.execute("select id, titre, account from passwordCard where account = "
 						+ account.getId()+" order by titre asc");
 
 		return deserializeRecords(sqlResults, "passwordCard");
@@ -192,12 +192,9 @@ public class DataAccess {
 		sqlDb.execute("delete from passwordCard");
 		for (PasswordCard password : passwords) {
 			StringBuffer sb = new StringBuffer(
-					"insert into passwordCard ( id, titre, user, password, adresse, account) values(");
+					"insert into passwordCard ( id, titre, account) values(");
 			sb.append("'").append(password.getId()).append("',");
 			sb.append("'").append(password.getTitre()).append("',");
-			sb.append("'").append(password.getUser()).append("',");
-			sb.append("'").append(password.getPassword()).append("',");
-			sb.append("'").append(password.getAdresse()).append("',");
 			sb.append(account.getId()).append(")");
 			sqlDb.execute(sb.toString());
 		}
@@ -239,12 +236,9 @@ public class DataAccess {
 		int id = password.getId() == null || password.getId() == 0 ? --minIdPasswd
 				: password.getId();
 		StringBuffer sb = new StringBuffer(
-				"insert into passwordCard (id, titre, user, password, adresse, account) values(");
+				"insert into passwordCard (id, titre, account) values(");
 		sb.append(id).append(",");
 		sb.append("'").append(password.getTitre()).append("',");
-		sb.append("'").append(password.getUser()).append("',");
-		sb.append("'").append(password.getPassword()).append("',");
-		sb.append("'").append(password.getAdresse()).append("',");
 		sb.append(password.getAccount()).append(")");
 		try {
 			sqlDb.execute(sb.toString());
@@ -255,7 +249,6 @@ public class DataAccess {
 			sqlDb.execute(sb.toString());
 		}
 
-		GWT.log(sb.toString());
 		persistDB();
 
 		return id;
@@ -266,7 +259,6 @@ public class DataAccess {
 		StringBuffer sb = new StringBuffer("delete from passwordField where idCard=").append(password.getId());
 		sqlDb.execute(sb.toString());
 		
-		GWT.log(sb.toString());
 		
 		for (PasswordField field : fields) {
 			int id = field.getId() == null || field.getId() == 0 ? --minIdField
@@ -279,7 +271,6 @@ public class DataAccess {
 			sb.append("'").append(field.getValue()).append("')");
 			sqlDb.execute(sb.toString());
 			
-			GWT.log(sb.toString());
 		}
 		persistDB();
 		
@@ -290,19 +281,16 @@ public class DataAccess {
 				"delete from passwordField where idCard=");
 		sb.append(password.getId());
 		sqlDb.execute(sb.toString());
-		GWT.log(sb.toString());
-
+		
 		sb = new StringBuffer("delete from passwordCard where id=");
 		sb.append(password.getId());
 		sqlDb.execute(sb.toString());
-		GWT.log(sb.toString());
-
+		
 		sb = new StringBuffer("delete from toDelete where id=");
 		sb.append(password.getId());
 		sb.append(" and type='password'");
 		sqlDb.execute(sb.toString());
-		GWT.log(sb.toString());
-
+		
 		persistDB();
 	}
 
@@ -318,7 +306,7 @@ public class DataAccess {
 	
 	public List<PasswordCard> getDelPasswd() {
 		JavaScriptObject sqlResults = sqlDb
-				.execute("select id, 'titre' as titre, 'user' as user, 'password' as password, 'adresse' as adresse, 0 as account from toDelete "
+				.execute("select id, 'titre' as titre, 0 as account from toDelete "
 						+ "where type='password'");
 
 		return deserializeRecords(sqlResults, "passwordCard");
@@ -342,8 +330,7 @@ public class DataAccess {
 	public void deleteToDelete() {
 		StringBuffer sb = new StringBuffer("delete from toDelete");
 		sqlDb.execute(sb.toString());
-		GWT.log(sb.toString());
-
+		
 		persistDB();
 	}
 

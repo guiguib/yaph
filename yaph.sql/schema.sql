@@ -10,9 +10,6 @@ CREATE TABLE account (
 );
 CREATE TABLE passwordCard (
 	id INTEGER,
-	adresse TEXT(250),
-	user TEXT,
-	password TEXT,
 	account INTEGER,
 	titre TEXT,
 	CONSTRAINT passwordcard_pk PRIMARY KEY (id),

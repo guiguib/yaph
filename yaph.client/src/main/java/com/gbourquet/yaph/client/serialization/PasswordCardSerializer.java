@@ -18,27 +18,6 @@ public class PasswordCardSerializer extends BaseSerializer<PasswordCard> {
 			}
 		});
 
-		fields.add(new StringFieldSerializer<PasswordCard>("user") {
-			@Override
-			protected String getValue(PasswordCard dto) {
-				return dto.getUser();
-			}
-		});
-
-		fields.add(new StringFieldSerializer<PasswordCard>("password") {
-			@Override
-			protected String getValue(PasswordCard dto) {
-				return dto.getPassword();
-			}
-		});
-
-		fields.add(new StringFieldSerializer<PasswordCard>("adresse") {
-			@Override
-			protected String getValue(PasswordCard dto) {
-				return dto.getAdresse();
-			}
-		});
-
 		fields.add(new IntFieldSerializer<PasswordCard>("account") {
 			@Override
 			protected Integer getValue(PasswordCard dto) {
@@ -52,9 +31,6 @@ public class PasswordCardSerializer extends BaseSerializer<PasswordCard> {
 		PasswordCard password = new PasswordCard();
 		password.setId(row.getInt("id"));
 		password.setTitre(row.getString("titre"));
-		password.setUser(row.getString("user"));
-		password.setPassword(row.getString("password"));
-		password.setAdresse(row.getString("adresse"));
 		password.setAccount(row.getInt("account"));
 
 		return password;

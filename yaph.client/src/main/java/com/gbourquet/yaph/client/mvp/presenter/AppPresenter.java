@@ -103,11 +103,9 @@ public class AppPresenter extends AbstractPresenter {
 
 			@Override
 			public void onRemoteReadPassword(ReadPasswordEvent event) {
-				GWT.log("Lecture des passwd faite");
 				// On met à jour la base locale
 				Account account = (Account) LocalSession.getInstance().getAttribute("account");
 				if (account != null) {
-					GWT.log("Nb passwds en base :" + event.getData().size());
 					List<PasswordCard> lPasswords = new ArrayList<PasswordCard>();
 					lPasswords.addAll(event.getData().keySet());
 					List<PasswordField> lFields = new ArrayList<PasswordField>();
@@ -122,19 +120,18 @@ public class AppPresenter extends AbstractPresenter {
 
 			@Override
 			public void onRemoteErrorPassword(ReadErrorPasswordEvent event) {
-				GWT.log("onRemoteErrorPassword");
+				GWT.log("onRemoteErrorPassword :"+event.getErrorMessage());
 
 			}
 
 			@Override
 			public void onLocalReadPassword(ReadPasswordEvent event) {
-				GWT.log("onLocalReadPassword");
-
+			
 			}
 
 			@Override
 			public void onLocalErrorPassword(ReadErrorPasswordEvent event) {
-				GWT.log("onLocalErrorPassword");
+				GWT.log("onLocalErrorPassword :"+event.getErrorMessage());
 
 			}
 		});

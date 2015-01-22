@@ -117,7 +117,6 @@ public class PasswordRemoteServiceImpl implements PasswordService {
 	@Override
 	public void syncData(Account account) {
 
-		GWT.log("Début synchro");
 		// on supprime les password de la table delete
 		List<PasswordCard> passwordsToDelete = DataAccess.getInstance().getDelPasswd();
 
@@ -143,7 +142,6 @@ public class PasswordRemoteServiceImpl implements PasswordService {
 
 			@Override
 			public void success(SyncPasswordResult result) {
-				GWT.log("Synchro terminée. "+ result.getData().size()+" passwords récupérés");
 				DataAccess.getInstance().deleteToDelete();
 				eventBus.fireEvent(new ReadPasswordEvent(result.getData()) {
 					
@@ -157,7 +155,7 @@ public class PasswordRemoteServiceImpl implements PasswordService {
 
 			@Override
 			public void failure(Throwable caught) {
-				GWT.log("Synchro terminée. "+ caught.getLocalizedMessage());
+				GWT.log("Erreur Synchro : "+ caught.getLocalizedMessage());
 				
 			}
 

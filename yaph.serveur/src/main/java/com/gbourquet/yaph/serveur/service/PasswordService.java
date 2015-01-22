@@ -15,9 +15,9 @@ import com.gbourquet.yaph.serveur.service.exception.ServiceException;
 public interface PasswordService extends Service {
 
     HashMap<PasswordCard, List<PasswordField>> getPasswords(final Account account) throws ServiceException;
-	PasswordCard save(PasswordCard password, List<PasswordField> fields) throws ServiceException;
-	List<PasswordField> getFields(final PasswordCard password) throws ServiceException;
-	void delete(PasswordCard password) throws ServiceException;
+	PasswordCard save(PasswordCard password, List<PasswordField> fields,Account account) throws ServiceException;
+	List<PasswordField> getFields(final PasswordCard password, Account account) throws ServiceException;
+	void delete(PasswordCard password, Account account) throws ServiceException;
 	HashMap<PasswordCard,List<PasswordField>> sync(Account account, List<PasswordCard> passwordToDelete, HashMap<PasswordCard, List<PasswordField>> dataToUpdate) throws ServiceException;
 	
 }

@@ -56,13 +56,10 @@ public class CryptoClient {
 		cipher.setKey(secretKey.getBytes());
 		try {
 			encryptedData.setAccount(dataToEncrypt.getAccount());
-			encryptedData.setAdresse(dataToEncrypt.getAdresse());
 			encryptedData.setId(dataToEncrypt.getId());
-			encryptedData.setPassword(dataToEncrypt.getPassword());
 			encryptedData.setTitre(cipher.encrypt(String.valueOf(dataToEncrypt.getTitre())));
 			encryptedData.setUpdateDate(dataToEncrypt.getUpdateDate());
-			encryptedData.setUser(dataToEncrypt.getUser());
-
+			
 		} catch (DataLengthException e1) {
 			e1.printStackTrace();
 		} catch (IllegalStateException e1) {
@@ -83,13 +80,10 @@ public class CryptoClient {
 		cipher.setKey(secretKey.getBytes());
 		try {
 			decryptedData.setAccount(dataToDecrypt.getAccount());
-			decryptedData.setAdresse(dataToDecrypt.getAdresse());
 			decryptedData.setId(dataToDecrypt.getId());
-			decryptedData.setPassword(dataToDecrypt.getPassword());
 			decryptedData.setTitre(cipher.decrypt(dataToDecrypt.getTitre()));
 			decryptedData.setUpdateDate(dataToDecrypt.getUpdateDate());
-			decryptedData.setUser(dataToDecrypt.getUser());
-
+			
 		} catch (DataLengthException e1) {
 			e1.printStackTrace();
 		} catch (IllegalStateException e1) {

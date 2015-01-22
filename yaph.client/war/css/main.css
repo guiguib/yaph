@@ -13,11 +13,6 @@ html {
 	text-shadow: none;
 }
 
-::selection {
-	background: #b3d4fc;
-	text-shadow: none;
-}
-
 hr {
 	display: block;
 	height: 1px;
@@ -71,8 +66,8 @@ body {
 
 .main-container {
 	position: absolute;
-	top: 122px;
-	bottom: 53px;
+	top: 120px;
+	bottom: 0px;
 	min-height: 440px;
 	width: 100%;
 }
@@ -497,42 +492,51 @@ div.active a {
 	padding: 10px;
 }
 
-.online, .offline {
-	position: absolute;
-	bottom: 20px;
+#inline {
+	position: fixed;
 	left: 20px;
+	bottom: 40px;
 	width: 30px;
-	height:40px;
-	padding: 0px;
-	margin: 10px 0 0 0;
+	height: 30px;
+	background-size: 100%;
+	z-index: 9999999990;
 }
 
-.online button, .offline button {
-	-webkit-appearance: none;
+#inline :HOVER {
 	cursor: pointer;
-	border: none;
-	outline: none;
-	padding: 0;
-	margin: -10px 0 0 0;
-	background: transparent;
-	vertical-align: bottom;
 }
-.online .gwt-Label, .offline .gwt-Label {
-	font-size: 10px;
-	color: #ccc;
+
+#inline ::selection {
+	background: #fff;
+}
+
+.online,.offline {
+	position: relative;
+	top: 0px;
+	right: 0px;
 	padding: 0px;
 	margin: 0px;
-	height:10px;
-	vertical-align: top;
+	height: 30px;
+	outline: none;
+}
+
+.online .gwt-Label,.offline .gwt-Label {
+	position: relative;
+	top: 20px; 
+	right : 0px; 
+	font-size : 10px;
+	color: #ccc;
+	padding: 0px;
+	margin: 20px 0 0 0;
+	height: 10px;
+	font-size: 10px;
+	right: 0px;
 }
 
 .online {
-	background : url('../img/online.png') no-repeat;
+	background: url('../img/online.png') no-repeat;
 }
-	
+
 .offline {
-	background : url('../img/offline.png') no-repeat;
+	background: url('../img/offline.png') no-repeat;
 }
-
-
-	

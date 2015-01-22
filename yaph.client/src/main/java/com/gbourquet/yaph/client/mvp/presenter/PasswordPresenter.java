@@ -219,14 +219,12 @@ public class PasswordPresenter extends AbstractPresenter {
 
 			@Override
 			public void onRemoteErrorPassword(SavingErrorPasswordEvent event) {
-				// Rien à faire
-
+				Window.alert(event.getErrorMessage());
 			}
 
 			@Override
 			public void onLocalErrorPassword(SavingErrorPasswordEvent event) {
-				// Rien à faire
-
+				Window.alert(event.getErrorMessage());
 			}
 		});
 
@@ -286,7 +284,7 @@ public class PasswordPresenter extends AbstractPresenter {
 
 			@Override
 			public void onRemoteErrorPassword(ReadErrorPasswordEvent event) {
-			
+				Window.alert(event.getErrorMessage());
 			}
 
 			@Override
@@ -296,7 +294,7 @@ public class PasswordPresenter extends AbstractPresenter {
 
 			@Override
 			public void onLocalErrorPassword(ReadErrorPasswordEvent event) {
-			
+				Window.alert(event.getErrorMessage());
 			}
 		});
 	}

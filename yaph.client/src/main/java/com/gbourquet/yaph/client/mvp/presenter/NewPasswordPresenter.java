@@ -25,7 +25,6 @@ import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -164,7 +163,6 @@ public class NewPasswordPresenter extends AbstractPresenter {
 			@Override
 			public void onUpdatePassword(UpdatePasswordEvent event) {
 				modeUpdate = true;
-				// TODO
 				passwordData = event.getPasswordCard();
 				fieldsData = event.getPasswordFields();
 				getView().clear();
@@ -173,6 +171,8 @@ public class NewPasswordPresenter extends AbstractPresenter {
 					getView().addField(lField);
 				}
 				getView().show();
+				getView().setHeaderText("Update password");
+				
 			}
 		});
 

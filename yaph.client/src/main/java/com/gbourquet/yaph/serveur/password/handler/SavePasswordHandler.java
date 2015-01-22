@@ -6,6 +6,7 @@ import net.customware.gwt.dispatch.server.ExecutionContext;
 import net.customware.gwt.dispatch.shared.ActionException;
 
 import com.gbourquet.yaph.serveur.handler.AbstractHandler;
+import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.gbourquet.yaph.serveur.password.in.SavePasswordAction;
@@ -21,17 +22,19 @@ public class SavePasswordHandler extends AbstractHandler<SavePasswordAction, Sav
 		final PasswordCard password = in.getPasswordCard();
 		final List<PasswordField> fields = in.getFields();
 
+		final Account account = (Account) session().getAttribute("account");
+		
 		PasswordCard outPassword;
 		List<PasswordField> outFields;
 		PasswordService service = (PasswordService) BeanFactory.getInstance().getService("passwordService");
 		try {
-			outPassword = service.save(password, fields);
+			outPassword = service.save(password, fields,account);
 		} catch (ServiceException e) {
 			throw new ActionException(e.getMessage());
 		}
 
 		try {
-			outFields = service.getFields(outPassword);
+			outFields = service.getFields(outPassword,account);
 		} catch (ServiceException e) {
 			throw new ActionException(e.getMessage());
 		}

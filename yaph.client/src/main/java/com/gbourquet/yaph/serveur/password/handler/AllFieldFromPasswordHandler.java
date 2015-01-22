@@ -6,6 +6,7 @@ import net.customware.gwt.dispatch.server.ExecutionContext;
 import net.customware.gwt.dispatch.shared.ActionException;
 
 import com.gbourquet.yaph.serveur.handler.AbstractHandler;
+import com.gbourquet.yaph.serveur.metier.generated.Account;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.gbourquet.yaph.serveur.password.in.AllFieldAction;
@@ -18,12 +19,13 @@ public class AllFieldFromPasswordHandler extends AbstractHandler<AllFieldAction,
 
 	public AllFieldResult exec(AllFieldAction in, ExecutionContext context) throws ActionException {
 
+		final Account account = (Account) session().getAttribute("account");
 		final PasswordCard password = in.getPassword();
 
 		List<PasswordField> out;
 		PasswordService service = (PasswordService) BeanFactory.getInstance().getService("passwordService");
 		try {
-			out = service.getFields(password);
+			out = service.getFields(password,account);
 		} catch (ServiceException e) {
 			throw new ActionException(e.getMessage());
 		}
