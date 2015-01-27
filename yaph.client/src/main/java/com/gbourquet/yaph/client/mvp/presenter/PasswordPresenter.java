@@ -49,21 +49,16 @@ public class PasswordPresenter extends AbstractPresenter {
 		HasClickHandlers getDeletePasswordButton();
 
 		void addPassword(PasswordCard password);
-
 		void removePassword(PasswordCard password);
-
-		void addField(PasswordField field);
-
-		void clearFields();
-
-		void unselectPassword();
-
-		void selectPassword(PasswordCard password);
-
 		void refreshPasswordList();
-
 		void updatePasswordList(List<PasswordCard> passwords);
 
+		void selectPassword(PasswordCard password);
+		void unselectPassword();
+
+		void addField(PasswordField field);
+		void clearFields();
+		
 		void addSelectionChangeHandler(Handler handler);
 
 		PasswordCard getSelectedPassword();

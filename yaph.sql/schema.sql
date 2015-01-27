@@ -26,3 +26,13 @@ CREATE TABLE passwordField (
 	CONSTRAINT PASSWORDFIELD_FK_PASSWORDCARD FOREIGN KEY (idCard) REFERENCES passwordCard(id)
 );
 
+CREATE TABLE passwordGroup (
+	id INTEGER,
+	idAccount INTEGER,
+	idPere INTEGER,
+	libelle TEXT,
+	CONSTRAINT passwordGroup_pk PRIMARY KEY (id),
+	CONSTRAINT passwordGroup_fk_passwordGroup FOREIGN KEY (idPere) REFERENCES passwordGroup(id),
+	CONSTRAINT passwordGroup_fk_account FOREIGN KEY (idAccount) REFERENCES account(id)
+);
+
