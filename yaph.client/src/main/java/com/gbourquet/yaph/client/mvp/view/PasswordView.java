@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
+import com.gbourquet.yaph.client.widget.FolderTree;
 import com.gbourquet.yaph.client.widget.NormalPager;
 import com.gbourquet.yaph.client.widget.PasswordWidget;
 import com.gbourquet.yaph.client.widget.PasswordWidget.TypePassword;
@@ -36,6 +37,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
@@ -80,6 +82,9 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	@UiField
 	Button deletePasswordButton;
 
+	@UiField
+	FolderTree folders;
+	
 	VerticalPanel fields;
 
 	/**
@@ -159,6 +164,33 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		fields = new VerticalPanel();
 		detailPassword.add(fields);
 		setFieldsVisible(false);
+		
+		TreeItem sub1 = new TreeItem(new Label("Dossier 1"));
+		TreeItem sub11 = new TreeItem(new Label("Dossier 1-1"));
+		TreeItem sub111 = new TreeItem(new Label("Dossier 1-1-1"));
+		sub11.addItem(sub111);
+		TreeItem sub112 = new TreeItem(new Label("Dossier 1-1-2"));
+		sub11.addItem(sub112);
+		sub1.addItem(sub11);
+		TreeItem sub12 = new TreeItem(new Label("Dossier 1-2"));
+		sub1.addItem(sub12);
+		TreeItem sub13 = new TreeItem(new Label("Dossier 1-3"));
+		sub1.addItem(sub13);
+		
+		TreeItem sub2 = new TreeItem(new Label("Dossier 2"));
+		TreeItem sub21 = new TreeItem(new Label("Dossier 2-1"));
+		sub2.addItem(sub21);
+		TreeItem sub22 = new TreeItem(new Label("Dossier 2-2"));
+		sub2.addItem(sub22);
+		TreeItem sub23 = new TreeItem(new Label("Dossier 2-3"));
+		sub2.addItem(sub23);
+		TreeItem sub3 = new TreeItem(new Label("Dossier 3"));
+		TreeItem sub31 = new TreeItem(new Label("Dossier 3-1"));
+		sub3.addItem(sub31);
+			
+		folders.addItem(sub1);
+		folders.addItem(sub2);
+		folders.addItem(sub3);
 
 	}
 
@@ -403,6 +435,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	@Override
 	public void setFieldsVisible(Boolean isVisible) {
 		detailPassword.setVisible(isVisible);
+		detailPassword.getParent().setVisible(isVisible);
 		updatePasswordButton.setVisible(isVisible);
 		deletePasswordButton.setVisible(isVisible);
 	}
