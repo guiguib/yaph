@@ -26,6 +26,7 @@ import com.gbourquet.yaph.client.service.password.PasswordRemoteServiceImpl;
 import com.gbourquet.yaph.client.service.password.PasswordService;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordGroup;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -52,6 +53,11 @@ public class PasswordPresenter extends AbstractPresenter {
 		void removePassword(PasswordCard password);
 		void refreshPasswordList();
 		void updatePasswordList(List<PasswordCard> passwords);
+
+		void addGroup(PasswordGroup group);
+		void removeGroup(PasswordGroup group);
+		void refreshGroupTree();
+		void updateGroupList(List<PasswordGroup> groups);
 
 		void selectPassword(PasswordCard password);
 		void unselectPassword();

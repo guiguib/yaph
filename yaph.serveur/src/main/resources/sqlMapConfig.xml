@@ -7,6 +7,7 @@
 		<mapper resource="maps/AccountMapper.xml" />
 		<mapper resource="maps/PasswordCardMapper.xml" />
 		<mapper resource="maps/PasswordFieldMapper.xml" />
+		<mapper resource="maps/PasswordGroupMapper.xml" />
 	</mappers>
 
 </configuration>

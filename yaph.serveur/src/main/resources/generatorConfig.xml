@@ -59,5 +59,13 @@
 			<columnOverride column="id"></columnOverride>
 		</table>
 		
+		<table schema="yaph" tableName="PASSWORDGROUP" modelType=""
+			domainObjectName="PasswordGroup">
+			<property name="constructorBased" value="true" />
+			<property name="useActualColumnNames" value="true" />
+			<generatedKey column="id" sqlStatement="SELECT last_insert_rowid()"/>
+			<columnOverride column="id"></columnOverride>
+		</table>
+		
 	</context>
 </generatorConfiguration>

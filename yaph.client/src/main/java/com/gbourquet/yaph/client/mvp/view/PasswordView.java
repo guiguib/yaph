@@ -1,7 +1,10 @@
 package com.gbourquet.yaph.client.mvp.view;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Queue;
 
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
 import com.gbourquet.yaph.client.widget.FolderTree;
@@ -10,6 +13,7 @@ import com.gbourquet.yaph.client.widget.PasswordWidget;
 import com.gbourquet.yaph.client.widget.PasswordWidget.TypePassword;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordGroup;
 import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
@@ -476,6 +480,39 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	public void refreshPasswordList() {
 		dataGrid.flush();
 		dataGrid.redraw();
+	}
+
+	@Override
+	public void addGroup(PasswordGroup group) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeGroup(PasswordGroup group) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void refreshGroupTree() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateGroupList(List<PasswordGroup> groups) {
+		HashMap<Integer,List<PasswordGroup>> mGroups = new HashMap<Integer, List<PasswordGroup>>();
+		Integer pivot=0;
+		List<PasswordGroup> lGroups=new ArrayList<PasswordGroup>();
+		for (PasswordGroup group : groups)
+		{
+			if (group.getIdPere()==pivot)
+			{
+				lGroups.add(group);
+			}
+		}
+		
 	}
 
 }
