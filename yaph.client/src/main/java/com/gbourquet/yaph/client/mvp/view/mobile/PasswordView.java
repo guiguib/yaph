@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
+import com.gbourquet.yaph.serveur.metier.generated.PasswordGroup;
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
 import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -450,6 +451,30 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 	@Override
 	public void refreshPasswordList() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addGroup(PasswordGroup group) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeGroup(PasswordGroup group) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void refreshGroupTree() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateGroupList(List<PasswordGroup> groups) {
 		// TODO Auto-generated method stub
 		
 	}

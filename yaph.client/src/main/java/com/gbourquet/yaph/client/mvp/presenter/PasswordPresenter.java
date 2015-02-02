@@ -298,6 +298,45 @@ public class PasswordPresenter extends AbstractPresenter {
 				Window.alert(event.getErrorMessage());
 			}
 		});
+		List<PasswordGroup> groups=new ArrayList<PasswordGroup>();
+		
+		PasswordGroup group1 = new PasswordGroup();
+		group1.setId(1);
+		group1.setLibelle("Groupe 1");
+		group1.setIdPere(0);
+		groups.add(group1);
+		
+		PasswordGroup group2 = new PasswordGroup();
+		group2.setId(2);
+		group2.setLibelle("Groupe 2");
+		group2.setIdPere(0);
+		groups.add(group2);
+		
+		PasswordGroup group11 = new PasswordGroup();
+		group11.setId(3);
+		group11.setLibelle("Groupe 1-1");
+		group11.setIdPere(1);
+		groups.add(group11);
+		
+		PasswordGroup group111 = new PasswordGroup();
+		group111.setId(4);
+		group111.setLibelle("Groupe 1-1-1");
+		group111.setIdPere(3);
+		groups.add(group111);
+		
+		PasswordGroup group12 = new PasswordGroup();
+		group12.setId(5);
+		group12.setLibelle("Groupe 1-2");
+		group12.setIdPere(1);
+		groups.add(group12);
+		
+		PasswordGroup group121 = new PasswordGroup();
+		group121.setId(6);
+		group121.setLibelle("Groupe 1-2-1");
+		group121.setIdPere(5);
+		groups.add(group121);
+		
+		getView().updateGroupList(groups); 
 	}
 
 	@Override
