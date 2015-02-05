@@ -70,10 +70,4 @@ public class MenuView extends Composite implements MenuPresenter.View {
 	public void setVisiblePassword(boolean visible) {
 		passwordAction.setVisible(visible);
 	}
-
-	@Override
-	public void setDisconnection(boolean disconnected) {
-		disconnectedLabel.setText(disconnected ? "Disconnected" : "");
-	}
-
 }

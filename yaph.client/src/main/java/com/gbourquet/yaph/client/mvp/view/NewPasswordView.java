@@ -14,7 +14,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -29,9 +28,6 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 
 	@UiField
 	Label header;
-
-	@UiField
-	DialogBox dialog;
 
 	@UiField
 	Label error;
@@ -60,8 +56,6 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 
 		title.getElement().setPropertyString("placeholder", "Password Title");
 
-		dialog.center();
-		dialog.hide();
 	}
 
 	/**
@@ -71,21 +65,9 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 	}
 
 	@Override
-	public void show() {
-		dialog.center();
-		dialog.setVisible(true);
-		dialog.show();
-	}
-
-	@Override
 	public HasClickHandlers getCancelButton() {
 
 		return cancelButton;
-	}
-
-	@Override
-	public void close() {
-		dialog.hide();
 	}
 
 	@Override
@@ -170,10 +152,4 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 	public void setHeaderText(String header) {
 		this.header.setText(header);
 	}
-
-	@Override
-	public void center() {
-		dialog.center();		
-	}
-
 }

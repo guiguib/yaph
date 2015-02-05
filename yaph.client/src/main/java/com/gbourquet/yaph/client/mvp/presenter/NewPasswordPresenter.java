@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gbourquet.yaph.client.LocalSession;
+import com.gbourquet.yaph.client.event.MenuEvent;
 import com.gbourquet.yaph.client.event.password.NewPasswordEvent;
 import com.gbourquet.yaph.client.event.password.NewPasswordEventHandler;
 import com.gbourquet.yaph.client.event.password.UpdatePasswordEvent;
@@ -12,6 +13,7 @@ import com.gbourquet.yaph.client.event.password.saved.SavedPasswordEvent;
 import com.gbourquet.yaph.client.event.password.saved.SavedPasswordEventHandler;
 import com.gbourquet.yaph.client.event.password.saved.SavingErrorPasswordEvent;
 import com.gbourquet.yaph.client.mvp.ClientFactory;
+import com.gbourquet.yaph.client.mvp.place.NewPasswordPlace;
 import com.gbourquet.yaph.client.mvp.place.PasswordPlace;
 import com.gbourquet.yaph.client.service.crypt.CryptService;
 import com.gbourquet.yaph.client.service.crypt.DefaultCryptServiceImpl;
@@ -52,10 +54,6 @@ public class NewPasswordPresenter extends AbstractPresenter {
 
 		void delFields();
 		void clear();
-		void show();
-		void center();
-		void close();
-
 	}
 
 	public View view;
@@ -78,8 +76,6 @@ public class NewPasswordPresenter extends AbstractPresenter {
 	}
 
 	public void bind(final ClientFactory factory) {
-
-		RootPanel.get("dialog").add(getView().asWidget());
 
 		// Evenements de la vue
 		// Valid nouveau mot de passe
@@ -108,7 +104,9 @@ public class NewPasswordPresenter extends AbstractPresenter {
 				}
 
 				getView().clear();
-				getView().close();
+				
+				//On retourne à la vue password
+				getFactory().getPlaceController().goTo(new PasswordPlace(""));
 			}
 
 		});
@@ -119,7 +117,6 @@ public class NewPasswordPresenter extends AbstractPresenter {
 			@Override
 			public void onClick(ClickEvent event) {
 				getView().clear();
-				getView().close();
 				getFactory().getPlaceController().goTo(new PasswordPlace(""));
 			}
 		});
@@ -136,8 +133,6 @@ public class NewPasswordPresenter extends AbstractPresenter {
 				field.setType("TEXT");
 				field.setValue("");
 				getView().addField(field);
-				if (fieldsData.size()==0)
-					getView().center();
 				fieldsData.add(field);
 
 			}
@@ -154,7 +149,7 @@ public class NewPasswordPresenter extends AbstractPresenter {
 				passwordData.setTitre("");
 				fieldsData = new ArrayList<PasswordField>();
 				getView().clear();
-				getView().show();
+				getFactory().getPlaceController().goTo(new NewPasswordPlace(""));
 			}
 		});
 
@@ -170,7 +165,7 @@ public class NewPasswordPresenter extends AbstractPresenter {
 				for (PasswordField lField : event.getPasswordFields()) {
 					getView().addField(lField);
 				}
-				getView().show();
+				getFactory().getPlaceController().goTo(new NewPasswordPlace(""));
 				getView().setHeaderText("Update password");
 				
 			}
@@ -205,13 +200,16 @@ public class NewPasswordPresenter extends AbstractPresenter {
 				fieldsData = new ArrayList<PasswordField>();
 				// On ferme la fenetre
 				getView().clear();
-				getView().close();
+				
 			}
 		});
 	}
 
 	@Override
 	public void start() {
+		RootPanel.get("container").clear();
+		RootPanel.get("container").add(getView().asWidget());
+		getEventBus().fireEvent(new MenuEvent("newPassword", true));
 	}
 
 	@Override

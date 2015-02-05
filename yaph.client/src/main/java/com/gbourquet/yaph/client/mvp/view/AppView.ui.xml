@@ -1,13 +1,29 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	>
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
 	.important {
 		font-weight: bold;
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		App
+		<div class="section no-pad-bot" id="index-banner">
+			<div class="container">
+				<br />
+				<br />
+				<h1 class="header center orange-text">Starter Template</h1>
+				<div class="row center">
+					<h5 class="header col s12 light">A modern responsive front-end framework based on
+						Material Design</h5>
+				</div>
+				<div class="row center">
+					<a href="http://materializecss.com/getting-started.html" id="download-button"
+						class="btn-large waves-effect waves-light orange">Get Started</a>
+				</div>
+				<br />
+				<br />
+
+			</div>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 

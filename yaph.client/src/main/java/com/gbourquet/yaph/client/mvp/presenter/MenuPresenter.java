@@ -30,7 +30,6 @@ public class MenuPresenter extends AbstractPresenter {
 
 		public void setVisiblePassword(boolean visible);
 
-		public void setDisconnection(boolean visible);
 	}
 
 	public View view;

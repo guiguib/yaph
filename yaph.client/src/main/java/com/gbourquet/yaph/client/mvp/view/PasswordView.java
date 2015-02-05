@@ -1,18 +1,14 @@
 package com.gbourquet.yaph.client.mvp.view;
 
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
-import com.gbourquet.yaph.client.widget.FolderTree;
 import com.gbourquet.yaph.client.widget.NormalPager;
 import com.gbourquet.yaph.client.widget.PasswordWidget;
 import com.gbourquet.yaph.client.widget.PasswordWidget.TypePassword;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
-import com.gbourquet.yaph.serveur.metier.generated.PasswordGroup;
 import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
@@ -37,11 +33,9 @@ import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
@@ -77,18 +71,13 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	NormalPager pager;
 
 	@UiField
-	SimplePanel detailPassword;
+	HTMLPanel detailPassword;
 
 	@UiField
 	Button updatePasswordButton;
 
 	@UiField
 	Button deletePasswordButton;
-
-	@UiField
-	FolderTree folders;
-
-	VerticalPanel fields;
 
 	/**
 	 * Column displays title.
@@ -164,8 +153,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		dataProvider.addDataDisplay(dataGrid);
 
 		initWidget(uiBinder.createAndBindUi(this));
-		fields = new VerticalPanel();
-		detailPassword.add(fields);
+		detailPassword.clear();
 		setFieldsVisible(false);
 
 	}
@@ -395,16 +383,13 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 	@Override
 	public void addField(PasswordField field) {
-		TypePassword type = "PASSWD".equals(field.getType()) ? TypePassword.PASSWD : TypePassword.TEXT; // TODO
-																										// gérer
-																										// tous
-																										// les
-																										// types
+		//TODO gérer tous les types
+		TypePassword type = "PASSWD".equals(field.getType()) ? TypePassword.PASSWD : TypePassword.TEXT;
+		
 		PasswordWidget fieldWidget = new PasswordWidget(type);
 		fieldWidget.setTitleText(field.getLibelle());
 		fieldWidget.setValueText(field.getValue());
-		this.fields.add(fieldWidget);
-		this.fields.setVisible(true);
+		this.detailPassword.add(fieldWidget);		
 	}
 
 	@Override
@@ -422,9 +407,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 	@Override
 	public void clearFields() {
-		detailPassword.remove(fields);
-		fields = new VerticalPanel();
-		detailPassword.add(fields);
+		detailPassword.clear();
 	}
 
 	@Override
@@ -457,50 +440,4 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		dataGrid.flush();
 		dataGrid.redraw();
 	}
-
-	@Override
-	public void addGroup(PasswordGroup group) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void removeGroup(PasswordGroup group) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void refreshGroupTree() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void updateGroupList(List<PasswordGroup> groups) {
-
-		folders.clear();
-		TreeItem root = new TreeItem(new Label("chargement en cours..."));
-		folders.addItem(root);
-		HashMap<Integer, TreeItem> mGroups = new HashMap<Integer, TreeItem>();
-		mGroups.put(0, root);
-		LinkedList<Integer> aTraiter = new LinkedList<Integer>();
-		aTraiter.add(0);
-		while (aTraiter.size() > 0) {
-			Integer pivot = aTraiter.removeLast();
-			TreeItem racine = mGroups.get(pivot);
-
-			for (PasswordGroup group : groups) {
-				if (group.getIdPere() == pivot) {
-					TreeItem item = new TreeItem(new Label(group.getLibelle()));
-					racine.addItem(item);
-					mGroups.put(group.getId(), item);
-					aTraiter.addFirst(group.getId());
-				}
-			}
-		}
-		((Label)root.getWidget()).setText("Groupes");
-		root.setState(true);
-	}
-
 }

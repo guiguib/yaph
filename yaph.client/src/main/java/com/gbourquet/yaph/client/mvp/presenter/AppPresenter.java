@@ -53,6 +53,13 @@ public class AppPresenter extends AbstractPresenter {
 		bind();
 	}
 
+	public static native void initJS() /*-{
+		$wnd.$('.button-collapse').sideNav();
+		// Initialize collapsible
+  		$wnd.$('.collapsible').collapsible();
+
+	}-*/;
+
 	public void bind() {
 
 		RootPanel.get("container").add(getView().asWidget());
@@ -109,8 +116,7 @@ public class AppPresenter extends AbstractPresenter {
 					List<PasswordCard> lPasswords = new ArrayList<PasswordCard>();
 					lPasswords.addAll(event.getData().keySet());
 					List<PasswordField> lFields = new ArrayList<PasswordField>();
-					for (PasswordCard lPassword : lPasswords)
-					{
+					for (PasswordCard lPassword : lPasswords) {
 						lFields.addAll(event.getData().get(lPassword));
 					}
 					localOnlinePasswordService.savePasswords(account, lPasswords, lFields);
@@ -120,24 +126,26 @@ public class AppPresenter extends AbstractPresenter {
 
 			@Override
 			public void onRemoteErrorPassword(ReadErrorPasswordEvent event) {
-				GWT.log("onRemoteErrorPassword :"+event.getErrorMessage());
+				GWT.log("onRemoteErrorPassword :" + event.getErrorMessage());
 
 			}
 
 			@Override
 			public void onLocalReadPassword(ReadPasswordEvent event) {
-			
+
 			}
 
 			@Override
 			public void onLocalErrorPassword(ReadErrorPasswordEvent event) {
-				GWT.log("onLocalErrorPassword :"+event.getErrorMessage());
+				GWT.log("onLocalErrorPassword :" + event.getErrorMessage());
 
 			}
 		});
 
 		// L'application est lancé
 		getEventBus().fireEvent(new LoadApplicationEvent());
+
+		initJS();
 	}
 
 	@Override

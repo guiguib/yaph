@@ -6,8 +6,8 @@
 	<!-- Inherit Activities and Places. -->
 	<inherits name='com.google.gwt.activity.Activity' />
 	<inherits name='com.google.gwt.place.Place' />
-	<inherits name='com.googlecode.gwt.crypto.Crypto'/>
-	
+	<inherits name='com.googlecode.gwt.crypto.Crypto' />
+
 	<!-- Inherit the default GWT style sheet. You can change -->
 	<!-- the theme of your GWT application by uncommenting -->
 	<!-- any one of the following lines. -->
@@ -33,7 +33,8 @@
 	<source path="client" excludes="*/*Test*.java,**/HudsonTest.java" />
 	<source path="serveur/metier" excludes="*/*Test*.java" />
 
-	<extend-property name="locale" values="fr_FR" />
+	<extend-property name="locale" values="fr" />
+	<set-property-fallback name="locale" value="fr" />
 
 	<define-property name="mobile.user.agent" values="android, iphone, not_mobile" />
 	<property-provider name="mobile.user.agent"><![CDATA[
@@ -41,8 +42,6 @@
     var ua = window.navigator.userAgent.toLowerCase();
     if (ua.indexOf('android') != -1) { return 'android'; }
     if (ua.indexOf('iphone') != -1) { return 'iphone'; }
-    //return 'android';
-    //return 'iphone';
     return 'not_mobile';
   }
 ]]></property-provider>

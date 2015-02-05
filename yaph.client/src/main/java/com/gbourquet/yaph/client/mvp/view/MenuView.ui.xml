@@ -7,16 +7,10 @@
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<header class="wrapper clearfix">
-			<h1 class="title">
-				<g:Label ui:field="userLabel"></g:Label>
-			</h1>
-			<nav>
-				<div id="bg-one"></div>
-				<div id="bg-two"></div>
-				<div id="bg-three"></div>
-				<div id="bg-four"></div>
-				<ul>
+		<nav>
+			<div class="nav-wrapper">
+				<a href="#" class="brand-logo"><g:Label ui:field="userLabel"></g:Label></a>
+				<ul id="nav-mobile" class="right side-nav">
 					<li>
 						<g:Hyperlink targetHistoryToken="app:" ui:field="appAction">Home</g:Hyperlink>
 					</li>
@@ -27,8 +21,12 @@
 						<g:Hyperlink targetHistoryToken="login:" ui:field="actionLabel">Sign in</g:Hyperlink>
 					</li>
 				</ul>
-			</nav>
-			<g:Label ui:field="disconnectedLabel"></g:Label>
-		</header>
+
+				<!-- Include this line below -->
+				<a class="button-collapse" href="#" data-activates="nav-mobile"><i class="mdi-navigation-menu"></i></a>
+				<!-- End -->
+
+			</div>
+		</nav>
 	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -43,7 +43,7 @@ public class PasswordWidget extends Composite {
 			public void onClick(ClickEvent event) {
 				setValueVisible(!valueVisible);
 			}
-		});
+		});		
 	}
 
 	public String getTitleText() {

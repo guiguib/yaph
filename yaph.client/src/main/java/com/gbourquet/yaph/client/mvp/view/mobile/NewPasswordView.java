@@ -71,24 +71,13 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 	interface Binder extends UiBinder<Widget, NewPasswordView> {
 	}
 
-	@Override
-	public void show() {
-		dialog.center();
-		dialog.setVisible(true);
-		dialog.show();
-	}
-
-	@Override
+		@Override
 	public HasClickHandlers getCancelButton() {
 
 		return cancelButton;
 	}
 
-	@Override
-	public void close() {
-		dialog.hide();
-	}
-
+	
 	@Override
 	public void clear() {
 		title.setText("");
@@ -175,10 +164,6 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 
 	}
 
-	@Override
-	public void center() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 }
