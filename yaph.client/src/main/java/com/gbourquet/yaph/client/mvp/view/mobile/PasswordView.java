@@ -1,6 +1,7 @@
 package com.gbourquet.yaph.client.mvp.view.mobile;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
@@ -14,6 +15,7 @@ import com.google.gwt.dom.builder.shared.TableCellBuilder;
 import com.google.gwt.dom.builder.shared.TableRowBuilder;
 import com.google.gwt.dom.client.Style.OutlineStyle;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -37,7 +39,6 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 import com.google.gwt.view.client.SelectionModel;
 
 public class PasswordView extends Composite implements PasswordPresenter.View {
@@ -376,67 +377,6 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	}
 
 	@Override
-	public void addPassword(PasswordCard password) {
-		List<PasswordCard> passwords = dataProvider.getList();
-		passwords.add(password);
-	}
-
-	@Override
-	public void updatePasswordList(List<PasswordCard> passwords) {
-		List<PasswordCard> data = dataProvider.getList();
-		data.clear();
-		data.addAll(passwords);
-	}
-
-	@Override
-	public void addField(PasswordField field) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void clearFields() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addSelectionChangeHandler(Handler handler) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public PasswordCard getSelectedPassword() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setFieldsVisible(Boolean isVisible) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void unselectPassword() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public HasClickHandlers getUpdatePasswordButton() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public HasClickHandlers getDeletePasswordButton() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void removePassword(PasswordCard password) {
 		// TODO Auto-generated method stub
 
@@ -449,7 +389,37 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	}
 
 	@Override
-	public void refreshPasswordList() {
+	public void updatePasswordList(HashMap<PasswordCard, List<PasswordField>> passwords) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setUpdateHandler(ClickHandler handler) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setRemoveHandler(ClickHandler handler) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Integer getOpenedPasswordId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addPassword(PasswordCard password, List<PasswordField> fields, boolean open) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeTooltips() {
 		// TODO Auto-generated method stub
 		
 	}

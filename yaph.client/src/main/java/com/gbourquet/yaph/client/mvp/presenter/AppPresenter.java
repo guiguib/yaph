@@ -54,11 +54,8 @@ public class AppPresenter extends AbstractPresenter {
 	}
 
 	public static native void initJS() /*-{
-		$wnd.$('.button-collapse').sideNav();
-		// Initialize collapsible
-  		$wnd.$('.collapsible').collapsible();
-
-	}-*/;
+		$wnd.jQuery('.button-collapse').sideNav();
+  	}-*/;
 
 	public void bind() {
 

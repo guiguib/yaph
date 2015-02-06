@@ -32,8 +32,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 
 public class PasswordPresenter extends AbstractPresenter {
 
@@ -44,27 +42,17 @@ public class PasswordPresenter extends AbstractPresenter {
 
 		HasClickHandlers getNewPasswordButton();
 
-		HasClickHandlers getUpdatePasswordButton();
+		void setUpdateHandler(ClickHandler handler);
+		void setRemoveHandler(ClickHandler handler);
 
-		HasClickHandlers getDeletePasswordButton();
-
-		void addPassword(PasswordCard password);
+		void addPassword(PasswordCard password, List<PasswordField> fields, boolean open);
 		void removePassword(PasswordCard password);
-		void refreshPasswordList();
-		void updatePasswordList(List<PasswordCard> passwords);
+		public void updatePasswordList(HashMap<PasswordCard, List<PasswordField>> passwords);
 
 		void selectPassword(PasswordCard password);
-		void unselectPassword();
-
-		void addField(PasswordField field);
-		void clearFields();
+		Integer getOpenedPasswordId();
 		
-		void addSelectionChangeHandler(Handler handler);
-
-		PasswordCard getSelectedPassword();
-
-		void setFieldsVisible(Boolean isVisible);
-
+		void removeTooltips();
 	}
 
 	public View view;
@@ -101,27 +89,48 @@ public class PasswordPresenter extends AbstractPresenter {
 			}
 		});
 
-		getView().getUpdatePasswordButton().addClickHandler(new ClickHandler() {
+		getView().setUpdateHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				// on retire le mot de passe des données du presenter
-				PasswordCard uPassword = getView().getSelectedPassword();
-				List<PasswordField> uFields = fields.get(uPassword);
-
+				getView().removeTooltips();
+				Integer id = getView().getOpenedPasswordId();
+				
+				List<PasswordField> uFields=null;
+				PasswordCard uPassword=null;
+				for (PasswordCard lPassword : passwords)
+				{
+					if (id.equals(lPassword.getId()))
+					{
+						uFields = fields.get(lPassword);
+						uPassword = lPassword;
+						break;
+					}
+				}
 				// On envoi un message au presenter de la vue de création de mot
 				// de passe avec le mot de passe à modifier et les champs
 				getEventBus().fireEvent(new UpdatePasswordEvent(uPassword, uFields));
 			}
 		});
 
-		getView().getDeletePasswordButton().addClickHandler(new ClickHandler() {
+		getView().setRemoveHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
+				getView().removeTooltips();
 				if (Window.confirm("Confirmez vous la suppression ?")) {
 
-					PasswordCard sPassword = getView().getSelectedPassword();
+					Integer id = getView().getOpenedPasswordId();
+					PasswordCard sPassword=null;
+					for (PasswordCard lPassword : passwords)
+					{
+						if (id.equals(lPassword.getId()))
+						{
+							sPassword = lPassword;
+							break;
+						}
+					}
+					
 					Boolean disconnected = ((Boolean) LocalSession.getInstance().getAttribute("disconnected") == null) ? false : (Boolean) LocalSession.getInstance().getAttribute(
 							"disconnected");
 					if (disconnected) {
@@ -131,24 +140,6 @@ public class PasswordPresenter extends AbstractPresenter {
 					}
 				}
 			}
-		});
-
-		getView().addSelectionChangeHandler(new Handler() {
-
-			@Override
-			public void onSelectionChange(SelectionChangeEvent event) {
-				if (getView().getSelectedPassword() != null) {
-					PasswordCard sPassword = getView().getSelectedPassword();
-					List<PasswordField> sFields = fields.get(sPassword);
-					getView().clearFields();
-					for (PasswordField field : sFields) {
-						getView().addField(field);
-					}
-
-					getView().setFieldsVisible(true);
-				}
-			}
-
 		});
 
 		// Evenements du bus
@@ -190,25 +181,30 @@ public class PasswordPresenter extends AbstractPresenter {
 				// On dechiffre les données
 				PasswordCard sPassword = cryptService.decrypt(event.getPasswordCard());
 				List<PasswordField> sFields = cryptService.decrypt(event.getFields());
-
-				PasswordCard selectedPassword = getView().getSelectedPassword();
+				Integer id = getView().getOpenedPasswordId();
+				
+				PasswordCard selectedPassword=null;
+				for (PasswordCard lPassword : passwords)
+				{
+					if (id.equals(lPassword.getId()))
+					{
+						selectedPassword = lPassword;
+						break;
+					}
+				}
+				
 				if (event.isModeUpdate()) {
 					getView().removePassword(selectedPassword);
 					passwords.remove(selectedPassword);
 					fields.remove(selectedPassword);
-					getView().refreshPasswordList();
 				} 
-				getView().addPassword(sPassword);
+				getView().addPassword(sPassword, sFields, true);
 				getView().selectPassword(sPassword);
 				passwords.add(sPassword);
 				fields.put(sPassword, sFields);
 			
-				getView().clearFields();
-				for (PasswordField field : sFields) {
-					getView().addField(field);
-				}
 				getView().selectPassword(sPassword);
-				getView().setFieldsVisible(true);
+				
 
 			}
 
@@ -251,9 +247,7 @@ public class PasswordPresenter extends AbstractPresenter {
 
 				// On met la vue à jour
 				getView().removePassword(sPassword);
-				getView().clearFields();
-				getView().unselectPassword();
-
+				
 			}
 		});
 
@@ -274,7 +268,7 @@ public class PasswordPresenter extends AbstractPresenter {
 					fields.put(clearPassword, clearFields);
 				
 				}
-				getView().updatePasswordList(passwords);
+				getView().updatePasswordList(fields);
 			}
 
 			@Override
@@ -301,8 +295,6 @@ public class PasswordPresenter extends AbstractPresenter {
 		RootPanel.get("container").add(getView().asWidget());
 		getEventBus().fireEvent(new MenuEvent("password", true));
 		// On nettoie
-		getView().setFieldsVisible(false);
-		getView().unselectPassword();
 	}
 
 	@Override
