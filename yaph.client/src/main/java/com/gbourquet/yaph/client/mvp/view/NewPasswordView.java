@@ -122,6 +122,7 @@ public class NewPasswordView extends Composite implements NewPasswordPresenter.V
 
 		fields.add(fieldWidget);
 		fieldsPanel.add(fieldWidget);
+		fieldWidget.init();
 	}
 
 	@Override

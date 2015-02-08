@@ -10,7 +10,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -18,10 +18,17 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class PasswordFieldWidget extends Composite {
 
+	public static native void widgetInitJS() /*-{
+	// Initialize collapsible
+	$wnd.jQuery('select').material_select();
+	$wnd.jQuery('.tooltipped').tooltip();
+}-*/;
+	
+	
 	int id=0;
 	
-		@UiField
-	Button del;
+	@UiField
+	Anchor del;
 
 	@UiField
 	TextBox title;
@@ -30,12 +37,10 @@ public class PasswordFieldWidget extends Composite {
 	TextBox value;
 
 	@UiField
-	Button generate;
+	Anchor generate;
 
 	@UiField
 	ListBox type;
-
-	private int width = 500;
 
 	private static PasswordFieldWidgetUiBinder uiBinder = GWT.create(PasswordFieldWidgetUiBinder.class);
 
@@ -53,16 +58,17 @@ public class PasswordFieldWidget extends Composite {
 		type.addItem("Adresse", "ADRESS");
 		type.addItem("Date", "DATE");
 
-		generate.setVisible(false);
+		//generate.setVisible(false);
 		type.addChangeHandler(new ChangeHandler() {
 
 			@Override
 			public void onChange(ChangeEvent event) {
 				if ("PASSWD".equals(type.getValue(type.getSelectedIndex())))
+				{	
 					setGenerateVisible(true);
-				else
+				} else {
 					setGenerateVisible(false);
-
+				}
 			}
 		});
 
@@ -76,19 +82,24 @@ public class PasswordFieldWidget extends Composite {
 			}
 		});
 
+		del.getElement().setAttribute("data-position", "top");
+		del.getElement().setAttribute("data-delay", "5");
+		del.getElement().setAttribute("data-tooltip", "Supprimer");
+		
+		generate.getElement().setAttribute("data-position", "top");
+		generate.getElement().setAttribute("data-delay", "5");
+		generate.getElement().setAttribute("data-tooltip", "Générer");
 	}
 
 	private void setGenerateVisible(boolean visible) {
 		generate.setVisible(visible);
-		if (visible)
-			width = width - 108;
-		else
-			width = 500;
-
-		value.setWidth(width + "px");
-
 	}
 
+	public void init()
+	{
+		widgetInitJS();
+	}
+	
 	public TextBox getTitleBox() {
 		return title;
 	}
