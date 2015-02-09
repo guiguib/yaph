@@ -3,8 +3,10 @@ package com.gbourquet.yaph.client.mvp.view;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gbourquet.yaph.client.event.widget.TagEventHandler;
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
 import com.gbourquet.yaph.client.widget.PasswordWidget;
+import com.gbourquet.yaph.client.widget.TagsWidget;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
 import com.google.gwt.core.client.GWT;
@@ -25,11 +27,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	interface PasswordViewUiBinder extends UiBinder<Widget, PasswordView> {
 	}
 
-	public static native void passwordViewInitJS() /*-{
-	// Initialize collapsible
-	$wnd.jQuery('.collapsible').collapsible();
-	$wnd.jQuery('.tooltipped').tooltip();
-}-*/;
+	
 
 	public static native int activePassword() /*-{
 	// Initialize collapsible
@@ -49,7 +47,14 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	
 }-*/;
 
-/**
+	
+	/**
+	 * The tags Area
+	 */
+	@UiField(provided=true)
+	TagsWidget tags;
+
+	/**
 	 * The main DataGrid.
 	 */
 	@UiField
@@ -141,7 +146,6 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 		li.getElement().setAttribute("id", password.getId()+"");
 		data.add(li);
 		wPasswords.put(password.getId(), li);
-		passwordViewInitJS();
 	}
 
 	@Override
@@ -177,13 +181,17 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	}
 
 	@Override
-	public Integer getOpenedPasswordId() {
-		
+	public Integer getOpenPasswordId() {
 		return activePassword();
 	}
 
 	@Override
 	public void removeTooltips() {
 		removeTooltipsJS();
+	}
+
+	@Override
+	public void addTagHandler(TagEventHandler handler) {
+		this.tags.addTagEventHandler(handler);
 	}
 }

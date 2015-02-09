@@ -17,6 +17,8 @@ import com.gbourquet.yaph.client.event.password.read.ReadPasswordEventHandler;
 import com.gbourquet.yaph.client.event.password.saved.SavedPasswordEvent;
 import com.gbourquet.yaph.client.event.password.saved.SavedPasswordEventHandler;
 import com.gbourquet.yaph.client.event.password.saved.SavingErrorPasswordEvent;
+import com.gbourquet.yaph.client.event.widget.TagEvent;
+import com.gbourquet.yaph.client.event.widget.TagEventHandler;
 import com.gbourquet.yaph.client.mvp.ClientFactory;
 import com.gbourquet.yaph.client.service.crypt.CryptService;
 import com.gbourquet.yaph.client.service.crypt.DefaultCryptServiceImpl;
@@ -35,6 +37,12 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class PasswordPresenter extends AbstractPresenter {
 
+	public static native void passwordViewInitJS() /*-{
+	// Initialize collapsible
+	$wnd.jQuery('.collapsible').collapsible();
+	$wnd.jQuery('.tooltipped').tooltip();
+}-*/;
+	
 	/*
 	 * Contrat echangé avec la vue
 	 */
@@ -44,13 +52,14 @@ public class PasswordPresenter extends AbstractPresenter {
 
 		void setUpdateHandler(ClickHandler handler);
 		void setRemoveHandler(ClickHandler handler);
-
+		void addTagHandler(TagEventHandler handler);
+		
 		void addPassword(PasswordCard password, List<PasswordField> fields, boolean open);
 		void removePassword(PasswordCard password);
 		public void updatePasswordList(HashMap<PasswordCard, List<PasswordField>> passwords);
 
 		void selectPassword(PasswordCard password);
-		Integer getOpenedPasswordId();
+		Integer getOpenPasswordId();
 		
 		void removeTooltips();
 	}
@@ -65,6 +74,8 @@ public class PasswordPresenter extends AbstractPresenter {
 	private PasswordService localOfflineService;
 	private CryptService cryptService;
 
+	private int openPasswordId=0;
+	
 	public PasswordPresenter(ClientFactory factory) {
 		super(factory);
 		view = factory.getPasswordView();
@@ -94,7 +105,7 @@ public class PasswordPresenter extends AbstractPresenter {
 			@Override
 			public void onClick(ClickEvent event) {
 				getView().removeTooltips();
-				Integer id = getView().getOpenedPasswordId();
+				Integer id = getView().getOpenPasswordId();
 				
 				List<PasswordField> uFields=null;
 				PasswordCard uPassword=null;
@@ -120,7 +131,7 @@ public class PasswordPresenter extends AbstractPresenter {
 				getView().removeTooltips();
 				if (Window.confirm("Confirmez vous la suppression ?")) {
 
-					Integer id = getView().getOpenedPasswordId();
+					Integer id = getView().getOpenPasswordId();
 					PasswordCard sPassword=null;
 					for (PasswordCard lPassword : passwords)
 					{
@@ -142,32 +153,19 @@ public class PasswordPresenter extends AbstractPresenter {
 			}
 		});
 
+		getView().addTagHandler(new TagEventHandler() {
+			
+			@Override
+			public void onRemove(TagEvent event) {
+				updateView(event.getTagName());
+			}
+			
+			@Override
+			public void onNewTag(TagEvent event) {
+				updateView(event.getTagName());
+			}
+		});
 		// Evenements du bus
-		/*getEventBus().addHandler(LoginEvent.TYPE, new LoginEventHandler() {
-
-			@Override
-			public void onLogin(final LoginEvent event) {
-				final Account account = event.getAccount();
-				CryptService cryptService = new DefaultCryptServiceImpl();
-				passwords = new ArrayList<PasswordCard>();
-				fields = new HashMap<PasswordCard, List<PasswordField>>();
-				List<PasswordCard> cPasswords = DataAccess.getInstance().getPasswords(account);
-				for (PasswordCard sPassword : cPasswords) {
-					PasswordCard dsPassword = cryptService.decrypt(sPassword);
-					List<PasswordField> sFields = cryptService.decrypt(DataAccess.getInstance().getFields(dsPassword));
-					passwords.add(dsPassword);
-					fields.put(dsPassword, sFields);
-				}
-				getView().updatePasswordList(passwords);
-			}
-
-			@Override
-			public void onNotLogged(NotLoggedEvent notLoggedEvent) {
-				// rien à faire
-			}
-
-		});*/
-
 		getEventBus().addHandler(SavedPasswordEvent.TYPE, new SavedPasswordEventHandler() {
 
 			@Override
@@ -181,8 +179,7 @@ public class PasswordPresenter extends AbstractPresenter {
 				// On dechiffre les données
 				PasswordCard sPassword = cryptService.decrypt(event.getPasswordCard());
 				List<PasswordField> sFields = cryptService.decrypt(event.getFields());
-				Integer id = getView().getOpenedPasswordId();
-				
+				Integer id = openPasswordId;
 				PasswordCard selectedPassword=null;
 				for (PasswordCard lPassword : passwords)
 				{
@@ -193,11 +190,13 @@ public class PasswordPresenter extends AbstractPresenter {
 					}
 				}
 				
+				
 				if (event.isModeUpdate()) {
 					getView().removePassword(selectedPassword);
 					passwords.remove(selectedPassword);
 					fields.remove(selectedPassword);
 				} 
+				
 				getView().addPassword(sPassword, sFields, true);
 				getView().selectPassword(sPassword);
 				passwords.add(sPassword);
@@ -294,7 +293,8 @@ public class PasswordPresenter extends AbstractPresenter {
 		RootPanel.get("container").clear();
 		RootPanel.get("container").add(getView().asWidget());
 		getEventBus().fireEvent(new MenuEvent("password", true));
-		// On nettoie
+		openPasswordId = getView().getOpenPasswordId();
+		passwordViewInitJS();
 	}
 
 	@Override

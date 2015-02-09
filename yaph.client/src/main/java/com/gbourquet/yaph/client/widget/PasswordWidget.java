@@ -5,7 +5,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -18,7 +20,10 @@ public class PasswordWidget extends Composite {
 	Label value;
 
 	@UiField
-	Label enclair;
+	Anchor enclairAction;
+
+	@UiField
+	HTMLPanel enclair;
 
 	String valuePasswd = "";
 	Boolean valueVisible = false;
@@ -37,13 +42,14 @@ public class PasswordWidget extends Composite {
 	public PasswordWidget(TypePassword type) {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.type = type;
-		enclair.addClickHandler(new ClickHandler() {
+		enclairAction.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				setValueVisible(!valueVisible);
 			}
 		});		
+		enclair.setVisible(this.type == TypePassword.PASSWD);
 	}
 
 	public String getTitleText() {
@@ -62,20 +68,18 @@ public class PasswordWidget extends Composite {
 		this.valuePasswd = value;
 		if (this.type == TypePassword.PASSWD && !valueVisible) {
 			this.value.setText("******");
-			this.enclair.setText("en clair");
 		} else {
 			this.value.setText(value);
-			this.enclair.setText(this.type == TypePassword.PASSWD ? "dissimuler" : "");
 		}
 	}
 
 	public void setValueVisible(Boolean visible) {
 		if (this.type == TypePassword.PASSWD && !visible) {
 			this.value.setText("******");
-			this.enclair.setText("en clair");
+			enclairAction.setHTML("<i class='mdi-action-visibility'></i>");
 		} else {
 			this.value.setText(valuePasswd);
-			this.enclair.setText(this.type == TypePassword.PASSWD ? "dissimuler" : "");
+			enclairAction.setHTML("<i class='mdi-action-visibility-off'></i>");
 		}
 		this.valueVisible = visible;
 	}

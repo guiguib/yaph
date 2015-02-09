@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gbourquet.yaph.client.event.widget.TagEventHandler;
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordCard;
 import com.gbourquet.yaph.serveur.metier.generated.PasswordField;
@@ -407,7 +408,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	}
 
 	@Override
-	public Integer getOpenedPasswordId() {
+	public Integer getOpenPasswordId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -420,6 +421,12 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 
 	@Override
 	public void removeTooltips() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addTagHandler(TagEventHandler handler) {
 		// TODO Auto-generated method stub
 		
 	}

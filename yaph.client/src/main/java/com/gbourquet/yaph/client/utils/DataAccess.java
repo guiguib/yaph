@@ -259,21 +259,20 @@ public class DataAccess {
 		StringBuffer sb = new StringBuffer("delete from passwordField where idCard=").append(password.getId());
 		sqlDb.execute(sb.toString());
 		
-		
 		for (PasswordField field : fields) {
 			int id = field.getId() == null || field.getId() == 0 ? --minIdField
 					: field.getId();
-			sb=new StringBuffer("insert into passwordField (id, idCard, type, libelle, value) values(");
+			sb=new StringBuffer("insert into passwordField (id, idCard, type, libelle, value) values (");
 			sb.append(id).append(",");
 			sb.append(password.getId()).append(",");
 			sb.append("'").append(field.getType()).append("',");
 			sb.append("'").append(field.getLibelle()).append("',");
 			sb.append("'").append(field.getValue()).append("')");
 			sqlDb.execute(sb.toString());
-			
 		}
-		persistDB();
 		
+		
+		persistDB();
 	}
 
 	public void deleteOnlinePasswordCard(PasswordCard password) {

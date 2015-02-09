@@ -6,22 +6,20 @@ import net.customware.gwt.dispatch.client.standard.StandardDispatchAsync;
 
 import com.gbourquet.yaph.client.LocalSession;
 import com.gbourquet.yaph.client.mvp.presenter.AppPresenter;
+import com.gbourquet.yaph.client.mvp.presenter.InlinePresenter;
 import com.gbourquet.yaph.client.mvp.presenter.LoginPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.LoginPresenter.View;
 import com.gbourquet.yaph.client.mvp.presenter.LogoutPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.MenuPresenter;
-import com.gbourquet.yaph.client.mvp.presenter.InlinePresenter;
 import com.gbourquet.yaph.client.mvp.presenter.NewPasswordPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
-import com.gbourquet.yaph.client.mvp.presenter.ProgressionPresenter;
-import com.gbourquet.yaph.client.mvp.view.mobile.MenuView;
-import com.gbourquet.yaph.client.mvp.view.mobile.InlineView;
 import com.gbourquet.yaph.client.mvp.view.mobile.AppView;
+import com.gbourquet.yaph.client.mvp.view.mobile.InlineView;
 import com.gbourquet.yaph.client.mvp.view.mobile.LoginView;
 import com.gbourquet.yaph.client.mvp.view.mobile.LogoutView;
+import com.gbourquet.yaph.client.mvp.view.mobile.MenuView;
 import com.gbourquet.yaph.client.mvp.view.mobile.NewPasswordView;
 import com.gbourquet.yaph.client.mvp.view.mobile.PasswordView;
-import com.gbourquet.yaph.client.mvp.view.mobile.ProgressionView;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -31,7 +29,6 @@ public class ClientFactoryMobileImpl implements ClientFactory {
 	private final PlaceController placeController = new PlaceController(eventBus);
 
 	private final AppPresenter.View appView = new AppView();
-	private final ProgressionPresenter.View progressionView = new ProgressionView();
 	private final PasswordPresenter.View passwordView = new PasswordView();
 	private final NewPasswordPresenter.View newPasswordView = new NewPasswordView();
 	private final LoginPresenter.View loginView = new LoginView();
@@ -54,11 +51,6 @@ public class ClientFactoryMobileImpl implements ClientFactory {
 	@Override
 	public AppPresenter.View getAppView() {
 		return appView;
-	}
-
-	@Override
-	public ProgressionPresenter.View getProgressionView() {
-		return progressionView;
 	}
 
 	@Override

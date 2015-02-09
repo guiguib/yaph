@@ -2,12 +2,21 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<g:HTMLPanel styleName="bloc">
-		<h4>Sign In</h4>	
+		<h4>Sign In</h4>
 		<g:Label ui:field="error"></g:Label>
-		<g:TextBox ui:field="login" maxLength="20" width="300px"></g:TextBox>
-		<g:PasswordTextBox ui:field="passwd" maxLength="20" width="300px"></g:PasswordTextBox>
-		<br/>
-		<g:Button ui:field="buttonLogin" />
+		<div class="row">
+			<div class="col s4">
+				<g:TextBox ui:field="login" maxLength="20"></g:TextBox>
+			</div>
+			<div class="col s4">
+				<g:PasswordTextBox ui:field="passwd" maxLength="20"></g:PasswordTextBox>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col s4">
+				<g:Button ui:field="buttonLogin" styleName="btn" />
+			</div>
+		</div>
 	</g:HTMLPanel>
-	
+
 </ui:UiBinder> 

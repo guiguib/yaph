@@ -13,7 +13,6 @@ import com.gbourquet.yaph.client.mvp.presenter.LogoutPresenter.View;
 import com.gbourquet.yaph.client.mvp.presenter.MenuPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.NewPasswordPresenter;
 import com.gbourquet.yaph.client.mvp.presenter.PasswordPresenter;
-import com.gbourquet.yaph.client.mvp.presenter.ProgressionPresenter;
 import com.gbourquet.yaph.client.mvp.view.AppView;
 import com.gbourquet.yaph.client.mvp.view.InlineView;
 import com.gbourquet.yaph.client.mvp.view.LoginView;
@@ -21,7 +20,6 @@ import com.gbourquet.yaph.client.mvp.view.LogoutView;
 import com.gbourquet.yaph.client.mvp.view.MenuView;
 import com.gbourquet.yaph.client.mvp.view.NewPasswordView;
 import com.gbourquet.yaph.client.mvp.view.PasswordView;
-import com.gbourquet.yaph.client.mvp.view.ProgressionView;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -31,7 +29,6 @@ public class ClientFactoryImpl implements ClientFactory {
 	private final PlaceController placeController = new PlaceController(eventBus);
 
 	private final AppPresenter.View appView = new AppView();
-	private final ProgressionPresenter.View progressionView = new ProgressionView();
 	private final PasswordPresenter.View passwordView = new PasswordView();
 	private final NewPasswordPresenter.View newPasswordView = new NewPasswordView();
 	private final LoginPresenter.View loginView = new LoginView();
@@ -54,11 +51,6 @@ public class ClientFactoryImpl implements ClientFactory {
 	@Override
 	public AppPresenter.View getAppView() {
 		return appView;
-	}
-
-	@Override
-	public ProgressionPresenter.View getProgressionView() {
-		return progressionView;
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import com.gbourquet.yaph.client.mvp.place.LoginPlace;
 import com.gbourquet.yaph.client.mvp.place.LogoutPlace;
 import com.gbourquet.yaph.client.mvp.place.NewPasswordPlace;
 import com.gbourquet.yaph.client.mvp.place.PasswordPlace;
-import com.gbourquet.yaph.client.mvp.place.ProgressionPlace;
 import com.gbourquet.yaph.client.utils.DataAccess;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
@@ -14,7 +13,6 @@ import com.google.gwt.place.shared.Place;
 
 public class AppMapper implements ActivityMapper {
 	private AppPresenter appPresenter;
-	private ProgressionPresenter progressionPresenter;
 	private PasswordPresenter passwordPresenter;
 	private NewPasswordPresenter newPasswordPresenter;
 	private LoginPresenter loginPresenter;
@@ -24,7 +22,6 @@ public class AppMapper implements ActivityMapper {
 
 	public AppMapper(ClientFactory clientFactory) {
 		super();
-		this.progressionPresenter = new ProgressionPresenter(clientFactory);
 		this.passwordPresenter = new PasswordPresenter(clientFactory);
 		this.newPasswordPresenter = new NewPasswordPresenter(clientFactory);
 		this.loginPresenter = new LoginPresenter(clientFactory);
@@ -39,8 +36,6 @@ public class AppMapper implements ActivityMapper {
 	public Activity getActivity(Place place) {
 		if (place instanceof AppPlace) {
 			return appPresenter;
-		} else if (place instanceof ProgressionPlace) {
-			return progressionPresenter;
 		} else if (place instanceof PasswordPlace) {
 			return passwordPresenter;
 		} else if (place instanceof NewPasswordPlace) {

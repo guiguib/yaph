@@ -1,0 +1,15 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<g:HTMLPanel styleName="card blue-grey darken-1">
+		<div class="card-content white-text">
+			<span class="card-title">Tags</span>
+			<p>
+				<g:HTMLPanel tag="span" ui:field="container">
+				</g:HTMLPanel>
+			</p>
+		</div>
+	</g:HTMLPanel>
+
+</ui:UiBinder> 
