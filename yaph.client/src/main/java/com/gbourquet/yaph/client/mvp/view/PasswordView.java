@@ -51,7 +51,7 @@ public class PasswordView extends Composite implements PasswordPresenter.View {
 	/**
 	 * The tags Area
 	 */
-	@UiField(provided=true)
+	@UiField
 	TagsWidget tags;
 
 	/**

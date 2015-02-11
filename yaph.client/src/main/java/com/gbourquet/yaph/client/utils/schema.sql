@@ -12,8 +12,8 @@ CREATE TABLE passwordCard (
 	id INTEGER,
 	account INTEGER,
 	titre TEXT,
-	CONSTRAINT passwordcard_pk PRIMARY KEY (id),
-	CONSTRAINT PASSWORDCARD_FK_ACCOUNT FOREIGN KEY (account) REFERENCES account(id)
+	CONSTRAINT passwordCard_pk PRIMARY KEY (id),
+	CONSTRAINT passwordCard_FK_account FOREIGN KEY (account) REFERENCES account(id)
 );
 
 CREATE TABLE passwordField (
@@ -22,13 +22,27 @@ CREATE TABLE passwordField (
 	type TEXT(80),
 	libelle TEXT,
 	value TEXT,
-	CONSTRAINT passwordfield_pk PRIMARY KEY (id),
-	CONSTRAINT PASSWORDFIELD_FK_PASSWORDCARD FOREIGN KEY (idCard) REFERENCES passwordCard(id)
+	CONSTRAINT passwordField_pk PRIMARY KEY (id),
+	CONSTRAINT passwordField_FK_passwordCard FOREIGN KEY (idCard) REFERENCES passwordCard(id)
+);
+
+CREATE TABLE passwordTag (
+	id INTEGER,
+	idAccount INTEGER,
+	libelle TEXT,
+	CONSTRAINT passwordTag_pk PRIMARY KEY (id),
+	CONSTRAINT passwordGroup_fk_account FOREIGN KEY (idAccount) REFERENCES account(id)
+);
+
+CREATE TABLE passwordCardTag (
+	idPassword INTEGER,
+	idTag INTEGER,
+	CONSTRAINT passwordCardTag_pk PRIMARY KEY (idPassword,idTag),
+	CONSTRAINT passwordCardTag_fk_passwordCard FOREIGN KEY (idPassword) REFERENCES passwordCard(id),
+	CONSTRAINT passwordCardTag_fk_passwordTag FOREIGN KEY (idTag) REFERENCES passwordTag(id)
 );
 
 CREATE TABLE toDelete (
 	id INTEGER,
 	type TEXT(80)
-)
-
-
+);

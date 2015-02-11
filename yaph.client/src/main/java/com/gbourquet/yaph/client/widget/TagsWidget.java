@@ -42,6 +42,8 @@ public class TagsWidget extends Composite implements ClickHandler, HasHandlers {
 	public TagsWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
 		
+		handlerManager = new HandlerManager(this);
+		
 		tags = new ArrayList<Anchor>();
 		valueTags = new ArrayList<String>();
 
@@ -50,8 +52,9 @@ public class TagsWidget extends Composite implements ClickHandler, HasHandlers {
 
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
-				// Si on appuie sur " "
-				if (KeyCodes.KEY_SPACE == event.getNativeEvent().getKeyCode()) {
+				// Si on appuie sur " " ou ENTER
+				if (KeyCodes.KEY_SPACE == event.getNativeEvent().getKeyCode() ||
+						KeyCodes.KEY_ENTER == event.getNativeEvent().getKeyCode()) {
 					//Si le tag exist déjà, on ne fait rien
 					final String vTag = saisiTag.getText().trim().toLowerCase();
 					if (valueTags.contains(vTag))

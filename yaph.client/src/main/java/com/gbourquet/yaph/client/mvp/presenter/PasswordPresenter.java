@@ -157,12 +157,12 @@ public class PasswordPresenter extends AbstractPresenter {
 			
 			@Override
 			public void onRemove(TagEvent event) {
-				updateView(event.getTagName());
+				
 			}
 			
 			@Override
 			public void onNewTag(TagEvent event) {
-				updateView(event.getTagName());
+				
 			}
 		});
 		// Evenements du bus
