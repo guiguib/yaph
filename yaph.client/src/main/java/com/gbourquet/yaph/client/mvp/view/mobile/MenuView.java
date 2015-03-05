@@ -51,23 +51,8 @@ public class MenuView extends Composite implements MenuPresenter.View {
 	}
 
 	@Override
-	public void setEnableApp(boolean enabled) {
-		if (enabled)
-			appAction.addStyleName("active");
-		else
-			appAction.removeStyleName("active");
-	}
-
-	@Override
-	public void setEnablePassword(boolean enabled) {
-		if (enabled)
-			passwordAction.addStyleName("active");
-		else
-			passwordAction.removeStyleName("active");
-	}
-
-	@Override
-	public void setVisiblePassword(boolean visible) {
-		passwordAction.setVisible(visible);
+	public void hideSideNavBar() {
+		// TODO Auto-generated method stub
+		
 	}
 }

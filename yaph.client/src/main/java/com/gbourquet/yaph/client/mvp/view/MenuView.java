@@ -16,6 +16,21 @@ public class MenuView extends Composite implements MenuPresenter.View {
 	interface MenuViewUiBinder extends UiBinder<Widget, MenuView> {
 	}
 
+	public static native int initMenu() /*-{
+		// Initialize collapsible
+		$wnd.jQuery('#bMenu').sideNav({
+			menuWidth : 240, // Default is 240
+			edge : 'right', // Choose the horizontal origin
+			closeOnClick : true
+		// Closes side-nav on <a> clicks, useful for Angular/Meteor
+		});
+	}-*/;
+
+	public static native int hideSideNav() /*-{
+		// Initialize collapsible
+		$wnd.jQuery('.button-collapse').sideNav('hide');
+	}-*/;
+
 	@UiField
 	Label userLabel;
 
@@ -30,10 +45,11 @@ public class MenuView extends Composite implements MenuPresenter.View {
 
 	public MenuView() {
 		initWidget(uiBinder.createAndBindUi(this));
+		initMenu();
 	}
 
 	public MenuView(String firstName) {
-		initWidget(uiBinder.createAndBindUi(this));
+		this();
 	}
 
 	@Override
@@ -48,23 +64,7 @@ public class MenuView extends Composite implements MenuPresenter.View {
 	}
 
 	@Override
-	public void setEnableApp(boolean enabled) {
-		if (enabled)
-			appAction.addStyleName("active");
-		else
-			appAction.removeStyleName("active");
-	}
-
-	@Override
-	public void setEnablePassword(boolean enabled) {
-		if (enabled)
-			passwordAction.addStyleName("active");
-		else
-			passwordAction.removeStyleName("active");
-	}
-
-	@Override
-	public void setVisiblePassword(boolean visible) {
-		passwordAction.setVisible(visible);
+	public void hideSideNavBar() {
+		hideSideNav();
 	}
 }

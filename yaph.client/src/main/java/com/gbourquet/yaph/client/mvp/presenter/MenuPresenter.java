@@ -23,13 +23,8 @@ public class MenuPresenter extends AbstractPresenter {
 		public void updateUserLabel(String newLabel);
 
 		public void updateActionLabel(String newLabel, String newAction);
-
-		public void setEnableApp(boolean enabled);
-
-		public void setEnablePassword(boolean enabled);
-
-		public void setVisiblePassword(boolean visible);
-
+	
+		public void hideSideNavBar();
 	}
 
 	public View view;
@@ -48,7 +43,6 @@ public class MenuPresenter extends AbstractPresenter {
 			public void onLoad(final LoadApplicationEvent event) {
 				RootPanel.get("menu").clear();
 				RootPanel.get("menu").add(getView().asWidget());
-				getView().setVisiblePassword(false);
 			}
 		});
 
@@ -59,8 +53,7 @@ public class MenuPresenter extends AbstractPresenter {
 				Account account = event.getAccount();
 				getView().updateUserLabel(account.getPrenom() + " " + account.getNom());
 				getView().updateActionLabel("Sign out", "logout:");
-				getView().setVisiblePassword(true);
-
+			
 			}
 
 			@Override
@@ -75,7 +68,6 @@ public class MenuPresenter extends AbstractPresenter {
 			public void onLogout(final LogoutEvent event) {
 				getView().updateUserLabel("");
 				getView().updateActionLabel("Sign in", "login:");
-				getView().setVisiblePassword(false);
 			}
 		});
 
@@ -83,10 +75,7 @@ public class MenuPresenter extends AbstractPresenter {
 
 			@Override
 			public void onMenu(final MenuEvent event) {
-				if ("app".equals(event.getMenu()))
-					getView().setEnableApp(event.isEnabled());
-				else if ("password".equals(event.getMenu()))
-					getView().setEnablePassword(event.isEnabled());
+				getView().hideSideNavBar();;
 			}
 		});
 	}

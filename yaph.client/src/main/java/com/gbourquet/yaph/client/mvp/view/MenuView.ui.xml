@@ -9,8 +9,24 @@
 	<g:HTMLPanel>
 		<nav>
 			<div class="nav-wrapper">
-				<a href="#" class="brand-logo"><g:Label ui:field="userLabel"></g:Label></a>
-				<ul id="nav-mobile" class="right side-nav">
+				<a href="#" class="brand-logo">
+					<g:Label ui:field="userLabel"></g:Label>
+				</a>
+				<a href="#" data-activates="nav-mobile" class="button-collapse" id="bMenu">
+					<i class="mdi-navigation-menu"></i>
+				</a>
+				<ul id="" class="right hide-on-med-and-down">
+					<li>
+						<a href="#app:">Home</a>
+					</li>
+					<li>
+						<a href="#password:">Passwords</a>
+					</li>
+					<li>
+						<a href="#login:">Sign in</a>
+					</li>
+				</ul>
+				<ul class="side-nav" id="nav-mobile">
 					<li>
 						<g:Hyperlink targetHistoryToken="app:" ui:field="appAction">Home</g:Hyperlink>
 					</li>
@@ -18,15 +34,12 @@
 						<g:Hyperlink targetHistoryToken="password:" ui:field="passwordAction">Passwords</g:Hyperlink>
 					</li>
 					<li>
-						<g:Hyperlink targetHistoryToken="login:" ui:field="actionLabel">Sign in</g:Hyperlink>
+						<g:Hyperlink targetHistoryToken="login:" ui:field="actionLabel">Sign
+							in</g:Hyperlink>
 					</li>
-				</ul>
-
-				<!-- Include this line below -->
-				<a class="button-collapse" href="#" data-activates="nav-mobile"><i class="mdi-navigation-menu"></i></a>
-				<!-- End -->
-
+				</ul>				
 			</div>
 		</nav>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 
